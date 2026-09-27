@@ -1,0 +1,44 @@
+---
+/**
+ * WordPress-parity catch-all: pages and posts live at root permalinks
+ * (e.g. /about/, /services/…/, /youtube-view-count-change-2026-…/).
+ *
+ * Resolves pages first, then posts. Tries the full path as the EmDash slug,
+ * then the final path segment (WP hierarchical pages store leaf post_name).
+ * Rewrites to the existing /pages/[slug] or /posts/[slug] templates so
+ * rendering stays in one place. Prefixed /posts/ and /pages/ URLs still work.
+ */
+import { getEmDashEntry, decodeSlug } from "emdash";
+import { slugLookupCandidates } from "../utils/content-url";
+
+const rawParam = Astro.params.slug;
+const raw =
+	typeof rawParam === "string"
+		? rawParam
+		: Array.isArray(rawParam)
+			? rawParam.join("/")
+			: "";
+const pathSlug = decodeSlug(raw) ?? raw;
+
+if (!pathSlug) {
+	return Astro.redirect("/404");
+}
+
+const candidates = slugLookupCandidates(pathSlug);
+
+for (const candidate of candidates) {
+	const { entry: page } = await getEmDashEntry("pages", candidate);
+	if (page) {
+		return Astro.rewrite(`/pages/${candidate}`);
+	}
+}
+
+for (const candidate of candidates) {
+	const { entry: post } = await getEmDashEntry("posts", candidate);
+	if (post) {
+		return Astro.rewrite(`/posts/${candidate}`);
+	}
+}
+
+return Astro.redirect("/404");
+---

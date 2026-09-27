@@ -2,6 +2,7 @@
 import { getEmDashCollection, getTermsForEntries } from "emdash";
 import Base from "../../layouts/Base.astro";
 import { getReadingTime } from "../../utils/reading-time";
+import { contentUrl } from "../../utils/content-url";
 
 // Sort in the database rather than in JS — lets the DB use its index on
 // published_at and avoids a full-table scan on the client.
@@ -58,7 +59,7 @@ const formatDate = (date: Date) =>
 				<div class="posts-list">
 					{postsWithTags.map(({ post, tags, bylines }) => (
 						<article class="post-item">
-							<a href={`/posts/${post.id}`} class="post-link">
+							<a href={contentUrl(post.id)} class="post-link">
 								<div class="post-meta">
 									{bylines.length > 0 && (
 										<>

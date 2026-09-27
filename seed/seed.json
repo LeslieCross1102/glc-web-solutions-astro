@@ -3,19 +3,19 @@
 	"version": "1",
 	"meta": {
 		"name": "GLC Web Solutions",
-		"description": "Creating beautiful websites and marketing to the right audience",
+		"description": "UK web design, SEO & GEO, and digital marketing",
 		"author": "GLC Web Solutions"
 	},
 	"settings": {
 		"title": "GLC Web Solutions",
-		"tagline": "Creating beautiful websites and marketing to the right audience"
+		"tagline": "UK web design, SEO & GEO, and digital marketing"
 	},
 	"collections": [
 		{
 			"slug": "posts",
 			"label": "Posts",
 			"labelSingular": "Post",
-			"urlPattern": "/posts/{slug}",
+			"urlPattern": "/{slug}",
 			"supports": [
 				"drafts",
 				"revisions",
@@ -55,7 +55,7 @@
 			"slug": "pages",
 			"label": "Pages",
 			"labelSingular": "Page",
-			"urlPattern": "/pages/{slug}",
+			"urlPattern": "/{slug}",
 			"supports": [
 				"drafts",
 				"revisions",
@@ -152,18 +152,33 @@
 			"items": [
 				{
 					"type": "custom",
-					"label": "Home",
-					"url": "/"
+					"label": "Services",
+					"url": "/services"
+				},
+				{
+					"type": "custom",
+					"label": "SEO & GEO",
+					"url": "/seo-and-geo-services"
 				},
 				{
 					"type": "custom",
 					"label": "About",
-					"url": "/pages/about"
+					"url": "/about"
 				},
 				{
 					"type": "custom",
-					"label": "Posts",
-					"url": "/posts"
+					"label": "Blog",
+					"url": "/all-posts"
+				},
+				{
+					"type": "custom",
+					"label": "Contact",
+					"url": "/contacts"
+				},
+				{
+					"type": "custom",
+					"label": "Special Offer",
+					"url": "/special-offer"
 				}
 			]
 		}

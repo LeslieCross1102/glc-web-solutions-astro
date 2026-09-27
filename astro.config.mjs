@@ -21,17 +21,17 @@ export default defineConfig({
 	fonts: [
 		{
 			provider: fontProviders.google(),
-			name: "Inter",
+			name: "IBM Plex Sans",
 			cssVariable: "--font-body",
 			weights: [400, 500, 600, 700],
-			fallbacks: ["sans-serif"],
+			fallbacks: ["Helvetica Neue", "Helvetica", "Arial", "sans-serif"],
 		},
 		{
 			provider: fontProviders.google(),
-			name: "JetBrains Mono",
+			name: "IBM Plex Mono",
 			cssVariable: "--font-mono",
 			weights: [400, 500],
-			fallbacks: ["monospace"],
+			fallbacks: ["ui-monospace", "SFMono-Regular", "Menlo", "monospace"],
 		},
 	],
 	devToolbar: { enabled: false },

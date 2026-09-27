@@ -2,6 +2,7 @@
 export const prerender = false;
 
 import { search } from "emdash";
+import { contentUrl } from "../utils/content-url";
 import Base from "../layouts/Base.astro";
 
 const query = Astro.url.searchParams.get("q")?.trim() || "";
@@ -11,13 +12,13 @@ const query = Astro.url.searchParams.get("q")?.trim() || "";
 // results, and handles tokenization/stemming. Templates that grep all
 // post bodies in JS quickly become unusable past a few hundred posts.
 const { items: results } = query
-	? await search(query, { collections: ["posts"], limit: 30 })
+	? await search(query, { collections: ["posts", "pages"], limit: 30 })
 	: { items: [] };
 ---
 
 <Base
 	title={query ? `Search: ${query}` : "Search"}
-	description="Search blog posts"
+	description="Search posts and pages"
 >
 	<section class="search-page">
 		<h1 class="search-title">Search</h1>
@@ -54,7 +55,7 @@ const { items: results } = query
 					{results.map((result) => (
 						<li class="search-result">
 							<a
-								href={`/posts/${result.slug ?? result.id}`}
+								href={contentUrl(result.slug ?? result.id)}
 								class="result-link"
 							>
 								<h2 class="result-title">{result.title ?? "Untitled"}</h2>

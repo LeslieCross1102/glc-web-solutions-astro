@@ -1,30 +1,41 @@
 /*
-  theme.css -- your theme overrides. This is the file to edit to
-  retheme the site.
-
-  Every design token lives in src/styles/tokens.css (colors, type
-  scale, spacing, layout, shadows) with its default value. Override any
-  of them here: declarations in this file are unlayered, so they always
-  beat the @layer base defaults in tokens.css.
-
-  Colors are defined with light-dark(). Overriding with a plain color
-  changes light and dark mode at once; use light-dark(<light>, <dark>)
-  to set different values per mode.
-
-  Webfonts are loaded in astro.config.mjs (--font-body, --font-mono).
-  Swap the loaded font there; use overrides here for system fonts or a
-  separate heading face.
-
-  Example:
-
-  :root {
-    --color-brand: light-dark(#0f766e, #2dd4bf);
-    --font-heading: "Iowan Old Style", Georgia, serif;
-    --radius: 8px;
-  }
+  theme.css -- GLC Web Solutions brand overrides.
+  Tokens default in tokens.css; unlayered overrides here win.
 */
 
 :root {
+	/* Professional teal / neutral palette (not purple AI defaults) */
+	--color-bg: light-dark(#f7faf9, #0b1210);
+	--color-bg-subtle: light-dark(#eef4f2, #121a18);
+	--color-text: light-dark(#14201c, #e8efec);
+	--color-text-secondary: light-dark(#3d524b, #9bb5ae);
+	--color-muted: light-dark(#6b7f77, #7a8f86);
+	--color-border: light-dark(#d5e0db, #24302c);
+	--color-border-subtle: light-dark(#e6eeea, #1a2421);
+	--color-surface: light-dark(#e8f0ed, #18211e);
+	--color-brand: light-dark(#0f766e, #2dd4bf);
+	--color-brand-hover: light-dark(#0d5f59, #5eead4);
+	--color-on-brand: white;
+	--color-brand-ring: color-mix(in srgb, var(--color-brand) 25%, transparent);
+
+	--font-heading: var(--font-body);
+	--radius: 4px;
+	--radius-lg: 8px;
+}
+
+@supports not (color: light-dark(#000, #fff)) {
+	:root {
+		--color-bg: #f7faf9;
+		--color-bg-subtle: #eef4f2;
+		--color-text: #14201c;
+		--color-text-secondary: #3d524b;
+		--color-muted: #6b7f77;
+		--color-border: #d5e0db;
+		--color-border-subtle: #e6eeea;
+		--color-surface: #e8f0ed;
+		--color-brand: #0f766e;
+		--color-brand-hover: #0d5f59;
+	}
 }
 
 /* Keep the signed-in Admin link separated from the primary navigation. */

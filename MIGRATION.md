@@ -1,9 +1,12 @@
-# GLC Web Solutions → EmDash migration
+# GLC Web Solutions → EmDash (Cloudflare) migration
+
+Full-site migration of https://glcwebsolutions.co.uk onto EmDash on Cloudflare Workers, mirroring the Waggz Dog Walking approach.
 
 ## WordPress export (WXR)
 
 - **Path:** `content/import/glcwebsolutions.WordPress.2026-09-27.xml`
 - **Source:** WordPress Tools → Export (full site dump dated 2026-09-27)
+- **Inventory (approx.):** ~148 published pages (many `/services/…` location pages), 22 posts at **root** slugs, ~241 media, Yoast SEO, menus, Contact Form 7 forms
 
 ## Cloudflare resources
 
@@ -13,41 +16,81 @@
 | Preview URL | https://glc-web-solutions.gareth-17d.workers.dev/ |
 | D1 database | `glc-emdash-db` |
 | R2 bucket | `glc-emdash-media` |
+| GitHub repo | https://github.com/LeslieCross1102/glc-web-solutions-astro |
 
-`wrangler.jsonc` uses these names so `wrangler deploy` targets the correct Worker.
+`wrangler.jsonc` uses these names so `wrangler deploy` targets the live Worker.
 
-## Deploy steps
+## Cloudflare D1 / R2 setup
 
-1. Authenticate: `npx wrangler login`
-2. Create (or confirm) D1 and R2 if they do not exist yet:
-   ```bash
-   npx wrangler d1 create glc-emdash-db
-   npx wrangler r2 bucket create glc-emdash-media
-   ```
-3. Paste the returned D1 `database_id` into `wrangler.jsonc` under `d1_databases[0].database_id` (uncomment that field).
-4. Install and deploy:
-   ```bash
-   npm install
-   npm run deploy
-   ```
-5. Open the Worker preview URL and complete EmDash admin setup if prompted.
+Requires `CLOUDFLARE_API_TOKEN` (Workers + D1 Edit + R2 Edit) in the environment or a gitignored `.env`.
 
-Optional: connect Cloudflare Workers Builds to this GitHub repo (`LeslieCross1102/glc-web-solutions-astro`) so deploys run from `main` or this branch.
+```bash
+export CLOUDFLARE_API_TOKEN=…   # do not commit
 
-## Import WordPress into EmDash
+npx wrangler d1 create glc-emdash-db
+npx wrangler r2 bucket create glc-emdash-media
+```
 
-1. Deploy or run locally (`npm run dev`).
-2. Open the EmDash admin UI (`/_emdash/admin`).
-3. Use **Import WordPress** and upload `content/import/glcwebsolutions.WordPress.2026-09-27.xml`.
-4. Review collections, media, authors, and menus after import completes.
+Paste the returned D1 `database_id` into `wrangler.jsonc` under `d1_databases[0].database_id` (uncomment that field), then:
 
-## URL parity notes
+```bash
+npm install
+npm run deploy
+```
 
-WordPress serves posts and pages at **root-level** permalinks (e.g. `/about/`, `/my-post/`).
+Optional: connect Cloudflare Workers Builds to this GitHub repo on branch `main`.
 
-The EmDash blog seed currently uses:
+## Deploy steps (summary)
 
-- Posts: `/posts/{slug}`
-- Pages: `/pages/{slug}`
+1. Authenticate (`wrangler login` or `CLOUDFLARE_API_TOKEN`).
+2. Create D1 + R2 if missing; set `database_id` in `wrangler.jsonc`.
+3. `npm install && npm run deploy`
+4. Open the Worker preview URL and complete EmDash admin setup if prompted.
 
-After import, adjust seed `urlPattern` values and matching Astro routes under `src/pages/` if you need WordPress-style root paths. Keep `/category/` and `/tag/` (or map them) as needed, then verify important WP URLs.
+## Import WordPress into EmDash (admin)
+
+1. Deploy or run locally (`npm run dev` — prefer port **4321** for GLC; Waggz uses 4322).
+2. Open **`/_emdash/admin`** and finish first-run setup if needed.
+3. Use **Import → WordPress** and upload:
+
+   `content/import/glcwebsolutions.WordPress.2026-09-27.xml`
+
+4. Map WordPress `post` → EmDash **posts**, `page` → **pages**.
+5. Import media into R2 when prompted.
+6. Review collections, media, authors, menus, and a sample of `/services/…` pages after import.
+
+### Important after import
+
+- Seed / site collections use **`urlPattern`: `/{slug}`** for both posts and pages (WordPress root permalinks).
+- If EmDash creates a **new** `posts` collection during import, it may default to `/blog/{slug}`. Change it in admin to `/{slug}` so generated links stay root-level.
+- WP hierarchical pages (e.g. `/services/website-design-…-in-gravesend/`) store the **leaf** `post_name` as the EmDash slug. The catch-all route resolves them by full path **or** last segment. For perfect outbound link generation with parent prefixes, optionally edit those page slugs in admin to the full path (`services/…`).
+
+## URL strategy (WordPress parity)
+
+| WordPress | EmDash public route |
+|---|---|
+| `/` home | `/` (`src/pages/index.astro`) |
+| `/about/`, `/special-offer/`, posts at root | `src/pages/[...slug].astro` → rewrite to page/post templates |
+| `/services/…` nested pages | Same catch-all (full path, then leaf slug) |
+| Blog index | `/posts` (listing) and WP page `/all-posts` after import |
+| Category / tag / search / RSS | `/category/[slug]`, `/tag/[slug]`, `/search`, `/rss.xml` |
+| Admin | `/_emdash/admin` |
+
+**`/posts/{slug}` and `/pages/{slug}` are not required.** They remain as internal rewrite targets and still work if visited directly. Public links generated by the site use root paths via `contentUrl()`.
+
+Nav (seed primary menu): Services, SEO & GEO, About, Blog, Contact, Special Offer → expected WP paths.
+
+## Branding (MVP shell)
+
+- Site title / tagline: GLC Web Solutions — UK web design, SEO & GEO, and digital marketing
+- Teal / neutral CSS variables in `src/styles/theme.css`
+- IBM Plex Sans / Mono in `astro.config.mjs`
+- Not pixel-perfect vs live WP theme; structure is ready for imported Portable Text content
+
+## Remaining gaps vs full visual / feature parity
+
+- Custom WP theme layouts, CF7 forms, and location-page block patterns are not recreated
+- Nested `/services/…` **outbound** links may omit the parent prefix until slugs are updated to full paths
+- Yoast SEO metadata depends on EmDash SEO fields after import
+- Contact forms need an EmDash/form alternative
+- Media URL rewrites should be verified after R2 import

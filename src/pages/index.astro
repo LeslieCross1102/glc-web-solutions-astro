@@ -9,6 +9,7 @@ import Base from "../layouts/Base.astro";
 import PostCard from "../components/PostCard.astro";
 import { getReadingTime } from "../utils/reading-time";
 import { resolveBlogSiteIdentity } from "../utils/site-identity";
+import { contentUrl } from "../utils/content-url";
 
 // Limit to what we render (1 featured + 6 grid). The DB does the slicing
 // instead of fetching every post and discarding the tail in JS.
@@ -91,7 +92,7 @@ function formatDate(date: Date | null | undefined) {
 				{featuredPost && (
 					<section class="featured-section">
 						<div class="featured-grid">
-							<a href={`/posts/${featuredPost.id}`} class="featured-image-link">
+							<a href={contentUrl(featuredPost.id)} class="featured-image-link">
 								<div class="featured-image" {...featuredPost.edit.featured_image}>
 									<Image image={featuredPost.data.featured_image} />
 								</div>
@@ -136,7 +137,7 @@ function formatDate(date: Date | null | undefined) {
 									</span>
 								</div>
 								<a
-									href={`/posts/${featuredPost.id}`}
+									href={contentUrl(featuredPost.id)}
 									class="featured-title-link"
 								>
 									<h1 class="featured-title" {...featuredPost.edit.title}>{featuredPost.data.title}</h1>
@@ -175,7 +176,7 @@ function formatDate(date: Date | null | undefined) {
 									title={post.data.title ?? "Untitled"}
 									excerpt={post.data.excerpt}
 									featuredImage={post.data.featured_image}
-									href={`/posts/${post.id}`}
+									href={contentUrl(post.id)}
 									date={post.data.publishedAt ?? undefined}
 									readingTime={getReadingTime(post.data.content)}
 									tags={tags}
