@@ -14,6 +14,8 @@ export default defineConfig({
 	integrations: [
 		react(),
 		emdash({
+			// Switch to https://glcwebsolutions.co.uk when the domain moves across
+			siteUrl: "https://glc-web-solutions.gareth-17d.workers.dev",
 			database: d1({ binding: "DB", session: "auto" }),
 			storage: r2({ binding: "MEDIA" }),
 		}),

@@ -11,10 +11,6 @@
 			"database_id": "dfe9fc69-1f8a-4bdb-b689-febb94d33cbe",
 		},
 	],
-	// Switch to https://glcwebsolutions.co.uk when the domain moves across
-	"vars": {
-		"EMDASH_SITE_URL": "https://glc-web-solutions.gareth-17d.workers.dev",
-	},
 	"r2_buckets": [
 		{
 			"binding": "MEDIA",
