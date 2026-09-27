@@ -16,7 +16,8 @@ Full-site migration of https://glcwebsolutions.co.uk onto EmDash on Cloudflare W
 | Preview URL | https://glc-web-solutions.gareth-17d.workers.dev/ |
 | D1 database | `glc-emdash-db` |
 | R2 bucket | `glc-emdash-media` |
-| GitHub repo | https://github.com/LeslieCross1102/glc-web-solutions-astro |
+| Target EmDash repo | https://github.com/LeslieCross1102/glc-web-solutions-astro (Cloud Agent currently **cannot push** — `cursor[bot]` 403) |
+| EmDash code (pushed) | Branch `cursor/glc-emdash-full-migration-365d` and `emdash-main` on https://github.com/LeslieCross1102/glc-web-solutions (orphan EmDash history; do **not** merge into WordPress `main`) |
 
 `wrangler.jsonc` uses these names so `wrangler deploy` targets the live Worker.
 
