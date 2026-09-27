@@ -23,16 +23,20 @@ if (!page) {
 
 if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
 const { siteTitle } = resolveBlogSiteIdentity(await getSiteSettings());
+// Imported SEO titles are the full WordPress <title>, so only append the site name to plain titles
+const hasSeoTitle = Boolean((page.seo ?? page.data.seo)?.title);
 const seo = getSeoMeta(page, {
-	siteTitle,
+	siteTitle: hasSeoTitle ? undefined : siteTitle,
 	siteUrl: Astro.url.origin,
-	path: Astro.url.pathname.replace(/\/$/, ""),
+	path: Astro.originPathname,
 });
 ---
 
 <Base
 	title={seo.title}
+	exactTitle={hasSeoTitle}
 	pageTitle={seo.ogTitle}
+	image={seo.ogImage}
 	description={seo.description}
 	canonical={seo.canonical}
 	robots={seo.robots}

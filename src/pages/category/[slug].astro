@@ -51,7 +51,10 @@ const filteredPosts = posts.map((post) => ({
 }));
 ---
 
-<Base title={`${term.label} posts`} description={`All posts in ${term.label}`}>
+<Base
+	title={`${term.label} Archives`}
+	description={(posts[0]?.seo ?? posts[0]?.data.seo)?.description || posts[0]?.data.excerpt || null}
+>
 	<section class="archive-section">
 		<header class="archive-header">
 			<span class="archive-label">Category</span>

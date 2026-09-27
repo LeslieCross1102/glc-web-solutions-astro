@@ -1,6 +1,7 @@
 ---
 import {
 	getEmDashCollection,
+	getEmDashEntry,
 	getTermsForEntries,
 	getSiteSettings,
 } from "emdash";
@@ -15,14 +16,20 @@ import { contentUrl } from "../utils/content-url";
 // instead of fetching every post and discarding the tail in JS.
 const POSTS_PER_PAGE = 7;
 
-const [{ entries: posts, cacheHint }, settings] = await Promise.all([
-	getEmDashCollection("posts", {
-		orderBy: { published_at: "desc" },
-		limit: POSTS_PER_PAGE + 1, // +1 to detect "view all" need
-	}),
-	getSiteSettings(),
-]);
+// WordPress front page (Settings → Reading) was imported as this page; its SEO drives the home <head>
+const FRONT_PAGE_SLUG = "home-1";
+
+const [{ entries: posts, cacheHint }, settings, { entry: frontPage }] =
+	await Promise.all([
+		getEmDashCollection("posts", {
+			orderBy: { published_at: "desc" },
+			limit: POSTS_PER_PAGE + 1, // +1 to detect "view all" need
+		}),
+		getSiteSettings(),
+		getEmDashEntry("pages", FRONT_PAGE_SLUG),
+	]);
 const { siteTitle, siteTagline } = resolveBlogSiteIdentity(settings);
+const frontSeo = frontPage ? (frontPage.seo ?? frontPage.data.seo) : null;
 
 if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
 
@@ -76,7 +83,12 @@ function formatDate(date: Date | null | undefined) {
 }
 ---
 
-<Base title={siteTitle} description={siteTagline}>
+<Base
+	title={frontSeo?.title || siteTitle}
+	exactTitle={Boolean(frontSeo?.title)}
+	description={frontSeo?.description || siteTagline}
+	canonical={new URL("/", Astro.url.origin).href}
+>
 	{
 		posts.length === 0 ? (
 			<section class="empty-state">
