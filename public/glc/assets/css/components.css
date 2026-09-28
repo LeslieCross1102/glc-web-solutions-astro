@@ -1,0 +1,1384 @@
+/**
+ * Teal Horizon — components.
+ *
+ * Site chrome and the reusable UI pieces defined by the style guide.
+ */
+
+/* ---------------------------------------------------------------------------
+ * Navigation
+ * ------------------------------------------------------------------------ */
+
+.glc-nav {
+	position: sticky;
+	top: 0;
+	z-index: 50;
+	width: 100%;
+	background-color: var(--glc-nav-surface);
+	box-shadow: var(--glc-shadow-sm);
+	transition: box-shadow var(--glc-duration) var(--glc-ease);
+}
+
+/* Opaque fallback first: backdrop-filter is only safe once we know it applies. */
+@supports ((backdrop-filter: blur(1px)) or (-webkit-backdrop-filter: blur(1px))) {
+	.glc-nav {
+		-webkit-backdrop-filter: blur(20px);
+		backdrop-filter: blur(20px);
+	}
+}
+
+.glc-nav.is-scrolled {
+	box-shadow: var(--glc-shadow-md);
+}
+
+.glc-nav__progress {
+	display: block;
+	height: 3px;
+	width: 100%;
+	overflow: hidden;
+	pointer-events: none;
+	background-color: transparent;
+}
+
+.glc-nav__progress-bar {
+	display: block;
+	height: 100%;
+	width: 100%;
+	background-color: var(--glc-primary);
+	transform: scaleX(var(--glc-scroll-progress, 0));
+	transform-origin: left center;
+	will-change: transform;
+}
+
+.glc-nav__inner {
+	display: flex;
+	justify-content: space-between;
+	align-items: center;
+	gap: 1.5rem;
+	padding-block: 1rem;
+}
+
+.glc-nav__brand {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.75rem;
+	font-family: var(--glc-font-headline);
+	font-size: var(--glc-text-xl);
+	font-weight: var(--glc-weight-bold);
+	letter-spacing: var(--glc-tracking-tighter);
+	color: var(--glc-nav-brand);
+	line-height: 1.2;
+}
+
+.glc-nav__brand:hover,
+.glc-nav__brand:focus-visible {
+	color: var(--glc-nav-link-hover);
+}
+
+.glc-nav__brand img,
+.glc-nav__brand .custom-logo {
+	display: block;
+	max-height: 2.5rem;
+	width: auto;
+}
+
+.glc-nav__tagline {
+	display: block;
+	font-family: var(--glc-font-label);
+	font-size: var(--glc-text-micro);
+	font-weight: var(--glc-weight-semibold);
+	text-transform: uppercase;
+	letter-spacing: var(--glc-tracking-widest);
+	color: var(--glc-secondary);
+}
+
+.glc-nav__actions {
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+/* Desktop menu ------------------------------------------------------------ */
+
+.glc-nav__menu {
+	display: none;
+	align-items: center;
+	gap: 2rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	font-family: var(--glc-font-headline);
+	font-weight: var(--glc-weight-semibold);
+	letter-spacing: var(--glc-tracking-tight);
+}
+
+@media (min-width: 1024px) {
+	.glc-nav__menu {
+		display: flex;
+	}
+}
+
+.glc-nav__menu li {
+	position: relative;
+	margin: 0;
+}
+
+.glc-nav__menu a {
+	display: inline-block;
+	color: var(--glc-nav-link);
+	padding-bottom: 0.25rem;
+	border-bottom: 2px solid transparent;
+}
+
+.glc-nav__menu a:hover,
+.glc-nav__menu a:focus-visible {
+	color: var(--glc-nav-link-hover);
+}
+
+.glc-nav__menu .current-menu-item > a,
+.glc-nav__menu .current-menu-ancestor > a,
+.glc-nav__menu .current_page_item > a {
+	color: var(--glc-nav-link-current);
+	border-bottom-color: var(--glc-nav-link-current);
+}
+
+/* Dropdowns --------------------------------------------------------------- */
+
+.glc-nav__menu .sub-menu {
+	position: absolute;
+	top: 100%;
+	left: 0;
+	z-index: 10;
+	min-width: 14rem;
+	margin: 0;
+	padding: 0.5rem;
+	list-style: none;
+	background-color: var(--glc-surface-container-lowest);
+	border-radius: var(--glc-radius-xl);
+	box-shadow: var(--glc-shadow-lg);
+	opacity: 0;
+	visibility: hidden;
+	transform: translateY(0.5rem);
+	transition: opacity var(--glc-duration) var(--glc-ease), transform var(--glc-duration) var(--glc-ease), visibility var(--glc-duration);
+}
+
+.glc-nav__menu li:hover > .sub-menu,
+.glc-nav__menu li:focus-within > .sub-menu {
+	opacity: 1;
+	visibility: visible;
+	transform: translateY(0);
+}
+
+.glc-nav__menu .sub-menu a {
+	display: block;
+	padding: 0.5rem 0.75rem;
+	border-bottom: 0;
+	border-radius: var(--glc-radius-lg);
+	font-size: var(--glc-text-sm);
+	color: var(--glc-on-surface-variant);
+}
+
+.glc-nav__menu .sub-menu a:hover,
+.glc-nav__menu .sub-menu a:focus-visible {
+	background-color: var(--glc-surface-container-high);
+	color: var(--glc-primary);
+}
+
+/* Toggles ----------------------------------------------------------------- */
+
+.glc-nav__toggle,
+.glc-scheme-toggle {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.75rem;
+	height: 2.75rem;
+	padding: 0;
+	border: 0;
+	border-radius: var(--glc-radius-xl);
+	background-color: transparent;
+	color: var(--glc-nav-link);
+	cursor: pointer;
+	transition: background-color var(--glc-duration) var(--glc-ease), color var(--glc-duration) var(--glc-ease);
+}
+
+.glc-nav__toggle:hover,
+.glc-scheme-toggle:hover {
+	background-color: var(--glc-surface-container-high);
+	color: var(--glc-primary);
+}
+
+/* Hamburger drawn from three spans so it can morph into a close icon. */
+.glc-nav__toggle-bars {
+	position: relative;
+	display: block;
+	width: 1.25rem;
+	height: 0.875rem;
+}
+
+.glc-nav__toggle-bars span {
+	position: absolute;
+	left: 0;
+	width: 100%;
+	height: 2px;
+	border-radius: var(--glc-radius);
+	background-color: currentColor;
+	transition: transform var(--glc-duration) var(--glc-ease), opacity var(--glc-duration) var(--glc-ease);
+}
+
+.glc-nav__toggle-bars span:nth-child(1) { top: 0; }
+.glc-nav__toggle-bars span:nth-child(2) { top: 50%; transform: translateY(-50%); }
+.glc-nav__toggle-bars span:nth-child(3) { bottom: 0; }
+
+.glc-nav__toggle[aria-expanded="true"] .glc-nav__toggle-bars span:nth-child(1) {
+	top: 50%;
+	transform: translateY(-50%) rotate(45deg);
+}
+
+.glc-nav__toggle[aria-expanded="true"] .glc-nav__toggle-bars span:nth-child(2) {
+	opacity: 0;
+}
+
+.glc-nav__toggle[aria-expanded="true"] .glc-nav__toggle-bars span:nth-child(3) {
+	bottom: 50%;
+	transform: translateY(50%) rotate(-45deg);
+}
+
+/**
+ * Hide the hamburger once the horizontal menu is available.
+ *
+ * This must stay below the .glc-nav__toggle base rule above: both selectors
+ * have the same specificity, so source order decides which display value wins.
+ */
+@media (min-width: 1024px) {
+	.glc-nav__toggle {
+		display: none;
+	}
+}
+
+.glc-scheme-toggle .glc-scheme-toggle__dark,
+.dark .glc-scheme-toggle .glc-scheme-toggle__light {
+	display: none;
+}
+
+.dark .glc-scheme-toggle .glc-scheme-toggle__dark {
+	display: inline-block;
+}
+
+/* Mobile panel ------------------------------------------------------------ */
+
+.glc-mobile-menu {
+	display: block;
+	background-color: var(--glc-surface-container-lowest);
+	border-top: 1px solid color-mix(in srgb, var(--glc-outline-variant) 30%, transparent);
+	overflow: hidden;
+	max-height: 0;
+	visibility: hidden;
+	transition: max-height var(--glc-duration) var(--glc-ease), visibility var(--glc-duration);
+}
+
+.glc-mobile-menu.is-open {
+	max-height: 80vh;
+	overflow-y: auto;
+	visibility: visible;
+}
+
+@media (min-width: 1024px) {
+	.glc-mobile-menu {
+		display: none;
+	}
+}
+
+.glc-mobile-menu__list {
+	margin: 0;
+	padding: 1rem 0 1.5rem;
+	list-style: none;
+	font-family: var(--glc-font-headline);
+	font-weight: var(--glc-weight-semibold);
+}
+
+.glc-mobile-menu__list li {
+	margin: 0;
+}
+
+.glc-mobile-menu__list a {
+	display: block;
+	padding: 0.75rem 0;
+	color: var(--glc-on-surface);
+}
+
+.glc-mobile-menu__list a:hover,
+.glc-mobile-menu__list a:focus-visible {
+	color: var(--glc-primary);
+}
+
+.glc-mobile-menu__list .sub-menu {
+	margin: 0;
+	padding-left: 1rem;
+	list-style: none;
+	font-weight: var(--glc-weight-normal);
+	font-size: var(--glc-text-sm);
+}
+
+.glc-mobile-menu__actions {
+	padding-bottom: 1.5rem;
+}
+
+/* ---------------------------------------------------------------------------
+ * Special offer banner
+ * ------------------------------------------------------------------------ */
+
+.glc-offer-banner {
+	width: 100%;
+	background-color: var(--glc-primary);
+	color: var(--glc-on-primary);
+}
+
+.glc-offer-banner[hidden] {
+	display: none !important;
+}
+
+.glc-offer-banner__inner {
+	position: relative;
+	display: flex;
+	align-items: center;
+	gap: 0.5rem;
+}
+
+.glc-offer-banner__link {
+	display: flex;
+	flex: 1 1 auto;
+	flex-wrap: wrap;
+	align-items: center;
+	justify-content: center;
+	gap: 0.75rem 1rem;
+	padding-block: 0.65rem;
+	padding-inline-end: 2.75rem;
+	font-family: var(--glc-font-label);
+	font-size: var(--glc-text-sm);
+	font-weight: var(--glc-weight-semibold);
+	line-height: var(--glc-leading-tight);
+	letter-spacing: var(--glc-tracking-wide);
+	color: var(--glc-on-primary);
+	text-align: center;
+	text-wrap: balance;
+}
+
+.glc-offer-banner__link:hover,
+.glc-offer-banner__link:focus-visible {
+	color: var(--glc-on-primary);
+	opacity: 1;
+}
+
+.glc-offer-banner__text {
+	display: inline;
+}
+
+.glc-offer-banner__aside {
+	display: block;
+	font-weight: var(--glc-weight-normal);
+	opacity: 0.9;
+}
+
+.glc-offer-banner__aside::before {
+	content: none;
+}
+
+@media (min-width: 768px) {
+	.glc-offer-banner__aside {
+		display: inline;
+	}
+
+	.glc-offer-banner__aside::before {
+		content: " — ";
+	}
+}
+
+.glc-offer-banner__label {
+	display: inline-block;
+	font-size: 1.1em;
+	font-weight: var(--glc-weight-bold);
+	letter-spacing: var(--glc-tracking-wider);
+	text-transform: uppercase;
+	animation: glc-offer-pulse 1.8s ease-in-out infinite;
+}
+
+@keyframes glc-offer-pulse {
+	0%,
+	100% {
+		opacity: 1;
+		transform: scale(1);
+	}
+
+	50% {
+		opacity: 0.55;
+		transform: scale(1.04);
+	}
+}
+
+@media (prefers-reduced-motion: reduce) {
+	.glc-offer-banner__label {
+		animation: none;
+	}
+}
+
+.glc-offer-banner__cta {
+	flex-shrink: 0;
+	background-color: #ffffff;
+	color: var(--glc-primary);
+	box-shadow: none;
+	text-decoration: none;
+}
+
+.glc-offer-banner__link:hover .glc-offer-banner__cta,
+.glc-offer-banner__link:focus-visible .glc-offer-banner__cta {
+	background-color: var(--glc-surface-container-low);
+	color: var(--glc-primary);
+	opacity: 1;
+}
+
+.glc-offer-banner__close {
+	position: absolute;
+	top: 50%;
+	right: 0;
+	transform: translateY(-50%);
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	width: 2.75rem;
+	height: 2.75rem;
+	padding: 0;
+	border: 0;
+	border-radius: var(--glc-radius-pill);
+	background: transparent;
+	color: var(--glc-on-primary);
+	cursor: pointer;
+	opacity: 0.85;
+	transition: opacity var(--glc-duration) var(--glc-ease), background-color var(--glc-duration) var(--glc-ease);
+}
+
+.glc-offer-banner__close:hover,
+.glc-offer-banner__close:focus-visible {
+	opacity: 1;
+	background-color: color-mix(in srgb, #ffffff 16%, transparent);
+}
+
+.glc-offer-banner__close .material-symbols-outlined {
+	font-size: 1.75rem;
+	line-height: 1;
+}
+
+@media (min-width: 768px) {
+	.glc-offer-banner__link {
+		font-size: var(--glc-text-base);
+		padding-block: 0.7rem;
+	}
+}
+
+/* ---------------------------------------------------------------------------
+ * Buttons
+ * ------------------------------------------------------------------------ */
+
+.glc-button {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	gap: 0.5rem;
+	padding: 0.75rem 2rem;
+	border: 0;
+	border-radius: var(--glc-radius-xl);
+	font-family: var(--glc-font-label);
+	font-size: var(--glc-text-base);
+	font-weight: var(--glc-weight-semibold);
+	line-height: 1.25;
+	text-align: center;
+	cursor: pointer;
+	transition: opacity var(--glc-duration) var(--glc-ease), background-color var(--glc-duration) var(--glc-ease),
+		color var(--glc-duration) var(--glc-ease), transform 100ms var(--glc-ease), filter var(--glc-duration) var(--glc-ease);
+}
+
+.glc-button:active {
+	transform: scale(0.95);
+}
+
+.glc-button--primary {
+	background-color: var(--glc-primary);
+	color: var(--glc-on-primary);
+	box-shadow: var(--glc-shadow-sm);
+}
+
+.glc-button--primary:hover,
+.glc-button--primary:focus-visible {
+	opacity: 0.9;
+	color: var(--glc-on-primary);
+}
+
+.glc-button--secondary {
+	background-color: var(--glc-surface-container-highest);
+	color: var(--glc-on-secondary-container);
+}
+
+.glc-button--secondary:hover,
+.glc-button--secondary:focus-visible {
+	background-color: var(--glc-secondary-container);
+	color: var(--glc-on-secondary-container);
+}
+
+.glc-button--ghost {
+	background-color: transparent;
+	color: var(--glc-primary);
+	padding-inline: 0.5rem;
+}
+
+.glc-button--ghost:hover,
+.glc-button--ghost:focus-visible {
+	color: var(--glc-surface-tint);
+}
+
+.glc-button--whatsapp {
+	background-color: var(--glc-whatsapp);
+	color: #ffffff;
+	box-shadow: var(--glc-shadow-md);
+}
+
+.glc-button--whatsapp:hover,
+.glc-button--whatsapp:focus-visible {
+	filter: brightness(1.1);
+	color: #ffffff;
+}
+
+/* On the green CTA panel: invert so the button stays readable. */
+.glc-cta-panel .glc-button--whatsapp {
+	background-color: #ffffff;
+	color: var(--glc-whatsapp);
+	box-shadow: none;
+}
+
+.glc-cta-panel .glc-button--whatsapp:hover,
+.glc-cta-panel .glc-button--whatsapp:focus-visible {
+	filter: none;
+	background-color: #ffffff;
+	color: var(--glc-whatsapp);
+	opacity: 0.92;
+}
+
+.glc-button--whatsapp svg {
+	width: 1.25rem;
+	height: 1.25rem;
+	fill: currentColor;
+}
+
+/* Contact Form 7 — thank-you state replaces the field stack. */
+.glc-form-thanks {
+	display: none;
+	flex-direction: column;
+	align-items: center;
+	gap: 1.25rem;
+	text-align: center;
+	padding: clamp(0.5rem, 0.25rem + 1vw, 1rem) 0;
+}
+
+/* Enquiry path: New website / Website redesign + connected URL. */
+.glc-form-path {
+	margin: 0;
+	padding: 0;
+}
+
+.glc-form-path__legend {
+	display: block;
+	margin: 0 0 0.45rem;
+	font-family: var(--glc-font-label, inherit);
+	font-size: var(--glc-text-sm, 0.875rem);
+	font-weight: var(--glc-weight-semibold, 600);
+	color: var(--glc-primary);
+}
+
+.wpcf7-form .glc-form-path .wpcf7-radio {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 0.5rem;
+}
+
+.wpcf7-form .glc-form-path .wpcf7-list-item {
+	display: block;
+	margin: 0;
+	padding: 0;
+	align-items: center;
+}
+
+.wpcf7-form .glc-form-path .wpcf7-list-item label {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	width: 100%;
+	min-height: 2.85rem;
+	padding: 0.55rem 0.65rem;
+	border: 1px solid color-mix(in srgb, var(--glc-primary) 18%, transparent);
+	border-radius: var(--glc-radius-control, 0.85rem);
+	background-color: var(--glc-surface-container-lowest, #fff);
+	color: var(--glc-primary);
+	font-family: var(--glc-font-label, inherit);
+	font-size: var(--glc-text-sm, 0.875rem);
+	font-weight: var(--glc-weight-semibold, 600);
+	line-height: 1.2;
+	text-align: center;
+	cursor: pointer;
+}
+
+.wpcf7-form .glc-form-path .wpcf7-list-item input {
+	position: absolute;
+	opacity: 0;
+	width: 1px;
+	height: 1px;
+	margin: 0;
+	pointer-events: none;
+}
+
+.wpcf7-form .glc-form-path .wpcf7-list-item:has(input:checked) label {
+	background-color: var(--glc-primary);
+	border-color: var(--glc-primary);
+	color: var(--glc-on-primary);
+}
+
+.wpcf7-form .glc-form-path .wpcf7-list-item:has(input:focus-visible) label {
+	outline: 2px solid var(--glc-primary);
+	outline-offset: 2px;
+}
+
+.wpcf7-form .glc-form-path .wpcf7-list-item-label {
+	display: inline;
+	font-size: inherit;
+	color: inherit;
+	line-height: inherit;
+}
+
+.glc-form-path__url {
+	display: none;
+}
+
+.wpcf7-form:has(input[name="your-path"][value="Website redesign"]:checked) .glc-form-path__url,
+.wpcf7-form:has(input[name="your-path[]"][value="Website redesign"]:checked) .glc-form-path__url {
+	display: block;
+}
+
+.wpcf7-form.sent .glc-form-thanks,
+.glc-form-thanks.is-visible {
+	display: flex;
+}
+
+.wpcf7-form.sent > *:not(.glc-form-thanks):not(.screen-reader-response) {
+	display: none !important;
+}
+
+.glc-form-thanks__figure {
+	margin: 0;
+	line-height: 0;
+}
+
+.glc-form-thanks__image {
+	display: block;
+	width: auto;
+	max-width: min(14rem, 55vw);
+	height: auto;
+	margin-inline: auto;
+}
+
+.glc-form-thanks__copy {
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.65rem;
+	max-width: 28rem;
+}
+
+.glc-form-thanks__eyebrow {
+	margin: 0;
+	font-family: var(--glc-font-label);
+	font-size: var(--glc-text-xs);
+	font-weight: var(--glc-weight-semibold);
+	letter-spacing: var(--glc-tracking-wider);
+	text-transform: uppercase;
+	color: var(--glc-primary);
+}
+
+.glc-form-thanks__title {
+	margin: 0;
+	font-family: var(--glc-font-headline);
+	font-size: clamp(1.35rem, 1.1rem + 1vw, 1.75rem);
+	font-weight: var(--glc-weight-extrabold);
+	line-height: var(--glc-leading-snug);
+	color: var(--glc-on-background);
+	text-wrap: balance;
+}
+
+.glc-form-thanks__text {
+	margin: 0;
+	font-size: var(--glc-text-base);
+	line-height: var(--glc-leading-relaxed);
+	color: var(--glc-secondary);
+}
+
+/* Coloured form hosts (not white panels): thank-you body copy in white. */
+.glc-cta-panel .glc-form-thanks__title,
+.glc-cta-panel .glc-form-thanks__text {
+	color: #ffffff;
+}
+
+.glc-form-thanks__actions {
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: center;
+	gap: 0.75rem;
+	margin-top: 0.5rem;
+}
+
+.glc-form-thanks__actions .glc-button {
+	min-height: 2.75rem;
+}
+
+@media (max-width: 540px) {
+	.glc-form-thanks__actions {
+		flex-direction: column;
+		width: 100%;
+	}
+
+	.glc-form-thanks__actions .glc-button {
+		width: 100%;
+		justify-content: center;
+	}
+}
+
+.glc-button--linkedin {
+	background-color: #0a66c2;
+	color: #ffffff;
+	box-shadow: var(--glc-shadow-md);
+}
+
+.glc-button--linkedin:hover,
+.glc-button--linkedin:focus-visible {
+	filter: brightness(1.08);
+	color: #ffffff;
+}
+
+.glc-button--linkedin svg {
+	width: 1.15rem;
+	height: 1.15rem;
+	fill: currentColor;
+}
+
+.glc-button--google {
+	background-color: #ffffff;
+	color: #3c4043;
+	box-shadow: var(--glc-shadow-md);
+	border: 1px solid #dadce0;
+}
+
+.glc-button--google:hover,
+.glc-button--google:focus-visible {
+	background-color: #f8f9fa;
+	color: #202124;
+}
+
+.glc-button--google:focus-visible {
+	color: #202124;
+	outline: 2px solid #4285f4;
+	outline-offset: 2px;
+}
+
+.glc-button--google svg,
+.glc-button__google-g {
+	width: 1.2rem;
+	height: 1.2rem;
+	flex-shrink: 0;
+}
+
+.glc-button--facebook {
+	background-color: #1877f2;
+	color: #ffffff;
+	box-shadow: var(--glc-shadow-md);
+}
+
+.glc-button--facebook:hover,
+.glc-button--facebook:focus-visible {
+	filter: brightness(1.08);
+	color: #ffffff;
+}
+
+.glc-button--facebook svg {
+	width: 1.15rem;
+	height: 1.15rem;
+	fill: currentColor;
+}
+
+.glc-button--sm {
+	padding: 0.5rem 1.5rem;
+	font-size: var(--glc-text-sm);
+}
+
+.glc-button--block {
+	width: 100%;
+}
+
+.glc-button .material-symbols-outlined {
+	font-size: var(--glc-text-sm);
+}
+
+/* ---------------------------------------------------------------------------
+ * Cards and panels
+ * ------------------------------------------------------------------------ */
+
+.glc-card {
+	background-color: var(--glc-surface-container-low);
+	border-radius: var(--glc-radius-xl);
+	padding: clamp(1.5rem, 1rem + 2vw, 2.5rem);
+}
+
+.glc-card--elevated {
+	background-color: var(--glc-surface-container-lowest);
+	box-shadow: var(--glc-shadow-editorial);
+}
+
+.glc-card--outlined {
+	background-color: var(--glc-surface-container-lowest);
+	border: 1px solid color-mix(in srgb, var(--glc-outline-variant) 10%, transparent);
+	box-shadow: var(--glc-shadow-editorial-soft);
+}
+
+.glc-card--primary {
+	background-color: var(--glc-primary);
+	color: var(--glc-on-primary);
+}
+
+.glc-card--primary :is(h1, h2, h3, h4, h5, h6) {
+	color: inherit;
+}
+
+.glc-card--primary p {
+	color: rgba(255, 255, 255, 0.85);
+	line-height: var(--glc-leading-relaxed);
+}
+
+.glc-card--flush {
+	display: flex;
+	flex-direction: column;
+	justify-content: space-between;
+	height: 100%;
+}
+
+.glc-card__footnote {
+	margin-top: 3rem;
+	padding-top: 2rem;
+	border-top: 1px solid color-mix(in srgb, var(--glc-outline-variant) 20%, transparent);
+}
+
+/**
+ * Swatch — the colour specimen tiles. The hex label sits bottom-left so a
+ * column of swatches reads as a single baseline.
+ */
+.glc-swatch {
+	display: flex;
+	align-items: flex-end;
+	height: 12rem;
+	padding: 1.5rem;
+	border-radius: var(--glc-radius-xl);
+	box-shadow: var(--glc-shadow-lg);
+	font-family: var(--glc-font-mono);
+	font-size: var(--glc-text-sm);
+}
+
+.glc-swatch--inset {
+	box-shadow: var(--glc-shadow-inner);
+	border: 1px solid color-mix(in srgb, var(--glc-outline-variant) 10%, transparent);
+}
+
+/* Token chip — the pill labels used for design notes. */
+.glc-chip {
+	display: inline-block;
+	padding: 0.25rem 0.75rem;
+	border-radius: var(--glc-radius-full);
+	background-color: rgba(255, 255, 255, 0.1);
+	font-family: var(--glc-font-mono);
+	font-size: var(--glc-text-micro);
+	letter-spacing: var(--glc-tracking-wider);
+	text-transform: uppercase;
+}
+
+.glc-chip--surface {
+	background-color: var(--glc-surface-container-high);
+	color: var(--glc-on-surface-variant);
+}
+
+/* Spec row — icon tile beside a label/description pair. */
+.glc-spec {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+}
+
+.glc-spec__icon {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	flex: 0 0 auto;
+	width: 3rem;
+	height: 3rem;
+	border-radius: var(--glc-radius-lg);
+	background-color: var(--glc-surface-container-high);
+	color: var(--glc-primary);
+}
+
+.glc-spec__icon--xl {
+	border-radius: var(--glc-radius-xl);
+}
+
+.glc-note {
+	margin-top: 2rem;
+	padding: 1.5rem;
+	border-radius: var(--glc-radius-lg);
+	background-color: var(--glc-surface-container-low);
+}
+
+.glc-note p {
+	margin: 0.5rem 0 0;
+	font-size: var(--glc-text-xs);
+	font-style: italic;
+	line-height: var(--glc-leading-normal);
+	color: var(--glc-secondary);
+}
+
+/* ---------------------------------------------------------------------------
+ * Hero
+ * ------------------------------------------------------------------------ */
+
+.glc-hero {
+	position: relative;
+	display: flex;
+	align-items: center;
+	overflow: hidden;
+	min-height: 24rem;
+	padding: clamp(2rem, 1rem + 4vw, 3rem);
+	border-radius: var(--glc-radius-xl);
+	background-color: var(--glc-primary-container);
+	color: #ffffff;
+}
+
+.glc-hero__media {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	opacity: 0.3;
+	mix-blend-mode: overlay;
+}
+
+.glc-hero__body {
+	position: relative;
+	z-index: 1;
+	max-width: 36rem;
+}
+
+.glc-hero__title {
+	font-family: var(--glc-font-headline);
+	font-size: clamp(1.875rem, 1.2rem + 2.8vw, var(--glc-text-4xl));
+	font-weight: var(--glc-weight-extrabold);
+	letter-spacing: var(--glc-tracking-tighter);
+	color: #ffffff;
+	margin: 0 0 1rem;
+}
+
+.glc-hero__text {
+	font-size: var(--glc-text-lg);
+	line-height: var(--glc-leading-relaxed);
+	color: rgba(255, 255, 255, 0.8);
+	max-width: none;
+}
+
+.glc-hero__meta {
+	display: flex;
+	align-items: center;
+	gap: 1rem;
+	margin-top: 2rem;
+}
+
+.glc-hero__meta-rule {
+	width: 3rem;
+	height: 1px;
+	background-color: var(--glc-primary-fixed-dim);
+}
+
+.glc-hero__meta-label {
+	font-size: var(--glc-text-micro);
+	font-weight: var(--glc-weight-bold);
+	text-transform: uppercase;
+	letter-spacing: var(--glc-tracking-widest);
+	color: var(--glc-primary-fixed);
+}
+
+/* ---------------------------------------------------------------------------
+ * Footer
+ * ------------------------------------------------------------------------ */
+
+.glc-footer {
+	background-color: var(--glc-footer-surface);
+	color: var(--glc-footer-text);
+	font-family: var(--glc-font-body);
+	font-size: var(--glc-text-sm);
+	letter-spacing: var(--glc-tracking-wide);
+}
+
+.glc-footer__primary {
+	display: flex;
+	flex-direction: column;
+	gap: 2.5rem;
+	padding-block: 4rem;
+	align-items: stretch;
+}
+
+@media (min-width: 960px) {
+	.glc-footer__primary {
+		flex-direction: row;
+		align-items: flex-start;
+		gap: clamp(2rem, 2.5vw, 3.25rem);
+	}
+}
+
+.glc-footer__brand {
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	flex: 0 0 auto;
+	width: max-content;
+	max-width: 100%;
+}
+
+.glc-footer__actions {
+	display: flex;
+	flex-direction: column;
+	flex-wrap: nowrap;
+	align-items: stretch;
+	gap: 0.75rem;
+	padding-block: 1.25rem 1.5rem;
+}
+
+.glc-footer__bar {
+	border-top: 1px solid var(--glc-footer-rule);
+}
+
+.glc-footer__actions .glc-button {
+	width: 100%;
+	max-width: 100%;
+	white-space: nowrap;
+	justify-content: center;
+}
+
+@media (min-width: 768px) {
+	.glc-footer__actions {
+		flex-direction: row;
+		flex-wrap: wrap;
+		align-items: center;
+		justify-content: flex-start;
+		gap: 0.75rem 0.85rem;
+		padding-block: 1.35rem 1.6rem;
+	}
+
+	.glc-footer__actions .glc-button {
+		width: auto;
+		white-space: nowrap;
+		text-align: left;
+		justify-content: center;
+	}
+}
+
+.glc-footer__brand-name {
+	font-size: var(--glc-text-lg);
+	font-weight: var(--glc-weight-bold);
+	color: #ffffff;
+}
+
+.glc-footer__logo {
+	display: inline-flex;
+	align-items: center;
+	align-self: flex-start;
+}
+
+/**
+ * The brand mark is a teal monogram beside a near-black wordmark, which is
+ * unreadable on the deep teal footer. Flatten it to solid white: brightness(0)
+ * takes every colour to black, then invert(1) lifts it to white, preserving
+ * the alpha channel so the lettering keeps its shape.
+ */
+.glc-footer__logo-img {
+	display: block;
+	width: auto;
+	max-width: 100%;
+	max-height: 2.5rem;
+	filter: brightness(0) invert(1);
+}
+
+.glc-footer__tagline {
+	max-width: 20rem;
+	color: var(--glc-footer-muted);
+}
+
+.glc-footer__columns {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 2rem 1.75rem;
+	min-width: 0;
+	flex: 1 1 auto;
+	width: 100%;
+}
+
+@media (min-width: 640px) {
+	.glc-footer__columns {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (min-width: 900px) {
+	.glc-footer__columns {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+
+@media (min-width: 1200px) {
+	.glc-footer__columns {
+		grid-template-columns: repeat(5, minmax(0, 1fr));
+	}
+}
+
+.glc-footer__column {
+	margin: 0;
+	padding: 0;
+	list-style: none;
+	display: flex;
+	flex-direction: column;
+	gap: 0.75rem;
+	min-width: 0;
+}
+
+.glc-footer__column-title {
+	margin-bottom: 0.5rem;
+	font-weight: var(--glc-weight-bold);
+	color: #ffffff;
+}
+
+.glc-footer__column a {
+	color: var(--glc-footer-muted);
+}
+
+.glc-footer__column a:hover,
+.glc-footer__column a:focus-visible {
+	color: #ffffff;
+}
+
+.glc-footer__bottom {
+	display: flex;
+	justify-content: center;
+	padding-block: 1.5rem;
+	border-top: 1px solid var(--glc-footer-rule);
+}
+
+.glc-footer__bottom p {
+	margin: 0;
+	max-width: none;
+	font-size: var(--glc-text-xs);
+	color: var(--glc-footer-faint);
+	text-align: center;
+}
+
+/**
+ * Service area link strip.
+ *
+ * Emitted by the glc-service-area-footer mu-plugin on `wp_footer`, so it lands
+ * outside #page and after our own footer. Its original stylesheet lives in a
+ * Restly child theme that is not installed here, so the design system adopts
+ * it: matching the footer surface makes the strip read as one continuous block
+ * rather than an orphan below it.
+ */
+.glc-footer-locations-wrap {
+	background-color: var(--glc-footer-surface);
+	color: var(--glc-footer-text);
+	border-top: 1px solid var(--glc-footer-rule);
+}
+
+.glc-footer-locations-wrap > .container {
+	width: 100%;
+	max-width: var(--glc-container);
+	margin-inline: auto;
+	padding: 2rem var(--glc-gutter-sm);
+}
+
+@media (min-width: 768px) {
+	.glc-footer-locations-wrap > .container {
+		padding-inline: var(--glc-gutter);
+	}
+}
+
+.glc-footer-locations {
+	display: grid;
+	gap: 1.75rem 2rem;
+	margin: 0;
+	padding: 0;
+}
+
+@media (min-width: 700px) {
+	.glc-footer-locations {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+}
+
+@media (min-width: 1100px) {
+	.glc-footer-locations {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+	}
+}
+
+.glc-footer-locations__hub {
+	margin: 0;
+	min-width: 0;
+}
+
+.glc-footer-locations__hub-title {
+	margin: 0 0 0.65rem;
+	font-size: var(--glc-text-sm);
+	font-weight: var(--glc-weight-bold);
+	text-transform: uppercase;
+	letter-spacing: var(--glc-tracking-wider);
+	color: #ffffff;
+}
+
+.glc-footer-locations__hub-title a {
+	color: #ffffff;
+	font-size: inherit;
+	letter-spacing: inherit;
+	text-decoration: none;
+}
+
+.glc-footer-locations__hub-title a:hover,
+.glc-footer-locations__hub-title a:focus-visible {
+	color: var(--glc-footer-muted);
+}
+
+.glc-footer-locations ul,
+.glc-footer-locations__spokes {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.35rem 1.1rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+.glc-footer-locations li {
+	margin: 0;
+}
+
+.glc-footer-locations a {
+	font-size: var(--glc-text-xs);
+	letter-spacing: var(--glc-tracking-wide);
+	color: var(--glc-footer-faint);
+	text-decoration: none;
+}
+
+.glc-footer-locations a:hover,
+.glc-footer-locations a:focus-visible {
+	color: #ffffff;
+}
+
+/* Footer widget areas inherit the same muted-on-deep-teal treatment. */
+.glc-footer .widget {
+	margin-bottom: 2rem;
+}
+
+.glc-footer .widget-title {
+	color: #ffffff;
+	font-size: var(--glc-text-sm);
+	font-weight: var(--glc-weight-bold);
+	text-transform: uppercase;
+	letter-spacing: var(--glc-tracking-wider);
+}
+
+.glc-footer .widget a {
+	color: var(--glc-footer-muted);
+}
+
+.glc-footer .widget a:hover,
+.glc-footer .widget a:focus-visible {
+	color: #ffffff;
+}
+
+/* ---------------------------------------------------------------------------
+ * reCAPTCHA v3 — hide the floating badge and keep Google's required notice
+ * in the form instead.
+ * ------------------------------------------------------------------------ */
+
+.grecaptcha-badge {
+	visibility: hidden !important;
+	opacity: 0 !important;
+	pointer-events: none !important;
+}
+
+.glc-recaptcha-notice {
+	margin: 0.85rem 0 0;
+	font-size: var(--glc-text-xs);
+	line-height: var(--glc-leading-snug);
+	color: var(--glc-secondary);
+}
+
+.glc-recaptcha-notice a {
+	color: inherit;
+	text-decoration: underline;
+	text-underline-offset: 0.12em;
+}
+
+.glc-recaptcha-notice a:hover,
+.glc-recaptcha-notice a:focus-visible {
+	color: var(--glc-primary);
+}
+
+/* ---------------------------------------------------------------------------
+ * WhatsApp FAB — occupies the bottom-right slot used by Astra's
+ * scroll-to-top control on every viewport.
+ * ------------------------------------------------------------------------ */
+
+.glc-whatsapp-fab {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	position: fixed;
+	z-index: 99;
+	right: max(1rem, env(safe-area-inset-right, 0px));
+	bottom: max(1rem, env(safe-area-inset-bottom, 0px));
+	width: 3.4rem;
+	height: 3.4rem;
+	border-radius: 50%;
+	background-color: var(--glc-whatsapp);
+	color: #ffffff;
+	box-shadow: var(--glc-shadow-lg);
+	text-decoration: none;
+}
+
+.glc-whatsapp-fab:hover,
+.glc-whatsapp-fab:focus-visible {
+	filter: brightness(1.08);
+	color: #ffffff;
+}
+
+.glc-whatsapp-fab svg {
+	width: 1.7rem;
+	height: 1.7rem;
+	fill: currentColor;
+	display: block;
+}
+
+body:has(.glc-whatsapp-fab) #ast-scroll-top,
+body:has(.glc-whatsapp-fab) .ast-scroll-top {
+	display: none !important;
+}
+
+@media (max-width: 768px) {
+	body:has(.glc-whatsapp-fab) {
+		padding-bottom: 4.75rem;
+	}
+}

@@ -1,0 +1,83 @@
+---
+/** Props: { device: "laptop" | "phone" } */
+interface Props {
+	device: "laptop" | "phone";
+}
+
+const { device } = Astro.props;
+const mod = device === "phone" ? " glc-lt--phone" : "";
+---
+
+<div class={`glc-lt glc-lt--menu${mod}`}>
+	<header class="glc-lt__nav">
+		<span class="glc-lt__brand">The Local Tavern</span>
+		<nav class="glc-lt__links">
+			<span>Home</span>
+			<span class="is-active">Menu</span>
+			<span>Events</span>
+			<span>Our Story</span>
+		</nav>
+		<span class="glc-lt__nav-cta">Book Table</span>
+	</header>
+
+	<div class="glc-lt__menu-head">
+		<p class="glc-lt__headline glc-lt__headline--ink">Our Menu</p>
+		<p class="glc-lt__lede glc-lt__lede--ink">Classics and craft selections, prepared with local ingredients.</p>
+		<div class="glc-lt__tabs">
+			<span class="is-active">Food</span>
+			<span>Drinks</span>
+		</div>
+	</div>
+
+	<div class="glc-lt__dishes">
+		<article>
+			<div>
+				<strong>Classic Steak &amp; Ale Pie</strong>
+				<span>Slow-cooked beef, suet pastry, buttered greens</span>
+			</div>
+			<em>£16.50</em>
+		</article>
+		<article>
+			<div>
+				<strong>Beer-Battered Fish &amp; Chips</strong>
+				<span>Cod, thick-cut chips, mushy peas, tartare</span>
+			</div>
+			<em>£16.00</em>
+		</article>
+		<article>
+			<div>
+				<strong>The Tavern Burger</strong>
+				<span>Aged beef, smoked cheddar, ale onions</span>
+			</div>
+			<em>£15.00</em>
+		</article>
+		<article>
+			<div>
+				<strong>Traditional Sunday Roast</strong>
+				<span>Beef, roasties, Yorkshire, proper gravy</span>
+			</div>
+			<em>£22.00</em>
+		</article>
+	</div>
+
+	<div class="glc-lt__drinks">
+		<article class="glc-lt__chip">
+			<img src="/glc/assets/images/pubs/pub-photo-pint.jpg" alt="" width="280" height="186" />
+			<div>
+				<em>On tap</em>
+				<strong>Hazy IPA</strong>
+				<span>Local Brewery Co. · 5.5%</span>
+			</div>
+		</article>
+		<article>
+			<em>Cask</em>
+			<strong>Oatmeal Stout</strong>
+			<span>£5.20</span>
+		</article>
+		<article>
+			<em>Guest</em>
+			<strong>Sour Cherry</strong>
+			<span>£5.80</span>
+		</article>
+	</div>
+</div>

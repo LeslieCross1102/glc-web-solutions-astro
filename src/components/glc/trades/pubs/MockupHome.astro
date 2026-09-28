@@ -1,0 +1,52 @@
+---
+/** Props: { device: "laptop" | "phone" } */
+interface Props {
+	device: "laptop" | "phone";
+}
+
+const { device } = Astro.props;
+const mod = device === "phone" ? " glc-lt--phone" : "";
+---
+
+<div class={`glc-lt glc-lt--home${mod}`}>
+	<header class="glc-lt__nav">
+		<span class="glc-lt__brand">The Local Tavern</span>
+		<nav class="glc-lt__links">
+			<span class="is-active">Home</span>
+			<span>Menu</span>
+			<span>Events</span>
+			<span>Our Story</span>
+		</nav>
+		<span class="glc-lt__nav-cta">Book Table</span>
+	</header>
+
+	<div class="glc-lt__hero">
+		<img class="glc-lt__hero-img" src="/glc/assets/images/pubs/pub-photo-hearth.jpg" alt="" width="1536" height="1024" />
+		<div class="glc-lt__hero-copy">
+			<span class="glc-lt__kicker">Est. 1978</span>
+			<p class="glc-lt__headline">Your Local, Your Family, Your Tavern.</p>
+			<p class="glc-lt__lede">Serving the community since 1978 with honest food, exceptional ales, and a warm hearth.</p>
+			<span class="glc-lt__btn glc-lt__btn--light">View Menu</span>
+		</div>
+	</div>
+
+	<div class="glc-lt__row">
+		<article class="glc-lt__chip">
+			<img src="/glc/assets/images/pubs/pub-photo-pint.jpg" alt="" width="280" height="186" />
+			<div>
+				<em>Local hero</em>
+				<strong>Oakwood Amber IPA</strong>
+			</div>
+		</article>
+		<article>
+			<em>What’s on</em>
+			<strong>The Great Pub Quiz</strong>
+			<span>Tuesdays · 8:00 PM</span>
+		</article>
+		<article>
+			<em>Private hire</em>
+			<strong>The Cellar Room</strong>
+			<span>Up to 80 guests</span>
+		</article>
+	</div>
+</div>

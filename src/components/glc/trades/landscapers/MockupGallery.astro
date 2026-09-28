@@ -1,0 +1,61 @@
+---
+/** Props: { device: "laptop" | "phone" } */
+interface Props {
+	device: "laptop" | "phone";
+}
+
+const { device } = Astro.props;
+const mod = device === "phone" ? " glc-ve--phone" : "";
+---
+
+<div class={`glc-ve glc-ve--gallery${mod}`}>
+	<header class="glc-ve__nav">
+		<span class="glc-ve__brand">VerdantEdge</span>
+		<nav class="glc-ve__links">
+			<span>Our Gardens</span>
+			<span>The Process</span>
+			<span class="is-active">Transformations</span>
+			<span>Contact</span>
+		</nav>
+		<span class="glc-ve__nav-cta">Consultation</span>
+	</header>
+
+	<div class="glc-ve__intro">
+		<p class="glc-ve__headline glc-ve__headline--ink">Transforming Landscapes Into Living Art</p>
+		<p class="glc-ve__lede glc-ve__lede--ink">A staggered journey through gardens we have reimagined — from barren plots to sanctuaries.</p>
+		<div class="glc-ve__tags">
+			<span class="is-active">Bespoke Design</span>
+			<span>Native Flora</span>
+			<span>Water Features</span>
+		</div>
+	</div>
+
+	<div class="glc-ve__split">
+		<div class="glc-ve__compare">
+			<img src="/glc/assets/images/landscapers/garden-photo-courtyard.jpg" alt="" width="1536" height="1024" />
+			<span class="glc-ve__compare-handle"></span>
+			<span class="glc-ve__compare-label">Hold for before</span>
+		</div>
+		<div class="glc-ve__project">
+			<em>The Hillside Retreat</em>
+			<p class="glc-ve__headline glc-ve__headline--ink">From Barren Slope to Terraced Sanctuary</p>
+			<p class="glc-ve__lede glc-ve__lede--ink">Stone steps, native planting and a garden that now holds the hillside rather than fighting it.</p>
+			<span class="glc-ve__btn glc-ve__btn--solid">View Details</span>
+		</div>
+	</div>
+
+	<div class="glc-ve__row glc-ve__row--gallery">
+		<article class="glc-ve__chip">
+			<img src="/glc/assets/images/landscapers/garden-photo-path.jpg" alt="" width="280" height="186" />
+			<div>
+				<em>Urban Oasis</em>
+				<strong>Glass &amp; Greenery</strong>
+			</div>
+		</article>
+		<article>
+			<em>Estate Revival</em>
+			<strong>The Water Garden</strong>
+			<span>Koi pond, willow, lighting</span>
+		</article>
+	</div>
+</div>

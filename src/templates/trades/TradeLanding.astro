@@ -1,0 +1,32 @@
+---
+/** Props: TemplateProps & { trade: TradeData } — port of page-service-<trade>.php */
+import SectionAreas from "../../components/glc/trades/SectionAreas.astro";
+import SectionContact from "../../components/glc/trades/SectionContact.astro";
+import SectionFeatures from "../../components/glc/trades/SectionFeatures.astro";
+import SectionFullService from "../../components/glc/trades/SectionFullService.astro";
+import SectionHero from "../../components/glc/trades/SectionHero.astro";
+import SectionProcess from "../../components/glc/trades/SectionProcess.astro";
+import SectionShowcase from "../../components/glc/trades/SectionShowcase.astro";
+import SectionStudies from "../../components/glc/trades/SectionStudies.astro";
+import type { TradeData } from "../../data/glc/trades/types";
+import SectionFaq from "../../components/glc/shared/SectionFaq.astro";
+import type { TemplateProps } from "../types";
+// import SectionPricing from "../../components/glc/services/website-design/SectionPricing.astro";
+
+interface Props extends TemplateProps {
+	trade: TradeData;
+}
+
+const { trade } = Astro.props;
+---
+
+<SectionHero trade={trade} />
+<SectionFullService trade={trade} />
+<SectionFeatures trade={trade} />
+<SectionShowcase trade={trade} />
+<SectionProcess trade={trade} />
+{/* <SectionPricing intro={trade.pricingIntro} /> */}
+<SectionAreas trade={trade} />
+<SectionStudies trade={trade} />
+<SectionFaq context={trade.key} />
+<SectionContact trade={trade} />

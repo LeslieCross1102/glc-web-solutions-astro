@@ -1,0 +1,10 @@
+---
+/** Props: TemplateProps — page-service-electricians.php */
+import { electricians } from "../../data/glc/trades/electricians";
+import type { TemplateProps } from "../types";
+import TradeLanding from "./TradeLanding.astro";
+
+type Props = TemplateProps;
+---
+
+<TradeLanding {...Astro.props} trade={electricians} />

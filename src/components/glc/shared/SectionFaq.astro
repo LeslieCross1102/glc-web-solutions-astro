@@ -1,0 +1,66 @@
+---
+// Props: { context: string (faq.php key, e.g. "home", "location", "case-bliss"); place?: string (town for "location"); url?: string (canonical page URL for FAQPage JSON-LD) }
+import { faqSections } from "../../../data/glc/faq";
+
+interface Props {
+	context: string;
+	place?: string;
+	url?: string;
+}
+
+const { context, place, url } = Astro.props;
+const raw = faqSections[context];
+const fill = (s: string) => s.replaceAll("{{place}}", place || "your area");
+const faq = raw
+	? {
+			...raw,
+			eyebrow: place ? fill(raw.eyebrow) : raw.eyebrow.replace("{{place}} questions", "Local questions"),
+			title: place ? fill(raw.title) : raw.title.replace("Website services in {{place}}", "Local website services"),
+			items: raw.items.map((item) => ({ q: fill(item.q), a: fill(item.a) })),
+		}
+	: null;
+
+const sectionId = faq?.section_id || "glc-faq";
+const titleId = `${sectionId}-title`;
+const base = (url || new URL(Astro.originPathname ?? Astro.url.pathname, Astro.url.origin).href).replace(/\/$/, "");
+const schema = faq
+	? {
+			"@context": "https://schema.org",
+			"@type": "FAQPage",
+			"@id": `${base}#faq`,
+			url: `${base}#${sectionId}`,
+			mainEntity: faq.items.map((item, i) => ({
+				"@type": "Question",
+				"@id": `${base}#faq-${i + 1}`,
+				name: item.q,
+				acceptedAnswer: { "@type": "Answer", text: item.a },
+			})),
+		}
+	: null;
+---
+
+{faq && faq.items.length > 0 && (
+	<section class="glc-home-section glc-home-section--lowest" id={sectionId} aria-labelledby={titleId}>
+		<div class="glc-container">
+			<header class="glc-home-heading glc-home-heading--center">
+				{faq.eyebrow && <span class="glc-eyebrow glc-eyebrow--micro">{faq.eyebrow}</span>}
+				<h2 class="glc-home-heading__title" id={titleId}>{faq.title}</h2>
+				{faq.intro && (
+					<div class="glc-home-heading__intro">
+						<p>{faq.intro}</p>
+					</div>
+				)}
+			</header>
+
+			<div class="glc-faq">
+				{faq.items.map((item, i) => (
+					<details class="glc-faq__item" id={`faq-${i + 1}`}>
+						<summary class="glc-faq__q">{item.q}</summary>
+						<p class="glc-faq__a">{item.a}</p>
+					</details>
+				))}
+			</div>
+		</div>
+		<script type="application/ld+json" id="glc-faq-schema" set:html={JSON.stringify(schema)} />
+	</section>
+)}

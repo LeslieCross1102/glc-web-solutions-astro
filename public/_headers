@@ -1,0 +1,24 @@
+/glc/uploads/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/glc/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+
+/glc/build/site.*
+  Cache-Control: public, max-age=31536000, immutable
+
+/glc/assets/images/*
+  Cache-Control: public, max-age=31536000
+
+/glc/icons/*
+  Cache-Control: public, max-age=31536000
+
+/favicon.ico
+  Cache-Control: public, max-age=31536000
+
+/glc/rendered/*
+  X-Robots-Tag: noindex
+  Cache-Control: public, max-age=3600
+
+/glc/build/css/*
+  X-Robots-Tag: noindex

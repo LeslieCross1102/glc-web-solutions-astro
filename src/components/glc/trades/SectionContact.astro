@@ -1,0 +1,60 @@
+---
+/** Props: { trade: TradeData } — port of service-<trade>/section-contact.php */
+import type { TradeData } from "../../../data/glc/trades/types";
+import OfferForm from "./OfferForm.astro";
+
+interface Props {
+	trade: TradeData;
+}
+
+const { trade } = Astro.props;
+const { key, contact } = trade;
+---
+
+{contact.title && (
+	<section
+		class="glc-home-section glc-home-section--surface glc-case-contact"
+		id="glc-case-contact"
+		aria-labelledby={`glc-${key}-contact-title`}
+	>
+		<div class="glc-container">
+			<div class="glc-case-contact__grid">
+				<div class="glc-case-contact__intro">
+					{contact.eyebrow && <span class="glc-eyebrow glc-eyebrow--micro">{contact.eyebrow}</span>}
+
+					<h2 class="glc-home-heading__title" id={`glc-${key}-contact-title`}>{contact.title}</h2>
+
+					{contact.lead && <p class="glc-case-contact__lead">{contact.lead}</p>}
+
+					{contact.asidePoints.length > 0 && (
+						<div class="glc-case-contact__offer">
+							{contact.asideTitle && <span class="glc-case-contact__offer-label">{contact.asideTitle}</span>}
+
+							<ul class="glc-case-brief__list">
+								{contact.asidePoints.map((point) => (
+									<li>
+										<span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+										<span>{point}</span>
+									</li>
+								))}
+							</ul>
+
+							{contact.offerUrl && (
+								<a class="glc-arrow-link" href={contact.offerUrl}>
+									{contact.offerLabel}
+									<span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+								</a>
+							)}
+						</div>
+					)}
+				</div>
+
+				<div class="glc-case-contact__form">
+					<span class="glc-eyebrow glc-eyebrow--micro">Get in touch</span>
+					<p class="glc-case-contact__form-lead">{contact.formLead}</p>
+					<OfferForm whatsappMessage={trade.whatsappMessage} />
+				</div>
+			</div>
+		</div>
+	</section>
+)}

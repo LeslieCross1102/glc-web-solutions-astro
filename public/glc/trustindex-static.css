@@ -1,0 +1,26 @@
+/* Trustindex Google reviews rendered as static markup (no third-party loader). */
+.ti-widget.ti-goog .ti-widget-container,
+.ti-widget.ti-goog .ti-widget-container * {
+	font-family: inherit;
+}
+.ti-widget.ti-goog .ti-reviews-container-wrapper {
+	flex-wrap: wrap;
+	row-gap: 16px !important;
+}
+.ti-widget.ti-goog .ti-controls,
+.ti-widget.ti-goog .ti-controls-line {
+	display: none !important;
+}
+.ti-widget.ti-goog .ti-review-content.is-expanded {
+	height: auto;
+	-webkit-line-clamp: unset;
+}
+.ti-widget.ti-goog .ti-read-more[hidden] {
+	display: none;
+}
+@media (max-width: 700px) {
+	.ti-widget.ti-goog .ti-col-2 .ti-review-item {
+		flex-basis: 100%;
+		max-width: 100%;
+	}
+}

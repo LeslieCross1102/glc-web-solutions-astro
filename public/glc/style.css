@@ -1,0 +1,266 @@
+/**
+ * Theme Name:  GLC Web Solutions
+ * Theme URI:   https://glcwebsolutions.co.uk/
+ * Description: Teal Horizon design system for GLC Web Solutions. An editorial, high-authority child theme for Astra built on Material-style colour roles, Plus Jakarta Sans headlines and Inter body copy.
+ * Author:      GLC Web Solutions
+ * Author URI:  https://glcwebsolutions.co.uk/
+ * Template:    astra
+ * Version:     1.0.0
+ * Requires at least: 6.0
+ * Requires PHP: 7.4
+ * License:     GNU General Public License v2 or later
+ * License URI: https://www.gnu.org/licenses/gpl-2.0.html
+ * Text Domain: glc
+ * Tags:        custom-colors, custom-logo, custom-menu, editor-style, full-width-template, translation-ready
+ */
+
+/*
+ * Stylesheets live in assets/css/ and are enqueued in this order by inc/enqueue.php:
+ *
+ *   1. tokens.css            Design tokens (colour roles, type scale, radii, shadows).
+ *   2. foundation.css        Base element styles, layout primitives, utilities.
+ *   3. components.css        Nav, buttons, cards, hero, chips, footer.
+ *   4. astra-integration.css Maps the tokens onto Astra's own CSS variables.
+ *
+ * Add project-specific one-offs below rather than editing the files above, so that
+ * the design system stays portable.
+ */
+
+.glc-about-story .glc-home-heading {
+	margin-bottom: 2rem;
+}
+
+.glc-about-story__heading--has-media {
+	display: grid;
+	gap: 1.5rem;
+	align-items: start;
+}
+
+@media (min-width: 768px) {
+	.glc-about-story__heading--has-media {
+		grid-template-columns: minmax(0, 1fr) minmax(0, 1.15fr);
+		gap: 2rem;
+	}
+}
+
+.glc-about-story__copy .glc-home-heading__intro {
+	margin-top: 1rem;
+	max-width: none;
+}
+
+.glc-about-story__figure {
+	margin: 0;
+}
+
+.glc-about-story__figure img {
+	display: block;
+	width: 100%;
+	height: auto;
+	border-radius: var(--glc-radius-media, 1rem);
+}
+
+.glc-about-story__figure .glc-caption {
+	margin-top: 0.7rem;
+	text-align: center;
+	font-style: italic;
+}
+
+.glc-about-story__body {
+	max-width: 46rem;
+	margin-bottom: 2rem;
+}
+
+.glc-about-story__commitments {
+	max-width: 46rem;
+	margin: 1rem 0 0;
+}
+
+.glc-about-story__commitments-title {
+	margin: 0 0 0.65rem;
+	font-family: var(--glc-font-display, inherit);
+	font-size: var(--glc-text-lg, 1.125rem);
+	font-weight: var(--glc-weight-semibold);
+}
+
+.glc-about-story__commitments-list {
+	margin: 0;
+	padding-left: 1.25rem;
+	font-size: var(--glc-text-lg, 1.125rem);
+	line-height: var(--glc-leading-relaxed, 1.6);
+}
+
+.glc-about-story__commitments-list li {
+	margin: 0 0 0.45rem;
+}
+
+.glc-about-story__commitments-list li:last-child {
+	margin-bottom: 0;
+}
+
+.glc-about-story__body p {
+	margin: 0 0 1rem;
+	font-size: var(--glc-text-lg, 1.125rem);
+	line-height: var(--glc-leading-relaxed, 1.6);
+}
+
+.glc-about-story__body p:last-child {
+	margin-bottom: 0;
+}
+
+.glc-about-story__vendors-label {
+	margin: 0 0 0.6rem;
+	font-size: var(--glc-text-sm, 0.875rem);
+	font-weight: var(--glc-weight-semibold);
+	letter-spacing: var(--glc-tracking-wide, 0.04em);
+	text-transform: uppercase;
+}
+
+.glc-about-story__vendors {
+	display: grid;
+	grid-template-columns: repeat(2, minmax(0, 1fr));
+	gap: 0.75rem;
+	margin: 0 0 2.5rem;
+	padding: 0;
+	list-style: none;
+}
+
+.glc-about-story__vendor {
+	display: flex;
+	align-items: center;
+	justify-content: center;
+	min-height: 4.75rem;
+	padding: 0.9rem 1.1rem;
+	background-color: var(--glc-surface-container-lowest, #fff);
+	border: 1px solid color-mix(in srgb, var(--glc-primary, #0f3d3e) 12%, transparent);
+	border-radius: var(--glc-radius-lg, 0.85rem);
+}
+
+.glc-about-story__vendor img {
+	display: block;
+	max-width: 8.75rem;
+	max-height: 1.85rem;
+	width: auto;
+	height: auto;
+	object-fit: contain;
+}
+
+.glc-about-story__vendor--apple img,
+.glc-about-story__vendor--adobe img {
+	max-height: 2.15rem;
+	max-width: 7.5rem;
+}
+
+.glc-about-story__vendor--telegraph img {
+	max-height: 1.55rem;
+	max-width: 9.5rem;
+}
+
+@media (min-width: 700px) {
+	.glc-about-story__vendors {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 0.9rem;
+	}
+}
+
+.glc-about-story__points {
+	display: grid;
+	gap: 1.5rem;
+	margin: 0;
+	padding: 0;
+	list-style: none;
+}
+
+@media (min-width: 768px) {
+	.glc-about-story__points {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: 2rem;
+	}
+}
+
+.glc-about-story__point strong {
+	display: block;
+	margin-bottom: 0.4rem;
+	font-family: var(--glc-font-display, inherit);
+	font-size: var(--glc-text-lg, 1.125rem);
+}
+
+.glc-about-story__point p {
+	margin: 0;
+	color: var(--glc-on-surface-variant, inherit);
+}
+
+.glc-about-aop__grid {
+	display: grid;
+	gap: 2rem;
+	align-items: center;
+}
+
+@media (min-width: 768px) {
+	.glc-about-aop__grid {
+		grid-template-columns: minmax(0, 1fr) minmax(16rem, 24rem);
+		gap: 2.5rem;
+	}
+}
+
+.glc-about-aop__logo {
+	display: inline-block;
+	margin: 0 0 1.15rem;
+	color: var(--glc-primary, #0f3d3e);
+}
+
+.glc-about-aop__logo img {
+	display: block;
+	width: 8.5rem;
+	height: auto;
+}
+
+.glc-about-aop__copy .glc-home-heading__title {
+	margin-bottom: 1rem;
+}
+
+.glc-about-aop__body {
+	max-width: 40rem;
+}
+
+.glc-about-aop__body p {
+	margin: 0 0 1rem;
+	font-size: var(--glc-text-lg, 1.125rem);
+	line-height: var(--glc-leading-relaxed, 1.6);
+}
+
+.glc-about-aop__body p:last-child {
+	margin-bottom: 0;
+}
+
+.glc-about-aop__media {
+	justify-self: center;
+	width: 100%;
+	max-width: 24rem;
+}
+
+.glc-about-aop__video {
+	position: relative;
+	aspect-ratio: 9 / 16;
+	overflow: hidden;
+	border-radius: var(--glc-radius-media, 1rem);
+	background: #000;
+}
+
+.glc-about-aop__video iframe {
+	position: absolute;
+	inset: 0;
+	width: 100%;
+	height: 100%;
+	border: 0;
+}
+
+.glc-404 {
+	padding-block: 4rem 5rem;
+}
+
+.glc-404__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.75rem;
+	margin-top: 1.75rem;
+}

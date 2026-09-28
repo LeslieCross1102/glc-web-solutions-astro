@@ -1,0 +1,756 @@
+/**
+ * Electricians landing — device mockups and cleaner section layout.
+ */
+
+.glc-electricians-hero {
+	overflow: visible;
+}
+
+.glc-electricians-hero .glc-home-hero__body {
+	padding-bottom: 1.5rem;
+}
+
+.glc-electricians-hero__stage {
+	position: relative;
+	min-width: 0;
+	padding: 0;
+}
+
+@media (min-width: 1024px) {
+	.glc-electricians-hero .glc-home-hero__body {
+		grid-column: span 5;
+		order: 1;
+	}
+
+	.glc-electricians-hero__stage {
+		grid-column: span 7;
+		order: 2;
+		align-self: start;
+	}
+}
+
+.glc-electricians-hero__devices {
+	position: relative;
+	z-index: 1;
+}
+
+.glc-electricians-hero__laptop {
+	position: relative;
+	z-index: 1;
+}
+
+.glc-electricians-hero__phone {
+	position: absolute;
+	right: 4%;
+	bottom: -8%;
+	width: min(32%, 10.75rem);
+	z-index: 2;
+	filter: drop-shadow(0 18px 28px rgba(15, 23, 42, 0.28));
+}
+
+.glc-electricians-hero__character {
+	position: relative;
+	z-index: 3;
+	width: min(48%, 12.5rem);
+	margin: -4.35rem 0 0 2%;
+	pointer-events: none;
+}
+
+.glc-electricians-hero__character img {
+	display: block;
+	width: 100%;
+	height: auto;
+	filter: drop-shadow(0 12px 18px rgba(15, 23, 42, 0.2));
+}
+
+@media (max-width: 1023px) {
+	.glc-electricians-hero__phone {
+		position: static;
+		width: min(12.5rem, 52%);
+		margin: 1.25rem auto 0;
+		bottom: auto;
+	}
+
+	.glc-electricians-hero__character {
+		width: min(11.5rem, 46%);
+		margin: -3.5rem auto 0;
+	}
+}
+
+.glc-electricians-hero--has-character .glc-home-hero__grid {
+	padding-bottom: 1.25rem;
+}
+
+.glc-electricians-service {
+	align-items: center;
+}
+
+.glc-electricians-service__device {
+	display: flex;
+	justify-content: center;
+	min-width: 0;
+}
+
+.glc-electricians-service__device .glc-device--phone {
+	max-width: 15.5rem;
+}
+
+.glc-electricians-gallery {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 2.5rem 1.75rem;
+	align-items: stretch;
+}
+
+@media (min-width: 800px) {
+	.glc-electricians-gallery {
+		grid-template-columns: repeat(2, minmax(0, 1fr));
+	}
+
+	.glc-electricians-gallery__item--feature {
+		grid-column: 1 / -1;
+	}
+}
+
+.glc-electricians-gallery__item {
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	gap: 1rem;
+	min-width: 0;
+}
+
+.glc-electricians-gallery__stage {
+	position: relative;
+	min-width: 0;
+}
+
+.glc-electricians-gallery__frame {
+	min-width: 0;
+}
+
+.glc-electricians-gallery__item--feature .glc-electricians-gallery__stage {
+	padding-bottom: 0;
+}
+
+.glc-electricians-gallery__phone {
+	display: none;
+}
+
+@media (min-width: 800px) {
+	.glc-electricians-gallery__item--feature .glc-electricians-gallery__stage {
+		padding: 0 1.5rem 5rem 0;
+	}
+
+	.glc-electricians-gallery__phone {
+		display: block;
+		position: absolute;
+		right: 1.25rem;
+		bottom: 0.75rem;
+		width: min(30%, 11rem);
+		z-index: 2;
+		filter: drop-shadow(0 18px 28px rgba(15, 23, 42, 0.28));
+	}
+}
+
+.glc-electricians-gallery__caption {
+	display: flex;
+	flex-direction: column;
+	gap: 0.35rem;
+	text-align: center;
+	margin-inline: auto;
+	max-width: 38rem;
+	padding-inline: 0.5rem;
+}
+
+.glc-electricians-gallery__item--half .glc-electricians-gallery__caption {
+	max-width: 28rem;
+}
+
+.glc-electricians-gallery__caption strong,
+.glc-electricians-phones__item figcaption strong {
+	font-family: var(--glc-font-headline);
+	font-size: var(--glc-text-lg);
+	color: var(--glc-primary);
+}
+
+.glc-electricians-gallery__caption span,
+.glc-electricians-phones__item figcaption span {
+	color: var(--glc-secondary);
+	line-height: var(--glc-leading-relaxed);
+}
+
+.glc-electricians-phones {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: 1.75rem 2rem;
+	margin-top: 2.75rem;
+	padding: 1.75rem 1.25rem 1.5rem;
+	border-radius: var(--glc-radius-card);
+	background: color-mix(in srgb, var(--glc-primary) 5%, var(--glc-surface-container-lowest));
+	justify-items: center;
+}
+
+.glc-electricians-phones__label {
+	margin: 0;
+	grid-column: 1 / -1;
+	text-align: center;
+	font-size: var(--glc-text-sm, 0.875rem);
+	font-weight: 650;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	color: var(--glc-primary);
+}
+
+@media (min-width: 720px) {
+	.glc-electricians-phones {
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		padding: 2.25rem 2rem 1.75rem;
+		gap: 1.5rem 1.5rem;
+	}
+
+	.glc-electricians-phones__label {
+		grid-column: 1 / -1;
+	}
+}
+
+.glc-electricians-phones__item {
+	margin: 0;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	gap: 0.9rem;
+	text-align: center;
+	width: 100%;
+	max-width: 16rem;
+}
+
+.glc-electricians-phones__item .glc-device--phone {
+	max-width: 12.75rem;
+	width: 100%;
+}
+
+.glc-electricians-phones__item figcaption {
+	display: flex;
+	flex-direction: column;
+	gap: 0.25rem;
+	max-width: 15rem;
+}
+
+.glc-electricians-areas {
+	display: grid;
+	gap: 1.5rem;
+	max-width: 52rem;
+	margin-inline: auto;
+}
+
+.glc-electricians-areas__list {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	gap: 0.75rem;
+}
+
+@media (min-width: 700px) {
+	.glc-electricians-areas {
+		max-width: none;
+		grid-template-columns: minmax(0, 1.05fr) minmax(0, 0.95fr);
+		gap: 2.5rem 3rem;
+		align-items: start;
+	}
+
+	.glc-electricians-areas__list {
+		grid-template-columns: 1fr;
+	}
+}
+
+.glc-electricians-areas__list li {
+	display: flex;
+	gap: 0.7rem;
+	align-items: flex-start;
+	padding: 0.85rem 1rem;
+	border-radius: var(--glc-radius-card);
+	background: var(--glc-surface-container-lowest);
+	border: 1px solid color-mix(in srgb, var(--glc-primary) 10%, transparent);
+	color: var(--glc-secondary);
+	line-height: var(--glc-leading-relaxed);
+}
+
+.glc-electricians-areas__list .material-symbols-outlined {
+	color: var(--glc-primary);
+	font-size: 1.25rem;
+	flex-shrink: 0;
+	margin-top: 0.1rem;
+}
+
+/* Device chrome ----------------------------------------------------------- */
+
+.glc-device {
+	--glc-vm-bg: #0b1220;
+	--glc-vm-panel: #131c2e;
+	--glc-vm-line: rgba(255, 255, 255, 0.08);
+	--glc-vm-text: #f4f7fb;
+	--glc-vm-muted: #93a4bb;
+	--glc-vm-blue: #3b9eff;
+	--glc-vm-warn: #f3b23a;
+	--glc-vm-danger: #e24b4b;
+	min-width: 0;
+	pointer-events: none;
+	user-select: none;
+}
+
+.glc-device--laptop {
+	background: #1b1d22;
+	border-radius: 0.9rem;
+	box-shadow: 0 22px 48px rgba(15, 23, 42, 0.18);
+	overflow: hidden;
+	border: 1px solid rgba(15, 23, 42, 0.2);
+}
+
+.glc-device__chrome {
+	display: flex;
+	align-items: center;
+	gap: 0.65rem;
+	padding: 0.45rem 0.7rem;
+	background: #262830;
+}
+
+.glc-device__dots {
+	display: flex;
+	gap: 0.28rem;
+}
+
+.glc-device__dots i {
+	width: 0.45rem;
+	height: 0.45rem;
+	border-radius: 50%;
+	background: #5c6370;
+	display: block;
+}
+
+.glc-device__dots i:first-child {
+	background: #ff6b6b;
+}
+
+.glc-device__dots i:nth-child(2) {
+	background: #ffd166;
+}
+
+.glc-device__dots i:nth-child(3) {
+	background: #6bd46b;
+}
+
+.glc-device__url {
+	flex: 1;
+	min-width: 0;
+	text-align: center;
+	font-size: 0.7rem;
+	letter-spacing: 0.02em;
+	color: #9aa3b2;
+	background: #14161c;
+	border-radius: 999px;
+	padding: 0.2rem 0.7rem;
+}
+
+.glc-device--laptop .glc-device__screen {
+	aspect-ratio: 16 / 10.2;
+	overflow: hidden;
+	container-type: inline-size;
+	background: var(--glc-vm-bg);
+}
+
+.glc-device--phone {
+	width: 100%;
+	max-width: 16rem;
+	margin-inline: auto;
+	background: #0c0e13;
+	border-radius: 1.65rem;
+	padding: 0.7rem 0.45rem 0.85rem;
+	box-shadow: 0 18px 40px rgba(15, 23, 42, 0.28);
+	border: 1px solid rgba(15, 23, 42, 0.45);
+}
+
+.glc-device__notch {
+	width: 34%;
+	height: 0.55rem;
+	margin: 0 auto 0.45rem;
+	background: #05060a;
+	border-radius: 999px;
+}
+
+.glc-device--phone .glc-device__screen {
+	aspect-ratio: 9 / 17.2;
+	overflow: hidden;
+	border-radius: 1rem;
+	container-type: inline-size;
+	background: var(--glc-vm-bg);
+}
+
+/* VoltMaster example UI --------------------------------------------------- */
+
+.glc-vm {
+	height: 100%;
+	padding: 0.85em 1em 1em;
+	color: var(--glc-vm-text);
+	font-family: var(--glc-font-body), system-ui, sans-serif;
+	font-size: clamp(10px, 2.7cqi, 15px);
+	line-height: 1.35;
+	background:
+		radial-gradient(120% 80% at 100% 0%, rgba(59, 158, 255, 0.16), transparent 55%),
+		var(--glc-vm-bg);
+	display: flex;
+	flex-direction: column;
+	gap: 0.75em;
+	overflow: hidden;
+}
+
+.glc-device--phone .glc-vm {
+	font-size: clamp(11px, 4.6cqi, 14px);
+}
+
+.glc-vm__nav {
+	display: flex;
+	align-items: center;
+	gap: 0.7em;
+	flex-shrink: 0;
+}
+
+.glc-vm__brand {
+	display: inline-flex;
+	align-items: center;
+	gap: 0.35em;
+	font-weight: 700;
+	letter-spacing: 0.01em;
+	white-space: nowrap;
+}
+
+.glc-vm__bolt {
+	width: 1.05em;
+	height: 1.05em;
+	border-radius: 0.28em;
+	background: var(--glc-vm-blue);
+	clip-path: polygon(40% 0, 100% 0, 60% 48%, 88% 48%, 0 100%, 42% 55%, 18% 55%);
+}
+
+.glc-vm__links {
+	display: none;
+	gap: 0.85em;
+	margin-left: auto;
+	color: var(--glc-vm-muted);
+	font-size: 0.78em;
+}
+
+.glc-device--laptop .glc-vm__links {
+	display: flex;
+}
+
+.glc-vm__nav-cta {
+	margin-left: auto;
+	background: var(--glc-vm-blue);
+	color: #061018;
+	font-weight: 700;
+	font-size: 0.72em;
+	padding: 0.35em 0.7em;
+	border-radius: 999px;
+	white-space: nowrap;
+}
+
+.glc-device--laptop .glc-vm__nav-cta {
+	margin-left: 0.4em;
+}
+
+.glc-vm__hero {
+	display: grid;
+	grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr);
+	gap: 0.8em;
+	align-items: center;
+	flex: 1;
+	min-height: 0;
+}
+
+.glc-vm--phone .glc-vm__hero {
+	grid-template-columns: 1fr;
+}
+
+.glc-vm__pill,
+.glc-vm__alert {
+	display: inline-flex;
+	align-items: center;
+	font-size: 0.68em;
+	font-weight: 600;
+	letter-spacing: 0.04em;
+	text-transform: uppercase;
+	padding: 0.28em 0.65em;
+	border-radius: 999px;
+	background: rgba(59, 158, 255, 0.14);
+	color: #b9dcff;
+	margin-bottom: 0.45em;
+}
+
+.glc-vm__alert {
+	background: rgba(226, 75, 75, 0.18);
+	color: #ffc4c4;
+}
+
+.glc-vm__headline {
+	margin: 0 0 0.4em;
+	font-family: var(--glc-font-headline), system-ui, sans-serif;
+	font-size: 1.35em;
+	font-weight: 750;
+	line-height: 1.15;
+	letter-spacing: -0.03em;
+}
+
+.glc-vm__lede {
+	margin: 0 0 0.7em;
+	color: var(--glc-vm-muted);
+	font-size: 0.82em;
+	max-width: 36em;
+}
+
+.glc-vm__actions {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4em;
+}
+
+.glc-vm__btn {
+	display: inline-flex;
+	align-items: center;
+	justify-content: center;
+	padding: 0.45em 0.8em;
+	border-radius: 999px;
+	font-size: 0.78em;
+	font-weight: 700;
+	white-space: nowrap;
+}
+
+.glc-vm__btn--primary {
+	background: var(--glc-vm-blue);
+	color: #061018;
+}
+
+.glc-vm__btn--warn {
+	background: var(--glc-vm-warn);
+	color: #1a1408;
+}
+
+.glc-vm__btn--wide {
+	width: 100%;
+	max-width: 22em;
+}
+
+.glc-vm__photo {
+	margin: 0;
+	position: relative;
+	border-radius: 0.7em;
+	overflow: hidden;
+	min-height: 0;
+	height: 100%;
+}
+
+.glc-vm__photo img {
+	display: block;
+	width: 100%;
+	height: 100%;
+	object-fit: cover;
+	object-position: 50% 18%;
+}
+
+.glc-vm__photo figcaption {
+	position: absolute;
+	left: 0.55em;
+	bottom: 0.55em;
+	background: rgba(8, 12, 20, 0.82);
+	color: #fff;
+	font-size: 0.62em;
+	font-weight: 600;
+	padding: 0.3em 0.55em;
+	border-radius: 0.4em;
+}
+
+.glc-vm--phone .glc-vm__photo {
+	height: 8.5em;
+}
+
+.glc-vm__trust {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.4em;
+	color: var(--glc-vm-muted);
+	font-size: 0.68em;
+	letter-spacing: 0.08em;
+	text-transform: uppercase;
+	flex-shrink: 0;
+}
+
+.glc-vm__trust span {
+	border: 1px solid var(--glc-vm-line);
+	border-radius: 0.35em;
+	padding: 0.25em 0.5em;
+}
+
+.glc-vm__cards,
+.glc-vm__faults {
+	display: grid;
+	grid-template-columns: repeat(3, minmax(0, 1fr));
+	gap: 0.45em;
+	flex-shrink: 0;
+}
+
+.glc-vm__cards article,
+.glc-vm__faults article,
+.glc-vm__quote-types article {
+	background: var(--glc-vm-panel);
+	border: 1px solid var(--glc-vm-line);
+	border-radius: 0.55em;
+	padding: 0.55em 0.6em;
+	display: flex;
+	flex-direction: column;
+	gap: 0.15em;
+}
+
+.glc-vm__cards strong,
+.glc-vm__faults strong,
+.glc-vm__quote-types strong {
+	font-size: 0.82em;
+}
+
+.glc-vm__cards span,
+.glc-vm__faults span,
+.glc-vm__quote-types span {
+	color: var(--glc-vm-muted);
+	font-size: 0.7em;
+}
+
+.glc-vm__cards-urgent {
+	background: #3a2418;
+	border-color: rgba(243, 178, 58, 0.35);
+}
+
+.glc-vm--phone .glc-vm__cards {
+	grid-template-columns: 1fr;
+}
+
+.glc-vm--emergency .glc-vm__centre {
+	text-align: center;
+	display: flex;
+	flex-direction: column;
+	align-items: center;
+	justify-content: center;
+	flex: 1;
+	padding: 0.4em 0.6em;
+}
+
+.glc-vm__faults {
+	grid-template-columns: repeat(4, minmax(0, 1fr));
+}
+
+.glc-vm--phone .glc-vm__faults {
+	grid-template-columns: 1fr 1fr;
+}
+
+.glc-vm__fault-ico {
+	font-size: 1em;
+	line-height: 1;
+}
+
+.glc-vm__quote {
+	display: grid;
+	grid-template-columns: minmax(0, 1.4fr) minmax(0, 0.8fr);
+	gap: 0.7em;
+	align-items: start;
+	flex: 1;
+	min-height: 0;
+}
+
+.glc-vm--phone .glc-vm__quote {
+	grid-template-columns: 1fr;
+}
+
+.glc-vm__steps {
+	display: flex;
+	flex-wrap: wrap;
+	gap: 0.35em;
+	margin: 0.55em 0 0.7em;
+	font-size: 0.68em;
+	color: var(--glc-vm-muted);
+}
+
+.glc-vm__steps span {
+	padding: 0.2em 0.5em;
+	border-radius: 999px;
+	border: 1px solid var(--glc-vm-line);
+}
+
+.glc-vm__steps .is-active {
+	background: var(--glc-vm-blue);
+	border-color: transparent;
+	color: #061018;
+	font-weight: 700;
+}
+
+.glc-vm__quote-types {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0.45em;
+	margin-bottom: 0.55em;
+}
+
+.glc-vm--phone .glc-vm__quote-types {
+	grid-template-columns: 1fr;
+}
+
+.glc-vm__quote-types .is-active {
+	border-color: var(--glc-vm-blue);
+	box-shadow: inset 0 0 0 1px var(--glc-vm-blue);
+}
+
+.glc-vm__fields {
+	display: grid;
+	grid-template-columns: 1fr 1fr;
+	gap: 0.4em;
+	margin-bottom: 0.65em;
+}
+
+.glc-vm__fields span {
+	display: block;
+	background: #0a101c;
+	border: 1px solid var(--glc-vm-line);
+	border-radius: 0.45em;
+	padding: 0.55em 0.6em;
+	color: #6f7f96;
+	font-size: 0.72em;
+}
+
+.glc-vm--phone .glc-vm__fields {
+	grid-template-columns: 1fr;
+}
+
+.glc-vm__quote-side {
+	background: #2a1b12;
+	border: 1px solid rgba(243, 178, 58, 0.28);
+	border-radius: 0.7em;
+	padding: 0.8em 0.75em;
+	display: flex;
+	flex-direction: column;
+	gap: 0.45em;
+}
+
+.glc-vm__quote-side p {
+	margin: 0;
+	color: #e7d2b5;
+	font-size: 0.75em;
+}
+
+.glc-vm__btn--warn {
+	background: var(--glc-vm-warn);
+	color: #1a1408;
+}
+
+@media (max-width: 799px) {
+	.glc-electricians-hero .glc-home-hero__title {
+		max-width: 20ch;
+	}
+}

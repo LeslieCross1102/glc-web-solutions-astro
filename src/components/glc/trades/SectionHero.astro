@@ -1,0 +1,85 @@
+---
+/** Props: { trade: TradeData } — port of service-<trade>/section-hero.php */
+import type { TradeData } from "../../../data/glc/trades/types";
+import { whatsappNumber, whatsappUrl } from "../../../data/glc/trades/shared";
+import Device from "./Device.astro";
+import TrustindexBadge from "./TrustindexBadge.astro";
+import WhatsappStrap from "../shared/WhatsappStrap.astro";
+
+interface Props {
+	trade: TradeData;
+}
+
+const { trade } = Astro.props;
+const { hero, key } = trade;
+const hasWhatsapp = hero.showWhatsapp && Boolean(whatsappNumber);
+const heroClass = [
+	"glc-home-hero glc-case-study-hero",
+	`glc-${key}-hero`,
+	hasWhatsapp ? "glc-home-hero--has-strap" : "",
+	hero.character.src ? `glc-${key}-hero--has-character` : "",
+]
+	.filter(Boolean)
+	.join(" ");
+---
+
+<section class={heroClass}>
+	<div class="glc-container glc-home-hero__grid">
+		<div class="glc-home-hero__body">
+			{hero.eyebrow && <span class="glc-eyebrow glc-eyebrow--micro">{hero.eyebrow}</span>}
+
+			<h1 class="glc-home-hero__title">
+				{hero.titleLead}
+				{hero.titleAccent && <em>{hero.titleAccent}</em>}
+			</h1>
+
+			{hero.lead && <p class="glc-home-hero__lead">{hero.lead}</p>}
+
+			<TrustindexBadge />
+
+			<div class="glc-home-hero__actions">
+				{hero.primaryCta.url && (
+					<a class="glc-button glc-button--primary" href={hero.primaryCta.url}>
+						{hero.primaryCta.label}
+					</a>
+				)}
+
+				{hero.secondaryCta.url && (
+					<a class="glc-button glc-button--secondary" href={hero.secondaryCta.url}>
+						{hero.secondaryCta.label}
+					</a>
+				)}
+			</div>
+		</div>
+
+		<div class={`glc-${key}-hero__stage`} aria-hidden="true">
+			<div class={`glc-${key}-hero__devices`}>
+				<div class={`glc-${key}-hero__laptop`}>
+					<Device trade={trade} device="laptop" screen="home" />
+				</div>
+				<div class={`glc-${key}-hero__phone`}>
+					<Device trade={trade} device="phone" screen="home" />
+				</div>
+			</div>
+			{hero.character.src && (
+				<figure class={`glc-${key}-hero__character`}>
+					<img
+						src={hero.character.src}
+						alt=""
+						width={hero.character.width}
+						height={hero.character.height}
+						decoding="async"
+					/>
+				</figure>
+			)}
+		</div>
+	</div>
+
+	{hero.showWhatsapp && (
+		<WhatsappStrap
+			url={whatsappUrl(trade.whatsappMessage)}
+			mascotSrc="/glc/assets/images/gareth-offer-hero.png"
+			mascotAlt="Gareth illustration"
+		/>
+	)}
+</section>

@@ -1,0 +1,50 @@
+---
+/** Props: { trade: TradeData, device: "laptop" | "phone", screen: string, class?: string } — port of service-<trade>/device.php */
+import type { TradeData } from "../../../data/glc/trades/types";
+import ElectriciansEmergency from "./electricians/MockupEmergency.astro";
+import ElectriciansHome from "./electricians/MockupHome.astro";
+import ElectriciansQuote from "./electricians/MockupQuote.astro";
+import LandscapersEstimator from "./landscapers/MockupEstimator.astro";
+import LandscapersGallery from "./landscapers/MockupGallery.astro";
+import LandscapersHome from "./landscapers/MockupHome.astro";
+import PubsEvents from "./pubs/MockupEvents.astro";
+import PubsHome from "./pubs/MockupHome.astro";
+import PubsMenu from "./pubs/MockupMenu.astro";
+
+interface Props {
+	trade: TradeData;
+	device: string;
+	screen: string;
+	class?: string;
+}
+
+const { trade, class: extraClass = "" } = Astro.props;
+const device = Astro.props.device === "phone" ? "phone" : "laptop";
+const screen = trade.screens.includes(Astro.props.screen) ? Astro.props.screen : "home";
+
+const mockups = {
+	electricians: { home: ElectriciansHome, emergency: ElectriciansEmergency, quote: ElectriciansQuote },
+	pubs: { home: PubsHome, events: PubsEvents, menu: PubsMenu },
+	landscapers: { home: LandscapersHome, gallery: LandscapersGallery, estimator: LandscapersEstimator },
+} as const;
+
+const Mockup = (mockups[trade.key] as Record<string, typeof ElectriciansHome>)[screen];
+const classes = ["glc-device", `glc-device--${device}`, trade.deviceClass, extraClass].filter(Boolean).join(" ");
+---
+
+<div class={classes} aria-hidden="true">
+	{device === "laptop" ? (
+		<div class="glc-device__chrome">
+			<span class="glc-device__dots" aria-hidden="true">
+				<i></i><i></i><i></i>
+			</span>
+			<span class="glc-device__url">{trade.urlLabel}</span>
+		</div>
+	) : (
+		<div class="glc-device__notch"></div>
+	)}
+
+	<div class="glc-device__screen">
+		<Mockup device={device} />
+	</div>
+</div>

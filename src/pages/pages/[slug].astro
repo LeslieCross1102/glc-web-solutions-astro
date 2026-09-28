@@ -7,6 +7,9 @@ import {
 } from "emdash";
 import { PortableText } from "emdash/ui";
 import Base from "../../layouts/Base.astro";
+import { resolveTemplate } from "../../templates";
+import { fallbackDescription, getRenderedPage } from "../../rendered";
+import RenderedBody from "../../components/glc/RenderedBody.astro";
 import { resolveBlogSiteIdentity } from "../../utils/site-identity";
 
 const slug = decodeSlug(Astro.params.slug);
@@ -30,6 +33,13 @@ const seo = getSeoMeta(page, {
 	siteUrl: Astro.url.origin,
 	path: Astro.originPathname,
 });
+
+const pageTitle = typeof page.data.title === "string" ? page.data.title : "";
+const matched = resolveTemplate({ slug, title: pageTitle, path: Astro.originPathname });
+const rendered = getRenderedPage(Astro.originPathname);
+const template = matched && (matched.replaceRendered || !rendered) ? matched : null;
+const Template = template?.component;
+const renderedPage = template ? null : rendered;
 ---
 
 <Base
@@ -37,11 +47,20 @@ const seo = getSeoMeta(page, {
 	exactTitle={hasSeoTitle}
 	pageTitle={seo.ogTitle}
 	image={seo.ogImage}
-	description={seo.description}
+	description={seo.description || rendered?.description || fallbackDescription(rendered)}
 	canonical={seo.canonical}
 	robots={seo.robots}
 	content={{ collection: "pages", id: page.data.id, slug }}
+	bodyClass={template?.bodyClass ?? renderedPage?.bodyClass}
+	trade={template?.trade ?? renderedPage?.trade ?? undefined}
+	sections={renderedPage ? renderedPage.sections : true}
+	renderedKey={renderedPage?.key}
 >
+	{Template ? (
+		<Template slug={slug} title={pageTitle} path={Astro.originPathname} />
+	) : renderedPage ? (
+		<RenderedBody page={renderedPage} />
+	) : (
 	<article class="page-article">
 		<header class="page-header">
 			<h1 class="page-title" {...page.edit.title}>{page.data.title}</h1>
@@ -51,6 +70,7 @@ const seo = getSeoMeta(page, {
 			<PortableText value={page.data.content} />
 		</div>
 	</article>
+	)}
 </Base>
 
 <style>

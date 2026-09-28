@@ -1,0 +1,10 @@
+---
+/** Props: TemplateProps — page-service-pubs.php */
+import { pubs } from "../../data/glc/trades/pubs";
+import type { TemplateProps } from "../types";
+import TradeLanding from "./TradeLanding.astro";
+
+type Props = TemplateProps;
+---
+
+<TradeLanding {...Astro.props} trade={pubs} />

@@ -1,0 +1,10 @@
+---
+/** Props: TemplateProps — page-service-landscapers.php */
+import { landscapers } from "../../data/glc/trades/landscapers";
+import type { TemplateProps } from "../types";
+import TradeLanding from "./TradeLanding.astro";
+
+type Props = TemplateProps;
+---
+
+<TradeLanding {...Astro.props} trade={landscapers} />

@@ -1,0 +1,69 @@
+---
+// Props: { tier: PriceTier } — same keys as the PHP tier array (id, eyebrow, title, price, period, price_secondary, period_secondary, lead, features, cta {url,label}, featured, layout)
+export interface PriceTier {
+	id?: string;
+	eyebrow?: string;
+	title?: string;
+	price?: string;
+	period?: string;
+	price_secondary?: string;
+	period_secondary?: string;
+	lead?: string;
+	features?: string[];
+	cta?: { url?: string; label?: string };
+	featured?: boolean;
+	layout?: string;
+}
+
+interface Props {
+	tier: PriceTier;
+}
+
+const { tier } = Astro.props;
+const featured = Boolean(tier.featured);
+const managed = tier.layout === "managed";
+const cls = ["glc-price-card", featured && "glc-price-card--featured", managed && "glc-price-card--managed"]
+	.filter(Boolean)
+	.join(" ");
+const id = tier.id ? `glc-price-${tier.id.replace(/[^A-Za-z0-9_-]/g, "")}` : undefined;
+---
+
+<article class={cls} id={id}>
+	{tier.eyebrow && <span class="glc-eyebrow glc-eyebrow--micro">{tier.eyebrow}</span>}
+
+	{tier.title && <h3 class="glc-price-card__title">{tier.title}</h3>}
+
+	{tier.price && (
+		<div class={`glc-price-card__price${tier.price_secondary ? " glc-price-card__price--split" : ""}`}>
+			<div>
+				<span class="glc-price-card__amount">{tier.price}</span>
+				{tier.period && <span class="glc-price-card__period">{tier.period}</span>}
+			</div>
+			{tier.price_secondary && (
+				<div>
+					<span class="glc-price-card__amount glc-price-card__amount--secondary">{tier.price_secondary}</span>
+					{tier.period_secondary && <span class="glc-price-card__period">{tier.period_secondary}</span>}
+				</div>
+			)}
+		</div>
+	)}
+
+	{tier.lead && <p class="glc-price-card__lead">{tier.lead}</p>}
+
+	{tier.features && tier.features.length > 0 && (
+		<ul class="glc-price-card__features">
+			{tier.features.map((feature) => (
+				<li>
+					<span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+					<span>{feature}</span>
+				</li>
+			))}
+		</ul>
+	)}
+
+	{tier.cta?.url && (
+		<a class={`glc-button ${featured || managed ? "glc-button--primary" : "glc-button--secondary"}`} href={tier.cta.url}>
+			{tier.cta.label}
+		</a>
+	)}
+</article>

@@ -1,0 +1,22 @@
+---
+/** Props: none — static hero rating fallback from glc_trustindex_widget('hero') */
+import { trustindexScore } from "../../../data/glc/trades/shared";
+---
+
+<div class="glc-trustindex glc-trustindex--hero">
+	<div class="glc-trustindex-badge" role="img" aria-label={`Google rating ${trustindexScore} out of 5`}>
+		<img
+			class="glc-trustindex-badge__google"
+			src="https://cdn.trustindex.io/assets/platform/Google/icon.svg"
+			alt=""
+			width="30"
+			height="30"
+			decoding="async"
+			aria-hidden="true"
+		/>
+		<span class="glc-trustindex-badge__stars" aria-hidden="true">
+			{[1, 2, 3, 4, 5].map(() => <span class="glc-trustindex-badge__star is-full"></span>)}
+		</span>
+		<span class="glc-trustindex-badge__score" aria-hidden="true">{trustindexScore}</span>
+	</div>
+</div>

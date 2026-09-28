@@ -1,0 +1,26 @@
+---
+/**
+ * GLC design system CSS, inlined. scripts/optimise.mjs bundles the WordPress + theme sheets in their
+ * enqueue order (fonts → WP/Astra → tokens → foundation → components → astra-integration → [home] →
+ * [trade] → style.css → WP extras), purges each rendered page against its own markup and minifies it.
+ */
+import assets from "../../generated/assets.json";
+import { loadPageCss } from "../../rendered";
+
+interface Props {
+	/** Rendered page key: inlines that page's purged sheet */
+	renderedKey?: string | null;
+	/** Section layouts (home, location, service, about…) share home.css */
+	sections?: boolean;
+	trade?: "electricians" | "pubs" | "landscapers";
+}
+
+const { renderedKey, sections = true, trade } = Astro.props;
+const css = await loadPageCss(Astro.url, { key: renderedKey, sections, trade });
+---
+
+{assets.preload.map((href) => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin="anonymous" />)}
+<style is:inline set:html={css} />
+<link rel="icon" href="/glc/icons/icon-32.png" sizes="32x32" />
+<link rel="icon" href="/glc/icons/icon-192.png" sizes="192x192" />
+<link rel="apple-touch-icon" href="/glc/icons/icon-180.png" />

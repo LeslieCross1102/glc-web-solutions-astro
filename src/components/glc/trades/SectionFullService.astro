@@ -1,0 +1,53 @@
+---
+/** Props: { trade: TradeData } — port of service-<trade>/section-full-service.php */
+import type { TradeData } from "../../../data/glc/trades/types";
+import Device from "./Device.astro";
+
+interface Props {
+	trade: TradeData;
+}
+
+const { trade } = Astro.props;
+const { key, fullService: block } = trade;
+---
+
+{block.title && (
+	<section
+		class="glc-home-section glc-home-section--lowest"
+		id={`glc-${key}-service`}
+		aria-labelledby={`glc-${key}-service-title`}
+	>
+		<div class="glc-container">
+			<div class={`glc-case-brief glc-case-brief--with-media glc-${key}-service`}>
+				<div class="glc-case-brief__content">
+					<header class="glc-home-heading">
+						{block.eyebrow && <span class="glc-eyebrow glc-eyebrow--micro">{block.eyebrow}</span>}
+
+						<h2 class="glc-home-heading__title" id={`glc-${key}-service-title`}>{block.title}</h2>
+
+						{block.lead && (
+							<div class="glc-home-heading__intro">
+								<p>{block.lead}</p>
+							</div>
+						)}
+					</header>
+
+					{block.points.length > 0 && (
+						<ul class="glc-case-brief__list">
+							{block.points.map((point) => (
+								<li>
+									<span class="material-symbols-outlined" aria-hidden="true">check_circle</span>
+									<span>{point}</span>
+								</li>
+							))}
+						</ul>
+					)}
+				</div>
+
+				<div class={`glc-${key}-service__device`} aria-hidden="true">
+					<Device trade={trade} device="phone" screen={block.screen} />
+				</div>
+			</div>
+		</div>
+	</section>
+)}

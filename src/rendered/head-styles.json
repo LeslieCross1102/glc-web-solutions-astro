@@ -1,0 +1,19 @@
+{
+	"before": [
+		"/glc/wp/wp-img-auto-sizes-contain-inline-css.css",
+		"/glc/wp/astra-theme-css-css.css",
+		"/glc/wp/astra-theme-css-inline-css.css",
+		"/glc/wp/site-designer-shared-pattern-classes-inline-css.css",
+		"/glc/wp/contact-form-7-css.css",
+		"/glc/wp/astra-contact-form-7-css.css",
+		"/glc/wp/wp-theme-css.css",
+		"/glc/wp/wp-components-css.css",
+		"/glc/wp/godaddy-styles-css.css",
+		"/glc/wp/glc-restly-child-extras-css.css"
+	],
+	"after": [
+		"/glc/wp/inline-74787.css",
+		"/glc/wp/wp-site-designer-contrast-fallback.css",
+		"/glc/wp/site-designer-logo-constraints.css"
+	]
+}

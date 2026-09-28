@@ -14,6 +14,7 @@ import PostCard from "../../components/PostCard.astro";
 import { getReadingTime } from "../../utils/reading-time";
 import { resolveBlogSiteIdentity } from "../../utils/site-identity";
 import { contentUrl } from "../../utils/content-url";
+import { getRenderedPage, loadRenderedHtml } from "../../rendered";
 
 const slug = decodeSlug(Astro.params.slug);
 
@@ -103,13 +104,40 @@ const publishDate =
 		month: "long",
 		day: "numeric",
 	}) ?? null;
+
+const postBody = JSON.parse(
+	JSON.stringify(post.data.content ?? []).replaceAll(
+		'src=\\"https://glcwebsolutions.co.uk/wp-content/uploads/2020/10/glc-web-solutions-logo-2020-medium.png\\"',
+		'src=\\"/glc/uploads/glc-web-solutions-logo-2020-medium-w440.webp\\" srcset=\\"/glc/uploads/glc-web-solutions-logo-2020-medium-w220.webp 220w, /glc/uploads/glc-web-solutions-logo-2020-medium-w360.webp 360w, /glc/uploads/glc-web-solutions-logo-2020-medium-w440.webp 440w\\" sizes=\\"(max-width: 1100px) 199px, 218px\\" width=\\"400\\" height=\\"74\\" decoding=\\"async\\"',
+	),
+);
+
+function openingText(blocks: unknown): string | null {
+	if (!Array.isArray(blocks)) return null;
+	for (const block of blocks as Array<{ _type?: string; style?: string; children?: Array<{ text?: string }> }>) {
+		if (block._type !== "block" || (block.style && block.style !== "normal")) continue;
+		const text = (block.children ?? []).map((c) => c.text ?? "").join("").replace(/\s+/g, " ").trim();
+		if (text.length < 70) continue;
+		return text.length <= 158 ? text : `${text.slice(0, 155).replace(/\s+\S*$/, "")}…`;
+	}
+	return null;
+}
+const description =
+	seo.description ||
+	(typeof post.data.excerpt === "string" && post.data.excerpt.trim()) ||
+	openingText(post.data.content);
+
+const rendered = getRenderedPage(Astro.originPathname);
+const renderedParts = rendered
+	? (await loadRenderedHtml(rendered, Astro.url)).split("<!--glc-post-body-->")
+	: null;
 ---
 
 <Base
 	title={seo.title}
 	exactTitle={hasSeoTitle}
 	pageTitle={seo.ogTitle}
-	description={seo.description}
+	description={description}
 	image={seo.ogImage}
 	canonical={seo.canonical}
 	robots={seo.robots}
@@ -117,7 +145,17 @@ const publishDate =
 	publishedTime={post.data.publishedAt?.toISOString() ?? null}
 	modifiedTime={post.data.updatedAt.toISOString()}
 	content={{ collection: "posts", id: post.data.id, slug }}
+	bodyClass={rendered?.bodyClass}
+	sections={rendered ? rendered.sections : true}
+	renderedKey={renderedParts?.length === 2 ? rendered?.key : null}
 >
+	{renderedParts && renderedParts.length === 2 ? (
+		<>
+			<Fragment set:html={renderedParts[0]} />
+			<PortableText value={postBody} />
+			<Fragment set:html={renderedParts[1]} />
+		</>
+	) : (<>
 	<article class="article">
 		{/* Hero: Full-width featured image */}
 		{
@@ -284,6 +322,7 @@ const publishDate =
 			</section>
 		)
 	}
+	</>)}
 
 	<script>
 		// Build table of contents from h2/h3 headings

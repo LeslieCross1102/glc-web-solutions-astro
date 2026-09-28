@@ -12,7 +12,9 @@
     "build": "astro build",
     "preview": "astro preview",
     "deploy": "astro build && wrangler deploy",
-    "typecheck": "astro check"
+    "typecheck": "astro check",
+    "optimise": "node scripts/optimise.mjs",
+    "fonts": "python3 scripts/fetch-fonts.py"
   },
   "dependencies": {
     "@astrojs/cloudflare": "^14.3.1",
@@ -26,6 +28,7 @@
   "devDependencies": {
     "@astrojs/check": "^0.9.10",
     "@cloudflare/workers-types": "^5.20260820.1",
+    "purgecss": "^7.0.2",
     "wrangler": "^4.125.0"
   }
 }

@@ -1,0 +1,48 @@
+---
+/** Props: { trade: TradeData } — port of service-<trade>/section-features.php */
+import type { TradeData } from "../../../data/glc/trades/types";
+
+interface Props {
+	trade: TradeData;
+}
+
+const { trade } = Astro.props;
+const { key, features: items, featuresIntro: intro } = trade;
+---
+
+{items.length > 0 && (
+	<section
+		class="glc-home-section glc-home-section--surface"
+		id={`glc-${key}-features`}
+		aria-labelledby={`glc-${key}-features-title`}
+	>
+		<div class="glc-container">
+			<header class="glc-home-heading glc-home-heading--center">
+				{intro.eyebrow && <span class="glc-eyebrow glc-eyebrow--micro">{intro.eyebrow}</span>}
+
+				<h2 class="glc-home-heading__title" id={`glc-${key}-features-title`}>{intro.title}</h2>
+
+				{intro.lead && (
+					<div class="glc-home-heading__intro">
+						<p>{intro.lead}</p>
+					</div>
+				)}
+			</header>
+
+			<div class={`glc-pillar-grid glc-pillar-grid--offerings glc-${key}-features`}>
+				{items.map((item) => (
+					<article class="glc-pillar">
+						{item.icon && (
+							<span class="glc-pillar__icon">
+								<span class="material-symbols-outlined" aria-hidden="true">{item.icon}</span>
+							</span>
+						)}
+
+						<h3 class="glc-pillar__title">{item.title}</h3>
+						<p class="glc-pillar__text">{item.text}</p>
+					</article>
+				))}
+			</div>
+		</div>
+	</section>
+)}

@@ -1,0 +1,46 @@
+---
+/** Props: { trade: TradeData } — port of service-<trade>/section-areas.php */
+import type { TradeData } from "../../../data/glc/trades/types";
+
+interface Props {
+	trade: TradeData;
+}
+
+const { trade } = Astro.props;
+const { key, areas } = trade;
+---
+
+{areas.title && (
+	<section
+		class="glc-home-section glc-home-section--lowest"
+		id={`glc-${key}-areas`}
+		aria-labelledby={`glc-${key}-areas-title`}
+	>
+		<div class="glc-container">
+			<div class={`glc-${key}-areas`}>
+				<header class="glc-home-heading">
+					{areas.eyebrow && <span class="glc-eyebrow glc-eyebrow--micro">{areas.eyebrow}</span>}
+
+					<h2 class="glc-home-heading__title" id={`glc-${key}-areas-title`}>{areas.title}</h2>
+
+					{areas.lead && (
+						<div class="glc-home-heading__intro">
+							<p>{areas.lead}</p>
+						</div>
+					)}
+				</header>
+
+				{areas.places.length > 0 && (
+					<ul class={`glc-${key}-areas__list`}>
+						{areas.places.map((place) => (
+							<li>
+								<span class="material-symbols-outlined" aria-hidden="true">location_on</span>
+								<span>{place}</span>
+							</li>
+						))}
+					</ul>
+				)}
+			</div>
+		</div>
+	</section>
+)}

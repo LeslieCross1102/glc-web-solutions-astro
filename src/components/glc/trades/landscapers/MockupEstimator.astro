@@ -1,0 +1,64 @@
+---
+/** Props: { device: "laptop" | "phone" } */
+interface Props {
+	device: "laptop" | "phone";
+}
+
+const { device } = Astro.props;
+const mod = device === "phone" ? " glc-ve--phone" : "";
+---
+
+<div class={`glc-ve glc-ve--estimator${mod}`}>
+	<header class="glc-ve__nav">
+		<span class="glc-ve__brand">VerdantEdge</span>
+		<nav class="glc-ve__links">
+			<span>Our Gardens</span>
+			<span>The Process</span>
+			<span>Transformations</span>
+			<span>Contact</span>
+		</nav>
+		<span class="glc-ve__nav-cta">Consultation</span>
+	</header>
+
+	<div class="glc-ve__intro glc-ve__intro--center">
+		<p class="glc-ve__headline glc-ve__headline--ink">The Estimator</p>
+		<p class="glc-ve__lede glc-ve__lede--ink">Adjust the parameters to preview the investment required for your sanctuary.</p>
+	</div>
+
+	<div class="glc-ve__est">
+		<div class="glc-ve__est-inputs">
+			<article>
+				<em>Garden Scale</em>
+				<strong>1,000 sq ft</strong>
+				<span class="glc-ve__slider"><i></i></span>
+				<small>Intimate courtyard → Expansive estate</small>
+			</article>
+			<article>
+				<em>Botanical Density</em>
+				<div class="glc-ve__pills">
+					<span>Minimalist</span>
+					<span class="is-active">Balanced</span>
+					<span>Lush Canopy</span>
+				</div>
+			</article>
+			<article>
+				<em>Primary Materials</em>
+				<ul class="glc-ve__checks">
+					<li class="is-checked">Natural Stone Paving</li>
+					<li class="is-checked">Premium Turf</li>
+					<li>Bespoke Woodwork</li>
+				</ul>
+			</article>
+		</div>
+		<aside class="glc-ve__est-summary">
+			<span>Projected investment</span>
+			<strong>£25,000</strong>
+			<ul>
+				<li>Design &amp; Planning ~15%</li>
+				<li>Materials &amp; Flora ~55%</li>
+				<li>Craftsmanship ~30%</li>
+			</ul>
+			<span class="glc-ve__btn glc-ve__btn--light">Request Formal Proposal</span>
+		</aside>
+	</div>
+</div>

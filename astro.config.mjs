@@ -7,6 +7,7 @@ import emdash from "emdash/astro";
 export default defineConfig({
 	output: "server",
 	adapter: cloudflare(),
+	build: { inlineStylesheets: "always" },
 	image: {
 		layout: "constrained",
 		responsiveStyles: true,

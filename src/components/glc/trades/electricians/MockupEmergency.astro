@@ -1,0 +1,54 @@
+---
+/** Props: { device: "laptop" | "phone" } */
+interface Props {
+	device: "laptop" | "phone";
+}
+
+const { device } = Astro.props;
+const mod = device === "phone" ? " glc-vm--phone" : "";
+---
+
+<div class={`glc-vm glc-vm--emergency${mod}`}>
+	<header class="glc-vm__nav">
+		<span class="glc-vm__brand">
+			<span class="glc-vm__bolt"></span>
+			VoltMaster
+		</span>
+		<nav class="glc-vm__links">
+			<span>Services</span>
+			<span>Domestic</span>
+			<span>Commercial</span>
+		</nav>
+		<span class="glc-vm__nav-cta">0800 865 8669</span>
+	</header>
+
+	<div class="glc-vm__centre">
+		<span class="glc-vm__alert">24/7 emergency response</span>
+		<p class="glc-vm__headline">Electrical emergency? We’re on our way.</p>
+		<p class="glc-vm__lede">Power cuts, burning smells, sparking sockets — a qualified electrician dispatched across London and the South-East.</p>
+		<span class="glc-vm__btn glc-vm__btn--primary glc-vm__btn--wide">Call now: 0800 865 8669</span>
+	</div>
+
+	<div class="glc-vm__faults">
+		<article>
+			<span class="glc-vm__fault-ico">🔥</span>
+			<strong>Burning smells</strong>
+			<span>Odour at sockets or the consumer unit</span>
+		</article>
+		<article>
+			<span class="glc-vm__fault-ico">⚡</span>
+			<strong>Power cuts</strong>
+			<span>Partial or total loss of supply</span>
+		</article>
+		<article>
+			<span class="glc-vm__fault-ico">💥</span>
+			<strong>Sparking sockets</strong>
+			<span>Visible arcing or hot faceplates</span>
+		</article>
+		<article>
+			<span class="glc-vm__fault-ico">🔊</span>
+			<strong>Buzzing CU</strong>
+			<span>Humming or tripping breakers</span>
+		</article>
+	</div>
+</div>

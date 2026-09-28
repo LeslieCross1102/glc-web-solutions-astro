@@ -1,0 +1,40 @@
+---
+// Props: none — the "Special Offer Submission" enquiry form (CF7 #4297 markup); backend wired via data-glc-form="offer"
+import WhatsappIcon from "./WhatsappIcon.astro";
+---
+
+<div class="glc-offer-form-wrap" id="glc-offer-claim">
+	<div class="wpcf7 no-js" id="wpcf7-f4297-o1" lang="en-GB" dir="ltr" data-wpcf7-id="4297">
+		<div class="screen-reader-response"><p role="status" aria-live="polite" aria-atomic="true"></p> <ul></ul></div>
+		<form action="#" method="post" class="wpcf7-form init" aria-label="Contact form" novalidate data-status="init" data-glc-form="offer">
+			<div class="glc-offer-form">
+				<p class="glc-offer-form__field"><label class="glc-visually-hidden" for="glc-offer-name">Name</label><span class="wpcf7-form-control-wrap" data-name="your-name"><input size="40" maxlength="400" class="wpcf7-form-control wpcf7-text wpcf7-validates-as-required" id="glc-offer-name" autocomplete="name" aria-required="true" aria-invalid="false" placeholder="Name" value="" type="text" name="your-name" required /></span></p>
+				<p class="glc-offer-form__field"><label class="glc-visually-hidden" for="glc-offer-email">Email</label><span class="wpcf7-form-control-wrap" data-name="your-email"><input size="40" maxlength="400" class="wpcf7-form-control wpcf7-email wpcf7-validates-as-required wpcf7-text wpcf7-validates-as-email" id="glc-offer-email" autocomplete="email" aria-required="true" aria-invalid="false" placeholder="Email" value="" type="email" name="your-email" required /></span></p>
+				<p class="glc-form-path"><span class="glc-form-path__legend">I need a</span><span class="wpcf7-form-control-wrap" data-name="your-path"><span class="wpcf7-form-control wpcf7-radio"><span class="wpcf7-list-item first"><label><input type="radio" name="your-path" value="New website" checked /><span class="wpcf7-list-item-label">New website</span></label></span><span class="wpcf7-list-item last"><label><input type="radio" name="your-path" value="Website redesign" /><span class="wpcf7-list-item-label">Website redesign</span></label></span></span></span></p>
+				<p class="glc-form-path__url glc-offer-form__field" data-glc-form-url><label class="glc-visually-hidden" for="glc-offer-website">Current website address</label><span class="wpcf7-form-control-wrap" data-name="your-website"><input size="40" maxlength="400" class="wpcf7-form-control wpcf7-url wpcf7-text wpcf7-validates-as-url" id="glc-offer-website" autocomplete="url" aria-invalid="false" placeholder="Current website address" value="" type="url" name="your-website" /></span></p>
+				<p class="glc-offer-form__field"><label class="glc-visually-hidden" for="glc-offer-brief">Brief description</label><span class="wpcf7-form-control-wrap" data-name="your-brief"><textarea cols="40" rows="4" maxlength="2000" class="wpcf7-form-control wpcf7-textarea wpcf7-validates-as-required" id="glc-offer-brief" aria-required="true" aria-invalid="false" placeholder="Brief description" name="your-brief" required></textarea></span></p>
+				<p class="glc-offer-form__consent"><span class="wpcf7-form-control-wrap" data-name="acceptance-contact"><span class="wpcf7-form-control wpcf7-acceptance"><span class="wpcf7-list-item"><label><input type="checkbox" name="acceptance-contact" value="1" aria-invalid="false" required /><span class="wpcf7-list-item-label">I consent to GLC Web Solutions contacting me about this enquiry using the details I have provided.</span></label></span></span></span></p>
+				<p class="glc-offer-form__submit"><input class="wpcf7-form-control wpcf7-submit has-spinner glc-button glc-button--primary" type="submit" value="Submit" /></p>
+			</div>
+			<div class="glc-form-thanks" data-glc-form-thanks>
+				<figure class="glc-form-thanks__figure">
+					<img class="glc-form-thanks__image" src="/glc/assets/images/glc-form-thanks.png" alt="" width="516" height="554" decoding="async" />
+				</figure>
+				<div class="glc-form-thanks__copy">
+					<p class="glc-form-thanks__eyebrow">Message sent</p>
+					<p class="glc-form-thanks__title">We'll get back to you as soon as we can.</p>
+					<p class="glc-form-thanks__text">Thanks for getting in touch — your enquiry is on its way to Gareth.</p>
+					<div class="glc-form-thanks__actions">
+						<button type="button" class="glc-button glc-button--primary" data-glc-form-reset>Submit another query</button>
+						<a class="glc-button glc-button--whatsapp" href="https://wa.me/447958793388?text=Hello%2C%20I%20would%20like%20to%20discuss%20a%20project." target="_blank" rel="noopener noreferrer">
+							<WhatsappIcon />
+							WhatsApp
+						</a>
+						<a class="glc-button glc-button--secondary" href="tel:07958793388">Call now</a>
+					</div>
+				</div>
+			</div>
+			<div class="wpcf7-response-output" aria-hidden="true"></div>
+		</form>
+	</div>
+</div>

@@ -1,0 +1,86 @@
+---
+// Props: { items: WorkItem[] ({ title, text, eyebrow?, url?, image?: { src, alt?, width?, height?, srcset?, sizes? } }); buttonLabel?; prevLabel?; nextLabel? }
+export interface WorkItem {
+	title: string;
+	text: string;
+	eyebrow?: string;
+	url?: string;
+	image?: { src: string; alt?: string; width?: number; height?: number; srcset?: string; sizes?: string };
+}
+
+interface Props {
+	items: WorkItem[];
+	buttonLabel?: string;
+	prevLabel?: string;
+	nextLabel?: string;
+}
+
+const {
+	items,
+	buttonLabel = "View Project Details",
+	prevLabel = "Previous client examples",
+	nextLabel = "Next client examples",
+} = Astro.props;
+---
+
+{items.length > 0 && (
+	<div class="glc-home-blog-carousel glc-work-carousel" data-glc-blog-carousel>
+		<button
+			class="glc-home-blog-carousel__nav glc-home-blog-carousel__nav--prev"
+			type="button"
+			data-glc-blog-prev
+			aria-label={prevLabel}
+			disabled
+		>
+			<span class="material-symbols-outlined" aria-hidden="true">chevron_left</span>
+		</button>
+
+		<div class="glc-home-blog-carousel__viewport">
+			<div class="glc-home-blog-carousel__track" data-glc-blog-track tabindex="0">
+				{items.map((item) => (
+					<article class="glc-work-card glc-our-work-card" data-glc-carousel-card>
+						{item.image && (
+							<figure class="glc-our-work-card__media">
+								<img
+									src={item.image.src}
+									alt={item.image.alt ?? ""}
+									width={item.image.width}
+									height={item.image.height}
+									srcset={item.image.srcset}
+									sizes={item.image.sizes}
+									loading="lazy"
+									decoding="async"
+								/>
+							</figure>
+						)}
+
+						<div class="glc-our-work-card__body">
+							<div class="glc-work-card__content">
+								{item.eyebrow && <span class="glc-eyebrow glc-eyebrow--micro">{item.eyebrow}</span>}
+								<h3 class="glc-work-card__title">{item.title}</h3>
+								<p class="glc-work-card__text">{item.text}</p>
+							</div>
+
+							{item.url && (
+								<a class="glc-button glc-button--primary" href={item.url}>
+									{buttonLabel}
+									<span class="material-symbols-outlined" aria-hidden="true">north_east</span>
+									<span class="glc-visually-hidden">{item.title}</span>
+								</a>
+							)}
+						</div>
+					</article>
+				))}
+			</div>
+		</div>
+
+		<button
+			class="glc-home-blog-carousel__nav glc-home-blog-carousel__nav--next"
+			type="button"
+			data-glc-blog-next
+			aria-label={nextLabel}
+		>
+			<span class="material-symbols-outlined" aria-hidden="true">chevron_right</span>
+		</button>
+	</div>
+)}

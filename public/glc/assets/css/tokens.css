@@ -1,0 +1,246 @@
+/**
+ * Teal Horizon — design tokens.
+ *
+ * Every value in this file is a direct translation of the Stitch `tailwind.config`
+ * for the Teal Horizon system. Nothing here should reference a component: if a
+ * value is only used in one place, it belongs in components.css instead.
+ */
+
+:root {
+	/* --- Colour roles: primary ------------------------------------------- */
+	--glc-primary: #004c4c;
+	--glc-on-primary: #ffffff;
+	--glc-primary-container: #006666;
+	--glc-on-primary-container: #93e1e0;
+	--glc-primary-fixed: #a2f0ef;
+	--glc-primary-fixed-dim: #86d4d3;
+	--glc-on-primary-fixed: #002020;
+	--glc-on-primary-fixed-variant: #004f4f;
+	--glc-inverse-primary: #86d4d3;
+	--glc-surface-tint: #096969;
+
+	/* --- Colour roles: secondary ----------------------------------------- */
+	--glc-secondary: #51606e;
+	--glc-on-secondary: #ffffff;
+	--glc-secondary-container: #d4e4f5;
+	--glc-on-secondary-container: #576674;
+	--glc-secondary-fixed: #d4e4f5;
+	--glc-secondary-fixed-dim: #b8c8d8;
+	--glc-on-secondary-fixed: #0e1d29;
+	--glc-on-secondary-fixed-variant: #394855;
+
+	/* --- Colour roles: tertiary ------------------------------------------ */
+	--glc-tertiary: #444444;
+	--glc-on-tertiary: #ffffff;
+	--glc-tertiary-container: #5b5b5b;
+	--glc-on-tertiary-container: #d5d3d3;
+	--glc-tertiary-fixed: #e4e2e2;
+	--glc-tertiary-fixed-dim: #c8c6c6;
+	--glc-on-tertiary-fixed: #1b1c1c;
+	--glc-on-tertiary-fixed-variant: #474747;
+
+	/* --- Colour roles: error --------------------------------------------- */
+	--glc-error: #ba1a1a;
+	--glc-on-error: #ffffff;
+	--glc-error-container: #ffdad6;
+	--glc-on-error-container: #93000a;
+
+	/* --- Colour roles: surfaces ------------------------------------------ */
+	--glc-background: #f6f9ff;
+	--glc-on-background: #0e1d29;
+	--glc-surface: #f6f9ff;
+	--glc-on-surface: #0e1d29;
+	--glc-surface-variant: #d4e4f5;
+	--glc-on-surface-variant: #3f4948;
+	--glc-surface-dim: #ccdcec;
+	--glc-surface-bright: #f6f9ff;
+	--glc-surface-container-lowest: #ffffff;
+	--glc-surface-container-low: #ecf5ff;
+	--glc-surface-container: #e1f0ff;
+	--glc-surface-container-high: #daeafa;
+	--glc-surface-container-highest: #d4e4f5;
+	--glc-inverse-surface: #23323e;
+	--glc-inverse-on-surface: #e6f2ff;
+
+	/* --- Colour roles: outlines ------------------------------------------ */
+	--glc-outline: #6f7979;
+	--glc-outline-variant: #bec9c8;
+
+	/* --- Brand teal ramp -------------------------------------------------
+	 * Used by the site chrome (navigation, footer), which sits outside the
+	 * Material role system in the source design.
+	 * -------------------------------------------------------------------- */
+	--glc-teal-50: #f0fdfa;
+	--glc-teal-200: #99f6e4;
+	--glc-teal-300: #5eead4;
+	--glc-teal-400: #2dd4bf;
+	--glc-teal-600: #0d9488;
+	--glc-teal-700: #0f766e;
+	--glc-teal-800: #115e59;
+	--glc-teal-900: #134e4a;
+	--glc-teal-950: #042f2e;
+
+	--glc-slate-400: #94a3b8;
+	--glc-slate-600: #475569;
+	--glc-slate-950: #020617;
+
+	--glc-whatsapp: #25d366;
+
+	/* --- Chrome surfaces --------------------------------------------------
+	 * Single source of truth for the sticky header and footer backgrounds.
+	 * -------------------------------------------------------------------- */
+	--glc-nav-surface: rgba(255, 255, 255, 0.8);
+	--glc-nav-brand: var(--glc-teal-900);
+	--glc-nav-link: var(--glc-slate-600);
+	--glc-nav-link-hover: var(--glc-teal-600);
+	--glc-nav-link-current: var(--glc-teal-700);
+
+	--glc-footer-surface: var(--glc-teal-950);
+	--glc-footer-text: var(--glc-teal-50);
+	--glc-footer-muted: rgba(153, 246, 228, 0.7);
+	--glc-footer-faint: rgba(153, 246, 228, 0.5);
+	--glc-footer-rule: rgba(17, 94, 89, 0.5);
+
+	/* --- Typography ------------------------------------------------------ */
+	--glc-font-headline: "Plus Jakarta Sans", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+	--glc-font-body: "Inter", ui-sans-serif, system-ui, -apple-system, "Segoe UI", sans-serif;
+	--glc-font-label: var(--glc-font-body);
+	--glc-font-mono: ui-monospace, SFMono-Regular, "SF Mono", Menlo, Consolas, monospace;
+
+	--glc-text-micro: 0.6875rem;
+	--glc-text-xs: 0.75rem;
+	--glc-text-sm: 0.875rem;
+	--glc-text-base: 1rem;
+	--glc-text-lg: 1.125rem;
+	--glc-text-xl: 1.25rem;
+	--glc-text-2xl: 1.5rem;
+	--glc-text-3xl: 1.875rem;
+	--glc-text-4xl: 2.25rem;
+	--glc-text-5xl: 3rem;
+	--glc-text-6xl: 3.75rem;
+
+	--glc-leading-display: 1.1;
+	--glc-leading-tight: 1.25;
+	--glc-leading-normal: 1.5;
+	--glc-leading-relaxed: 1.625;
+
+	--glc-tracking-tighter: -0.05em;
+	--glc-tracking-tight: -0.025em;
+	--glc-tracking-normal: 0;
+	--glc-tracking-wide: 0.025em;
+	--glc-tracking-wider: 0.05em;
+	--glc-tracking-widest: 0.1em;
+	--glc-tracking-eyebrow: 0.2em;
+
+	--glc-weight-normal: 400;
+	--glc-weight-medium: 500;
+	--glc-weight-semibold: 600;
+	--glc-weight-bold: 700;
+	--glc-weight-extrabold: 800;
+
+	/* --- Shape -----------------------------------------------------------
+	 * Mirrors the Stitch borderRadius scale, including its deliberate
+	 * redefinition of `full` as 0.75rem rather than a pill.
+	 * -------------------------------------------------------------------- */
+	--glc-radius: 0.125rem;
+	--glc-radius-lg: 0.25rem;
+	--glc-radius-xl: 0.5rem;
+	--glc-radius-full: 0.75rem;
+	--glc-radius-pill: 9999px;
+
+	/* Large editorial radii for media, cards and full-bleed panels. These sit
+	 * outside the Stitch borderRadius scale, which only covers control-sized
+	 * elements. */
+	--glc-radius-media: 1rem;
+	--glc-radius-card: 2rem;
+	--glc-radius-panel: 3rem;
+
+	/* --- Elevation -------------------------------------------------------
+	 * Depth comes from tonal surface shifts first and shadow second; see the
+	 * architecture note in the style guide.
+	 * -------------------------------------------------------------------- */
+	--glc-shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+	--glc-shadow-md: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -2px rgba(0, 0, 0, 0.1);
+	--glc-shadow-lg: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -4px rgba(0, 0, 0, 0.1);
+	--glc-shadow-inner: inset 0 2px 4px 0 rgba(0, 0, 0, 0.05);
+	--glc-shadow-editorial: 0 32px 48px -12px rgba(14, 29, 41, 0.06);
+	--glc-shadow-editorial-soft: 0 32px 48px -12px rgba(14, 29, 41, 0.04);
+	--glc-shadow-ambient: 0 32px 48px -12px rgba(14, 29, 41, 0.05);
+
+	/* Ghost border: the only sanctioned container boundary. Never opaque. */
+	--glc-ghost-border: 1px solid rgba(190, 201, 200, 0.15);
+
+	/* --- Space and measure ----------------------------------------------- */
+	--glc-container: 80rem;
+	--glc-gutter: 2rem;
+	--glc-gutter-sm: 1.25rem;
+	--glc-section-gap: 8rem;
+	--glc-grid-gap: 2rem;
+	--glc-measure: 65ch;
+
+	/* --- Motion ----------------------------------------------------------- */
+	--glc-duration: 300ms;
+	--glc-ease: cubic-bezier(0.4, 0, 0.2, 1);
+}
+
+/**
+ * Dark scheme.
+ *
+ * The source design declares `darkMode: "class"` but only ships light role
+ * values, so the dark set below is the tonal inverse of the same palette:
+ * containers become the light-on-dark counterparts and surfaces step down
+ * through the obsidian used for `on-background`.
+ */
+.dark {
+	--glc-primary: #86d4d3;
+	--glc-on-primary: #003737;
+	--glc-primary-container: #004f4f;
+	--glc-on-primary-container: #a2f0ef;
+
+	--glc-secondary: #b8c8d8;
+	--glc-on-secondary: #23323e;
+	--glc-secondary-container: #394855;
+	--glc-on-secondary-container: #d4e4f5;
+
+	--glc-tertiary: #c8c6c6;
+	--glc-on-tertiary: #303030;
+	--glc-tertiary-container: #474747;
+	--glc-on-tertiary-container: #e4e2e2;
+
+	--glc-error: #ffb4ab;
+	--glc-on-error: #690005;
+	--glc-error-container: #93000a;
+	--glc-on-error-container: #ffdad6;
+
+	--glc-background: #0e1d29;
+	--glc-on-background: #dee3ea;
+	--glc-surface: #0e1d29;
+	--glc-on-surface: #dee3ea;
+	--glc-surface-variant: #394855;
+	--glc-on-surface-variant: #bec9c8;
+	--glc-surface-dim: #0e1d29;
+	--glc-surface-bright: #34434f;
+	--glc-surface-container-lowest: #09161f;
+	--glc-surface-container-low: #16252f;
+	--glc-surface-container: #1a2933;
+	--glc-surface-container-high: #24333e;
+	--glc-surface-container-highest: #2f3e49;
+	--glc-inverse-surface: #dee3ea;
+	--glc-inverse-on-surface: #23323e;
+
+	--glc-outline: #89939e;
+	--glc-outline-variant: #3f4948;
+
+	--glc-nav-surface: rgba(2, 6, 23, 0.8);
+	--glc-nav-brand: var(--glc-teal-50);
+	--glc-nav-link: var(--glc-slate-400);
+	--glc-nav-link-hover: var(--glc-teal-300);
+	--glc-nav-link-current: var(--glc-teal-400);
+
+	--glc-footer-surface: #000000;
+
+	--glc-shadow-editorial: 0 32px 48px -12px rgba(0, 0, 0, 0.5);
+	--glc-shadow-editorial-soft: 0 32px 48px -12px rgba(0, 0, 0, 0.4);
+	--glc-shadow-ambient: 0 32px 48px -12px rgba(0, 0, 0, 0.45);
+	--glc-ghost-border: 1px solid rgba(190, 201, 200, 0.12);
+}

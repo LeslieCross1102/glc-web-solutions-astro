@@ -1,0 +1,70 @@
+---
+/** Props: { trade: TradeData } — port of service-<trade>/section-showcase.php */
+import type { TradeData } from "../../../data/glc/trades/types";
+import Device from "./Device.astro";
+
+interface Props {
+	trade: TradeData;
+}
+
+const { trade } = Astro.props;
+const { key, showcase: items, showcasePhones: phones, showcaseIntro: intro } = trade;
+---
+
+{items.length > 0 && (
+	<section
+		class="glc-home-section glc-home-section--lowest"
+		id={`glc-${key}-showcase`}
+		aria-labelledby={`glc-${key}-showcase-title`}
+	>
+		<div class="glc-container">
+			<header class="glc-home-heading glc-home-heading--center">
+				{intro.eyebrow && <span class="glc-eyebrow glc-eyebrow--micro">{intro.eyebrow}</span>}
+
+				<h2 class="glc-home-heading__title" id={`glc-${key}-showcase-title`}>{intro.title}</h2>
+
+				{intro.lead && (
+					<div class="glc-home-heading__intro">
+						<p>{intro.lead}</p>
+					</div>
+				)}
+			</header>
+
+			<div class={`glc-${key}-gallery`}>
+				{items.map((item) => (
+					<figure class={`glc-${key}-gallery__item glc-${key}-gallery__item--${item.layout}`}>
+						<div class={`glc-${key}-gallery__stage`}>
+							<div class={`glc-${key}-gallery__frame`}>
+								<Device trade={trade} device={item.device} screen={item.screen} />
+							</div>
+							{item.layout === "feature" && (
+								<div class={`glc-${key}-gallery__phone`}>
+									<Device trade={trade} device="phone" screen={item.screen} />
+								</div>
+							)}
+						</div>
+						<figcaption class={`glc-${key}-gallery__caption`}>
+							{item.title && <strong>{item.title}</strong>}
+							{item.caption && <span>{item.caption}</span>}
+						</figcaption>
+					</figure>
+				))}
+			</div>
+
+			{phones.length > 0 && (
+				<div class={`glc-${key}-phones`}>
+					<p class={`glc-eyebrow glc-eyebrow--micro glc-${key}-phones__label`}>The same journeys on a phone</p>
+					{phones.map((phone) => (
+						<figure class={`glc-${key}-phones__item`}>
+							<Device trade={trade} device="phone" screen={phone.screen} />
+							<figcaption>
+								{phone.title && <strong>{phone.title}</strong>}
+								{phone.caption && <span>{phone.caption}</span>}
+							</figcaption>
+						</figure>
+					))}
+				</div>
+			)}
+		</div>
+	</section>
+)}

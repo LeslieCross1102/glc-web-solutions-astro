@@ -1,0 +1,14 @@
+---
+// Props: none — Google reviews (Trustindex widget markup captured from the live site)
+import widget from "../../../data/glc/reviews-widget.html?raw";
+---
+
+<section class="glc-home-section glc-home-section--surface" id="glc-reviews">
+	<div class="glc-container">
+		<div class="glc-home-heading glc-home-heading--center">
+			<h2 class="glc-home-heading__title">What our clients say</h2>
+		</div>
+
+		<Fragment set:html={widget} />
+	</div>
+</section>

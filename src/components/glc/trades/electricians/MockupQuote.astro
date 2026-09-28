@@ -1,0 +1,57 @@
+---
+/** Props: { device: "laptop" | "phone" } */
+interface Props {
+	device: "laptop" | "phone";
+}
+
+const { device } = Astro.props;
+const mod = device === "phone" ? " glc-vm--phone" : "";
+---
+
+<div class={`glc-vm glc-vm--quote${mod}`}>
+	<header class="glc-vm__nav">
+		<span class="glc-vm__brand">
+			<span class="glc-vm__bolt"></span>
+			VoltMaster
+		</span>
+		<nav class="glc-vm__links">
+			<span>Services</span>
+			<span>Domestic</span>
+			<span>Commercial</span>
+		</nav>
+		<span class="glc-vm__nav-cta">Emergency call</span>
+	</header>
+
+	<div class="glc-vm__quote">
+		<div class="glc-vm__quote-main">
+			<p class="glc-vm__headline">Request a free quote</p>
+			<p class="glc-vm__lede">Tell us the job. We come back with a clear price — not a fishing call.</p>
+			<div class="glc-vm__steps">
+				<span class="is-active">1 Service</span>
+				<span>2 Location</span>
+				<span>3 Schedule</span>
+				<span>4 Details</span>
+			</div>
+			<div class="glc-vm__quote-types">
+				<article class="is-active">
+					<strong>Residential</strong>
+					<span>Homes, flats, consumer units, EV</span>
+				</article>
+				<article>
+					<strong>Commercial</strong>
+					<span>Offices, retail, testing, three-phase</span>
+				</article>
+			</div>
+			<div class="glc-vm__fields">
+				<span>Postcode</span>
+				<span>Preferred window</span>
+			</div>
+			<span class="glc-vm__btn glc-vm__btn--primary">Request free quote</span>
+		</div>
+		<aside class="glc-vm__quote-side">
+			<strong>Need help now?</strong>
+			<p>24/7 emergency dispatch if this cannot wait for a planned visit.</p>
+			<span class="glc-vm__btn glc-vm__btn--warn">Call 0800 865 8669</span>
+		</aside>
+	</div>
+</div>

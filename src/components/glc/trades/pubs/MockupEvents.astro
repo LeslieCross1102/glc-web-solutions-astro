@@ -1,0 +1,63 @@
+---
+/** Props: { device: "laptop" | "phone" } */
+interface Props {
+	device: "laptop" | "phone";
+}
+
+const { device } = Astro.props;
+const mod = device === "phone" ? " glc-lt--phone" : "";
+---
+
+<div class={`glc-lt glc-lt--events${mod}`}>
+	<header class="glc-lt__nav">
+		<span class="glc-lt__brand">The Local Tavern</span>
+		<nav class="glc-lt__links">
+			<span>Home</span>
+			<span>Menu</span>
+			<span class="is-active">Events</span>
+			<span>Our Story</span>
+		</nav>
+		<span class="glc-lt__nav-cta">Book Table</span>
+	</header>
+
+	<div class="glc-lt__banner">
+		<img src="/glc/assets/images/pubs/pub-photo-oak-room.jpg" alt="" width="1536" height="1024" />
+		<div class="glc-lt__banner-copy">
+			<p class="glc-lt__headline">Gather &amp; Celebrate</p>
+			<p class="glc-lt__lede">Private dinners, weekly quizzes and the heart of the community — all under one roof.</p>
+		</div>
+	</div>
+
+	<div class="glc-lt__split">
+		<div class="glc-lt__oak">
+			<p class="glc-lt__headline glc-lt__headline--ink">The Oak Room</p>
+			<p class="glc-lt__lede glc-lt__lede--ink">Our dedicated function room for wakes, birthdays and office dos.</p>
+			<ul class="glc-lt__facts">
+				<li>Up to 50 seated, 80 standing</li>
+				<li>Private bar, fully staffed</li>
+				<li>Bespoke buffet or set menus</li>
+			</ul>
+		</div>
+		<div class="glc-lt__form">
+			<span>Enquire about hire</span>
+			<i></i><i></i>
+			<i class="is-wide"></i>
+			<strong>Submit enquiry</strong>
+		</div>
+	</div>
+
+	<div class="glc-lt__row glc-lt__row--events">
+		<article class="glc-lt__chip">
+			<img src="/glc/assets/images/pubs/pub-photo-quiz.jpg" alt="" width="280" height="186" />
+			<div>
+				<em>Every Thursday</em>
+				<strong>The Big Pub Quiz</strong>
+			</div>
+		</article>
+		<article>
+			<em>Thursdays</em>
+			<strong>Darts League</strong>
+			<span>Open board from 7:30 PM</span>
+		</article>
+	</div>
+</div>

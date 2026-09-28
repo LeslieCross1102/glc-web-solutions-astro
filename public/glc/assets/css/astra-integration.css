@@ -1,0 +1,524 @@
+/**
+ * Teal Horizon — Astra integration.
+ *
+ * Astra derives most of its output from nine global colour variables and its
+ * own container widths. Rather than fighting that with per-selector overrides,
+ * this file re-points those variables at the Teal Horizon tokens so anything
+ * Astra renders (blog, archives, comments, WooCommerce) inherits the system.
+ *
+ * This stylesheet is enqueued after `astra-theme-css`, so it wins on the
+ * :root cascade without needing !important.
+ */
+
+:root,
+body {
+	--ast-global-color-0: var(--glc-primary);
+	--ast-global-color-1: var(--glc-surface-tint);
+	--ast-global-color-2: var(--glc-on-background);
+	--ast-global-color-3: var(--glc-on-background);
+	--ast-global-color-4: var(--glc-background);
+	--ast-global-color-5: var(--glc-surface-container-lowest);
+	--ast-global-color-6: var(--glc-outline-variant);
+	--ast-global-color-7: var(--glc-secondary);
+	--ast-global-color-8: var(--glc-primary-container);
+
+	--ast-border-color: color-mix(in srgb, var(--glc-outline-variant) 40%, transparent);
+	--ast-comment-inputs-background: var(--glc-surface-container-lowest);
+}
+
+/* ---------------------------------------------------------------------------
+ * Containers
+ * ------------------------------------------------------------------------ */
+
+.ast-container,
+.ast-container-fluid {
+	max-width: var(--glc-container);
+	margin-inline: auto;
+	padding-inline: var(--glc-gutter-sm);
+}
+
+@media (min-width: 768px) {
+	.ast-container,
+	.ast-container-fluid {
+		padding-inline: var(--glc-gutter);
+	}
+}
+
+#content.site-content {
+	padding-block: clamp(3rem, 1.5rem + 6vw, 5rem);
+}
+
+/* Full-width page templates should not inherit the gutter twice. */
+.ast-page-builder-template #content.site-content > .ast-container {
+	max-width: none;
+	padding-inline: 0;
+}
+
+/* ---------------------------------------------------------------------------
+ * Entry content
+ * ------------------------------------------------------------------------ */
+
+.entry-title,
+.entry-title a {
+	font-family: var(--glc-font-headline);
+	letter-spacing: var(--glc-tracking-tight);
+	color: var(--glc-on-background);
+}
+
+.entry-content > * + * {
+	margin-top: 1.5rem;
+}
+
+.entry-content :is(h2, h3, h4) {
+	margin-top: 3rem;
+}
+
+.entry-meta,
+.entry-meta * {
+	font-size: var(--glc-text-xs);
+	font-weight: var(--glc-weight-semibold);
+	text-transform: uppercase;
+	letter-spacing: var(--glc-tracking-wider);
+	color: var(--glc-secondary);
+}
+
+.ast-separate-container .ast-article-post,
+.ast-separate-container .ast-article-single,
+.ast-separate-container .comments-area,
+.ast-separate-container .ast-comment-list li.depth-1 {
+	background-color: var(--glc-surface-container-lowest);
+	border: 0;
+	border-radius: var(--glc-radius-xl);
+	box-shadow: var(--glc-shadow-editorial-soft);
+}
+
+.ast-separate-container .ast-comment-list li.depth-1 {
+	padding: 2rem;
+}
+
+/* ---------------------------------------------------------------------------
+ * Buttons and forms
+ * ------------------------------------------------------------------------ */
+
+.ast-button,
+.ast-custom-button,
+button:not(.glc-nav__toggle):not(.glc-scheme-toggle):not(.glc-button):not(.glc-offer-banner__close),
+.button,
+input[type="button"],
+input[type="submit"],
+input[type="reset"],
+.wp-block-button__link {
+	background-color: var(--glc-primary);
+	color: var(--glc-on-primary);
+	border: 0;
+	border-radius: var(--glc-radius-xl);
+	padding: 0.75rem 2rem;
+	font-family: var(--glc-font-label);
+	font-weight: var(--glc-weight-semibold);
+	box-shadow: var(--glc-shadow-sm);
+	transition: opacity var(--glc-duration) var(--glc-ease), transform 100ms var(--glc-ease);
+}
+
+.ast-button:hover,
+.ast-custom-button:hover,
+.button:hover,
+input[type="submit"]:hover,
+.wp-block-button__link:hover {
+	background-color: var(--glc-primary);
+	color: var(--glc-on-primary);
+	opacity: 0.9;
+}
+
+.wp-block-button.is-style-outline .wp-block-button__link {
+	background-color: transparent;
+	color: var(--glc-primary);
+	box-shadow: none;
+	border: 2px solid var(--glc-primary);
+}
+
+/**
+ * Inputs are filled, not outlined: a surface-container-low fill instead of a
+ * white box with a border. Focus lifts the fill to the lowest tier and adds a
+ * 2px ghost border, per the "no opaque boundaries" rule.
+ */
+input[type="text"],
+input[type="email"],
+input[type="url"],
+input[type="password"],
+input[type="search"],
+input[type="tel"],
+input[type="number"],
+input[type="date"],
+select,
+textarea {
+	background-color: var(--glc-surface-container-low);
+	color: var(--glc-on-surface);
+	border: 0;
+	border-radius: var(--glc-radius-xl);
+	padding: 0.75rem 1rem;
+	font-family: var(--glc-font-body);
+	transition: background-color var(--glc-duration) var(--glc-ease), box-shadow var(--glc-duration) var(--glc-ease);
+}
+
+input:focus,
+select:focus,
+textarea:focus {
+	background-color: var(--glc-surface-container-lowest);
+	box-shadow: 0 0 0 2px var(--glc-primary);
+	outline: none;
+}
+
+::placeholder {
+	color: var(--glc-secondary);
+	opacity: 0.7;
+}
+
+/* Contact Form 7 sits on most GLC pages, so give it the panel treatment. */
+.wpcf7 form .wpcf7-response-output {
+	border-width: 0;
+	border-left: 3px solid var(--glc-primary);
+	border-radius: var(--glc-radius-lg);
+	background-color: var(--glc-surface-container-low);
+	padding: 1rem 1.25rem;
+	margin: 1.5rem 0 0;
+}
+
+.wpcf7 form.invalid .wpcf7-response-output,
+.wpcf7 form.unaccepted .wpcf7-response-output {
+	border-left-color: var(--glc-error);
+	background-color: var(--glc-error-container);
+	color: var(--glc-on-error-container);
+}
+
+.wpcf7-not-valid-tip {
+	color: var(--glc-error);
+	font-size: var(--glc-text-xs);
+	font-weight: var(--glc-weight-semibold);
+}
+
+/* ---------------------------------------------------------------------------
+ * Blocks
+ * ------------------------------------------------------------------------ */
+
+.wp-block-quote,
+.wp-block-pullquote {
+	border-left: 3px solid var(--glc-primary-fixed-dim);
+	padding-left: var(--glc-gutter);
+	color: var(--glc-secondary);
+	font-style: italic;
+}
+
+.wp-block-separator {
+	border: 0;
+	height: 1px;
+	background-color: color-mix(in srgb, var(--glc-outline-variant) 30%, transparent);
+}
+
+.wp-block-image img,
+.wp-block-cover,
+.wp-block-media-text__media img {
+	border-radius: var(--glc-radius-xl);
+}
+
+.wp-block-table :is(td, th) {
+	border-color: color-mix(in srgb, var(--glc-outline-variant) 40%, transparent);
+}
+
+.wp-block-table th {
+	background-color: var(--glc-surface-container-high);
+	font-family: var(--glc-font-headline);
+}
+
+.wp-block-code,
+pre {
+	background-color: var(--glc-inverse-surface);
+	color: var(--glc-inverse-on-surface);
+	border-radius: var(--glc-radius-xl);
+	padding: 1.5rem;
+	overflow-x: auto;
+}
+
+/* ---------------------------------------------------------------------------
+ * Sidebar, pagination, misc
+ * ------------------------------------------------------------------------ */
+
+.widget-title,
+.wp-block-heading.widget-title {
+	font-family: var(--glc-font-headline);
+	font-size: var(--glc-text-sm);
+	font-weight: var(--glc-weight-bold);
+	text-transform: uppercase;
+	letter-spacing: var(--glc-tracking-wider);
+	color: var(--glc-primary);
+}
+
+.ast-pagination .page-numbers {
+	border-radius: var(--glc-radius-xl);
+	color: var(--glc-secondary);
+}
+
+.ast-pagination .page-numbers.current {
+	background-color: var(--glc-primary);
+	color: var(--glc-on-primary);
+}
+
+.ast-scroll-top {
+	background-color: var(--glc-primary);
+	color: var(--glc-on-primary);
+	border-radius: var(--glc-radius-xl);
+}
+
+body:has(.glc-whatsapp-fab) #ast-scroll-top,
+body:has(.glc-whatsapp-fab) .ast-scroll-top {
+	display: none !important;
+}
+
+.skip-link:focus {
+	background-color: var(--glc-primary);
+	color: var(--glc-on-primary);
+	border-radius: var(--glc-radius-xl);
+}
+
+/* ---------------------------------------------------------------------------
+ * Blog reading column and featured heroes
+ * ------------------------------------------------------------------------ */
+
+.single-post.ast-narrow-container,
+.blog.ast-narrow-container,
+.archive.ast-narrow-container,
+.search.ast-narrow-container {
+	--ast-narrow-container-width: var(--glc-container);
+	--wp--custom--ast-content-width-size: var(--glc-container);
+	--wp--custom--ast-wide-width-size: var(--glc-container);
+	--glc-measure: none;
+}
+
+@media (min-width: 922px) {
+	.single-post.ast-narrow-container .site-content > .ast-container,
+	.blog.ast-narrow-container .site-content > .ast-container,
+	.archive.ast-narrow-container .site-content > .ast-container,
+	.search.ast-narrow-container .site-content > .ast-container {
+		max-width: var(--glc-container);
+	}
+}
+
+.single-post.ast-narrow-container .ast-container--narrow,
+.single-post.ast-narrow-container #primary {
+	max-width: var(--glc-container);
+}
+
+.single-post .entry-content > p,
+.single-post .entry-content > ul,
+.single-post .entry-content > ol,
+.single-post .entry-content > blockquote {
+	max-width: none;
+}
+
+.single-post .entry-content .wp-block-image {
+	display: block;
+	width: 100%;
+	margin: 0.5rem 0 !important;
+	line-height: 0;
+	text-align: center;
+}
+
+.single-post .entry-content .wp-block-image img {
+	display: block;
+	width: auto;
+	max-width: min(100%, 1024px);
+	height: auto !important;
+	margin-block: 0;
+	margin-inline: auto;
+	box-shadow: none;
+}
+
+/* Pull the featured hero up under the site header — Astra + theme padding stack otherwise. */
+.single-post #content.site-content {
+	padding-top: clamp(1rem, 0.5rem + 1.5vw, 1.5rem);
+	background-color: #ffffff;
+}
+
+/* Astra inline CSS sets article background to --ast-global-color-4 (glc-background). */
+.single-post.ast-separate-container .ast-article-single:not(.ast-related-post),
+.single-post.ast-separate-container .comments-area,
+.single-post.ast-separate-container .post-navigation {
+	background-color: #ffffff;
+}
+
+.single-post.ast-separate-container #primary {
+	margin-top: 0;
+	padding-top: 0;
+}
+
+.single-post.ast-separate-container .ast-article-single {
+	padding-top: 0;
+	padding-inline: var(--glc-gutter-sm);
+	padding-bottom: 2.5rem;
+}
+
+@media (min-width: 768px) {
+	.single-post.ast-separate-container .ast-article-single {
+		padding-inline: var(--glc-gutter);
+	}
+}
+
+.single-post.ast-separate-container .post-navigation,
+.single-post.ast-separate-container .comments-area {
+	padding-inline: var(--glc-gutter-sm);
+}
+
+@media (min-width: 768px) {
+	.single-post.ast-separate-container .post-navigation,
+	.single-post.ast-separate-container .comments-area {
+		padding-inline: var(--glc-gutter);
+	}
+}
+
+/* Featured hero stays edge-to-edge within the article card. */
+.single-post.ast-separate-container .post-thumb-img-content,
+.single-post.ast-separate-container .ast-single-post-featured-section {
+	margin-inline: calc(-1 * var(--glc-gutter-sm));
+}
+
+@media (min-width: 768px) {
+	.single-post.ast-separate-container .post-thumb-img-content,
+	.single-post.ast-separate-container .ast-single-post-featured-section {
+		margin-inline: calc(-1 * var(--glc-gutter));
+	}
+}
+
+.single-post .entry-header > *:first-child {
+	margin-top: 0;
+}
+
+.single-post .post-thumb-img-content,
+.single-post .ast-single-post-featured-section {
+	margin: 0 0 1.5rem;
+	overflow: hidden;
+	border-radius: var(--glc-radius-card);
+	background: transparent;
+}
+
+.single-post .post-thumb img,
+.single-post .ast-single-post-featured-section img {
+	display: block;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 16 / 9;
+	object-fit: cover;
+	box-shadow: none;
+}
+
+.blog .post-thumb img,
+.archive .post-thumb img {
+	aspect-ratio: 16 / 9;
+	width: 100%;
+	object-fit: cover;
+	box-shadow: none;
+}
+
+/* Key GLC Insight callout — used inside post content (HTML block). */
+.glc-insight {
+	position: relative;
+	display: block;
+	margin: 2rem 0;
+	padding: 1.5rem 1.65rem;
+	border-radius: var(--glc-radius-card);
+	background-color: #ffffff;
+	border: 1px solid color-mix(in srgb, var(--glc-primary) 14%, transparent);
+	border-left: 4px solid var(--glc-primary);
+	box-shadow: var(--glc-shadow-ambient);
+}
+
+.glc-insight__brand {
+	position: absolute;
+	top: 1.5rem;
+	right: 1.65rem;
+	display: block;
+	margin: 0;
+	min-width: 0;
+	overflow: visible;
+}
+
+.single-post .entry-content .glc-insight img,
+.glc-insight__logo {
+	display: block;
+	width: auto;
+	max-width: min(11rem, 28vw);
+	height: auto;
+	max-height: 2.75rem;
+	margin: 0;
+	object-fit: contain;
+	object-position: top right;
+	box-shadow: none;
+	aspect-ratio: auto;
+}
+
+.glc-insight__body {
+	min-width: 0;
+}
+
+.glc-insight__label {
+	margin: 0 0 0.65rem;
+	padding-right: clamp(6rem, 15vw, 10rem);
+	font-family: var(--glc-font-headline);
+	font-size: var(--glc-text-2xl);
+	font-weight: var(--glc-weight-extrabold);
+	font-style: italic;
+	color: var(--glc-primary);
+	line-height: var(--glc-leading-snug);
+}
+
+.glc-insight__text {
+	margin: 0;
+	font-family: var(--glc-font-headline);
+	font-size: var(--glc-text-2xl);
+	font-weight: var(--glc-weight-semibold);
+	font-style: italic;
+	line-height: var(--glc-leading-relaxed);
+	color: var(--glc-on-background);
+}
+
+@media (max-width: 767px) {
+	.glc-insight__brand {
+		top: 1.25rem;
+		right: 1.25rem;
+	}
+
+	.glc-insight__label {
+		padding-right: clamp(5rem, 20vw, 7.5rem);
+	}
+
+	.glc-insight__label,
+	.glc-insight__text {
+		font-size: var(--glc-text-xl);
+	}
+}
+
+/* Single post — WhatsApp strap + related posts below comments. */
+.single-post #primary,
+.single-post .glc-blog-single-footer {
+	overflow: visible;
+}
+
+.glc-blog-single-footer {
+	margin-top: clamp(2rem, 1rem + 3vw, 3rem);
+}
+
+.glc-blog-single-footer__strap {
+	position: relative;
+	z-index: 2;
+	margin-top: clamp(1.5rem, 0.75rem + 2vw, 2.5rem);
+	width: 100vw;
+	max-width: 100vw;
+	margin-inline: calc(50% - 50vw);
+}
+
+.glc-blog-single-footer__carousel {
+	padding-top: clamp(2rem, 1rem + 3vw, 3rem);
+	padding-bottom: clamp(1rem, 0.5rem + 2vw, 2rem);
+}
+
+.glc-blog-single-footer__carousel.glc-home-section {
+	background-color: transparent;
+}

@@ -6,6 +6,8 @@ import {
 	decodeSlug,
 } from "emdash";
 import Base from "../../layouts/Base.astro";
+import RenderedBody from "../../components/glc/RenderedBody.astro";
+import { fallbackDescription, getRenderedPage } from "../../rendered";
 import PostCard from "../../components/PostCard.astro";
 import { getReadingTime } from "../../utils/reading-time";
 import { contentUrl } from "../../utils/content-url";
@@ -48,12 +50,18 @@ const filteredPosts = posts.map((post) => ({
 	post,
 	tags: tagsByEntry.get(post.data.id) ?? [],
 }));
+
+const rendered = getRenderedPage(Astro.originPathname);
 ---
 
 <Base
 	title={`${term.label} Archives`}
-	description={(posts[0]?.seo ?? posts[0]?.data.seo)?.description || posts[0]?.data.excerpt || null}
+	description={rendered?.description || fallbackDescription(rendered) || (posts[0]?.seo ?? posts[0]?.data.seo)?.description || posts[0]?.data.excerpt || null}
+	bodyClass={rendered?.bodyClass}
+	sections={rendered ? rendered.sections : true}
+	renderedKey={rendered?.key}
 >
+	{rendered ? <RenderedBody page={rendered} /> : (<>
 	<section class="archive-section">
 		<header class="archive-header">
 			<span class="archive-label">Tag</span>
@@ -93,6 +101,7 @@ const filteredPosts = posts.map((post) => ({
 			}
 		</nav>
 	</section>
+	</>)}
 </Base>
 
 <style>

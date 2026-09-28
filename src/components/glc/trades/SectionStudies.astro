@@ -1,0 +1,41 @@
+---
+/** Props: { trade: TradeData } — port of service-<trade>/section-studies.php */
+import type { TradeData } from "../../../data/glc/trades/types";
+import { portfolio } from "../../../data/glc/trades/shared";
+import WorkCarousel from "../shared/WorkCarousel.astro";
+
+interface Props {
+	trade: TradeData;
+}
+
+const { trade } = Astro.props;
+const { key, studiesIntro: intro } = trade;
+---
+
+{portfolio.length > 0 && (
+	<section
+		class="glc-home-section glc-home-section--surface"
+		id={`glc-${key}-studies`}
+		aria-labelledby={`glc-${key}-studies-title`}
+	>
+		<div class="glc-container">
+			<div class="glc-home-heading glc-home-heading--center">
+				{intro.eyebrow && <span class="glc-eyebrow glc-eyebrow--micro">{intro.eyebrow}</span>}
+				<h2 class="glc-home-heading__title" id={`glc-${key}-studies-title`}>{intro.title}</h2>
+				{intro.lead && (
+					<div class="glc-home-heading__intro">
+						<p>{intro.lead}</p>
+					</div>
+				)}
+				{intro.linkUrl && (
+					<a class="glc-arrow-link" href={intro.linkUrl}>
+						{intro.linkLabel}
+						<span class="material-symbols-outlined" aria-hidden="true">arrow_forward</span>
+					</a>
+				)}
+			</div>
+
+			<WorkCarousel items={portfolio} buttonLabel="View case study" />
+		</div>
+	</section>
+)}

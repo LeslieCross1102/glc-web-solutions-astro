@@ -1,0 +1,36 @@
+---
+// Props: { url: string; label?: string; mascotSrc?: string; mascotAlt?: string }
+import WhatsappIcon from "./WhatsappIcon.astro";
+
+interface Props {
+	url: string;
+	label?: string;
+	mascotSrc?: string;
+	mascotAlt?: string;
+}
+
+const { url, label = "Prefer a conversation?", mascotSrc, mascotAlt = "" } = Astro.props;
+---
+
+{url && (
+	<aside class="glc-hero-strap" aria-label="Prefer a conversation on WhatsApp">
+		<div class="glc-container glc-hero-strap__inner">
+			{mascotSrc && (
+				<img
+					class="glc-hero-strap__mascot"
+					src={mascotSrc}
+					alt={mascotAlt}
+					width="281"
+					height="1024"
+					decoding="async"
+					loading="lazy"
+				/>
+			)}
+			<p class="glc-hero-strap__label">{label}</p>
+			<a class="glc-button glc-button--whatsapp glc-hero-strap__button" href={url} target="_blank" rel="noopener noreferrer">
+				<WhatsappIcon />
+				WhatsApp
+			</a>
+		</div>
+	</aside>
+)}

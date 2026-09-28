@@ -1,0 +1,11 @@
+---
+import { loadRenderedHtml, type RenderedPage } from "../../rendered";
+
+interface Props {
+	page: RenderedPage;
+}
+
+const html = await loadRenderedHtml(Astro.props.page, Astro.url);
+---
+
+<Fragment set:html={html} />

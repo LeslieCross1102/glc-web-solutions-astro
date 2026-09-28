@@ -1,0 +1,8 @@
+{
+	"script": "/glc/build/site.86aeb78633.js",
+	"preload": [
+		"/glc/fonts/inter-normal-2e721bfa.woff2",
+		"/glc/fonts/plus-jakarta-sans-normal-a3f3a30d.woff2",
+		"/glc/fonts/material-symbols-outlined-normal-4bbb8935.woff2"
+	]
+}

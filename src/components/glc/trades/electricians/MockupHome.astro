@@ -1,0 +1,63 @@
+---
+/** Props: { device: "laptop" | "phone" } */
+interface Props {
+	device: "laptop" | "phone";
+}
+
+const { device } = Astro.props;
+const mod = device === "phone" ? " glc-vm--phone" : "";
+---
+
+<div class={`glc-vm glc-vm--home${mod}`}>
+	<header class="glc-vm__nav">
+		<span class="glc-vm__brand">
+			<span class="glc-vm__bolt"></span>
+			VoltMaster
+		</span>
+		<nav class="glc-vm__links">
+			<span>Services</span>
+			<span>Domestic</span>
+			<span>Commercial</span>
+			<span>EV charging</span>
+		</nav>
+		<span class="glc-vm__nav-cta">Emergency call</span>
+	</header>
+
+	<div class="glc-vm__hero">
+		<div class="glc-vm__copy">
+			<span class="glc-vm__pill">Available 24/7 for emergencies</span>
+			<p class="glc-vm__headline">Expert electrical solutions for home &amp; business</p>
+			<p class="glc-vm__lede">NICEIC electricians across London and the South-East. Book planned work, or call out a spark in minutes.</p>
+			<div class="glc-vm__actions">
+				<span class="glc-vm__btn glc-vm__btn--primary">Book a service</span>
+				<span class="glc-vm__btn glc-vm__btn--warn">Call emergency</span>
+			</div>
+		</div>
+		<figure class="glc-vm__photo">
+			<img src="/glc/assets/images/electricians/electrician-portrait.jpg" alt="" width="400" height="600" />
+			<figcaption>Fully licensed &amp; insured</figcaption>
+		</figure>
+	</div>
+
+	<div class="glc-vm__trust">
+		<span>NICEIC</span>
+		<span>TrustMark</span>
+		<span>CHAS</span>
+		<span>Part P</span>
+	</div>
+
+	<div class="glc-vm__cards">
+		<article>
+			<strong>Commercial</strong>
+			<span>Fit-outs, testing, three-phase</span>
+		</article>
+		<article>
+			<strong>Domestic</strong>
+			<span>Rewires, consumer units, EV</span>
+		</article>
+		<article class="glc-vm__cards-urgent">
+			<strong>Emergency</strong>
+			<span>24/7 fault finding</span>
+		</article>
+	</div>
+</div>

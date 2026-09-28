@@ -1,0 +1,54 @@
+---
+/** Props: { device: "laptop" | "phone" } */
+interface Props {
+	device: "laptop" | "phone";
+}
+
+const { device } = Astro.props;
+const mod = device === "phone" ? " glc-ve--phone" : "";
+---
+
+<div class={`glc-ve glc-ve--home${mod}`}>
+	<header class="glc-ve__nav">
+		<span class="glc-ve__brand">VerdantEdge</span>
+		<nav class="glc-ve__links">
+			<span class="is-active">Our Gardens</span>
+			<span>The Process</span>
+			<span>Transformations</span>
+			<span>Contact</span>
+		</nav>
+		<span class="glc-ve__nav-cta">Consultation</span>
+	</header>
+
+	<div class="glc-ve__hero">
+		<img class="glc-ve__hero-img" src="/glc/assets/images/landscapers/garden-photo-dusk.jpg" alt="" width="1536" height="1024" />
+		<div class="glc-ve__hero-copy">
+			<p class="glc-ve__headline">Cultivating Serenity in Every Stone and Leaf</p>
+			<p class="glc-ve__lede">Bespoke outdoor sanctuaries designed for profound connection — from first sketch to planting out.</p>
+			<div class="glc-ve__hero-actions">
+				<span class="glc-ve__btn glc-ve__btn--accent">Begin Your Journey</span>
+				<span class="glc-ve__btn glc-ve__btn--ghost">Explore Our Gardens</span>
+			</div>
+		</div>
+	</div>
+
+	<div class="glc-ve__row">
+		<article class="glc-ve__chip">
+			<img src="/glc/assets/images/landscapers/garden-photo-path.jpg" alt="" width="280" height="186" />
+			<div>
+				<em>Our philosophy</em>
+				<strong>Managed Wildness</strong>
+			</div>
+		</article>
+		<article>
+			<em>Curation &amp; craft</em>
+			<strong>Hardscaping</strong>
+			<span>Stone, timber, water</span>
+		</article>
+		<article>
+			<em>Curation &amp; craft</em>
+			<strong>Botanical Curation</strong>
+			<span>Native planting, year-round</span>
+		</article>
+	</div>
+</div>

@@ -1,0 +1,35 @@
+---
+// Props: { title?: string; text?: string; showForm?: boolean (default true); formLead?: string } — defaults are glc_home_cta()
+import OfferForm from "../shared/OfferForm.astro";
+
+interface Props {
+	title?: string;
+	text?: string;
+	showForm?: boolean;
+	formLead?: string;
+}
+
+const {
+	title = "Need a website that earns its keep?",
+	text = "Tell us what you do. We will come back with a clear, cost-effective plan — no waffle.",
+	showForm = true,
+	formLead = "Share a few details and we will get back to you.",
+} = Astro.props;
+---
+
+{(title || showForm) && (
+	<section class="glc-home-section glc-home-section--surface" id="glc-get-started">
+		<div class="glc-container">
+			<div class="glc-cta-panel">
+				{title && <h2 class="glc-cta-panel__title">{title}</h2>}
+				{text && <p class="glc-cta-panel__text">{text}</p>}
+				{showForm && (
+					<div class="glc-cta-panel__form">
+						{formLead && <p class="glc-cta-panel__form-lead">{formLead}</p>}
+						<OfferForm />
+					</div>
+				)}
+			</div>
+		</div>
+	</section>
+)}

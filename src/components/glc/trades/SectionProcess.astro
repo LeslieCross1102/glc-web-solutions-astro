@@ -1,0 +1,59 @@
+---
+/** Props: { trade: TradeData } — port of service-<trade>/section-process.php */
+import type { TradeData } from "../../../data/glc/trades/types";
+import { designProcess as steps } from "../../../data/glc/trades/shared";
+
+interface Props {
+	trade: TradeData;
+}
+
+const { trade } = Astro.props;
+const { key, processIntro: intro } = trade;
+---
+
+{steps.length > 0 && (
+	<section
+		class="glc-home-section glc-home-section--surface"
+		id={`glc-${key}-process`}
+		aria-labelledby={`glc-${key}-process-title`}
+	>
+		<div class="glc-container glc-container--design-process">
+			<header class="glc-home-heading glc-home-heading--center">
+				{intro.eyebrow && <span class="glc-eyebrow glc-eyebrow--micro">{intro.eyebrow}</span>}
+
+				<h2 class="glc-home-heading__title" id={`glc-${key}-process-title`}>{intro.title}</h2>
+
+				{intro.lead && (
+					<div class="glc-home-heading__intro">
+						<p>{intro.lead}</p>
+					</div>
+				)}
+			</header>
+
+			<div class="glc-design-process-grid">
+				{steps.map((step, index) => (
+					<article class="glc-design-process-step">
+						<div class="glc-design-process-step__heading">
+							<span class="glc-design-process-step__number">{index + 1}</span>
+							<h3 class="glc-design-process-step__title">{step.title}</h3>
+						</div>
+
+						<figure class="glc-design-process-step__media">
+							<img
+								width={step.image.width}
+								height={step.image.height}
+								src={step.image.src}
+								class="attachment-large size-large"
+								alt={step.title}
+								loading="lazy"
+								decoding="async"
+							/>
+						</figure>
+
+						<p class="glc-design-process-step__text">{step.text}</p>
+					</article>
+				))}
+			</div>
+		</div>
+	</section>
+)}

@@ -1,0 +1,458 @@
+/*
+Template:       restly
+Theme Name:     Restly Child
+Theme URI: 		http://wptf.themepul.com/restly
+Author: 		Themepul
+Author URI: 	http://themepul.com/
+Description:    This Child Theme only for Restly Theme.
+Version:        1.0.0
+Text Domain:    restly-child
+*/
+
+/* Split layout pages: hide duplicate breadcrumb title (H1 is in content) */
+body.glc-services-location-page .breadcroumb-area .brea-title,
+body.glc-contact-page .breadcroumb-area .brea-title {
+	position: absolute;
+	width: 1px;
+	height: 1px;
+	padding: 0;
+	margin: -1px;
+	overflow: hidden;
+	clip: rect(0, 0, 0, 0);
+	white-space: nowrap;
+	border: 0;
+}
+
+.glc-location-page .post-thumbnail {
+	margin-bottom: clamp(1.5rem, 3vw, 2.25rem);
+}
+
+.glc-location-page__split {
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: clamp(1.25rem, 3vw, 2.25rem);
+	align-items: start;
+	margin-bottom: 0;
+}
+
+@media (min-width: 768px) {
+	.glc-location-page__split {
+		grid-template-columns: minmax(11rem, 0.42fr) minmax(0, 1fr);
+		gap: clamp(1.75rem, 4vw, 3rem);
+		column-gap: clamp(2rem, 5vw, 3.5rem);
+	}
+}
+
+.glc-location-page__title-col {
+	margin: 0;
+	padding: 0;
+}
+
+.glc-location-page__title {
+	margin: 0;
+	padding: 0 0 0 1rem;
+	font-size: clamp(1.65rem, 2.8vw, 2.35rem);
+	font-weight: 700;
+	line-height: 1.18;
+	letter-spacing: -0.02em;
+	color: #1d2c38;
+	border-left: 4px solid #006666;
+}
+
+.glc-location-page__body-col {
+	margin: 0;
+}
+
+.glc-location-page__body-col > *:first-child {
+	margin-top: 0;
+}
+
+.glc-location-page__body-col p {
+	font-size: 1.0625rem;
+	line-height: 1.65;
+	color: #2c3e50;
+}
+
+.glc-location-page__body-col p + p {
+	margin-top: 1em;
+}
+
+/* Contact page: teal panel + white form card (aligns with location contact band) */
+.glc-contact-page .glc-contact-page__panel {
+	background: #006666;
+	border-radius: 14px;
+	padding: clamp(1.75rem, 4vw, 2.75rem) clamp(1.25rem, 3vw, 2rem);
+	box-shadow: 0 12px 40px rgba(0, 102, 102, 0.25);
+}
+
+.glc-contact-page .glc-contact-page__panel > *:first-child {
+	margin-top: 0;
+}
+
+.glc-contact-page .glc-contact-page__panel p,
+.glc-contact-page .glc-contact-page__panel li {
+	color: rgba(255, 255, 255, 0.94);
+	font-size: 1.0625rem;
+	line-height: 1.65;
+}
+
+.glc-contact-page .glc-contact-page__panel h2,
+.glc-contact-page .glc-contact-page__panel h3 {
+	color: #ffffff;
+	font-weight: 700;
+	margin-top: 1.25em;
+	margin-bottom: 0.5em;
+}
+
+.glc-contact-page .glc-contact-page__panel a {
+	color: #c8f0f0;
+	text-decoration: underline;
+	text-underline-offset: 2px;
+}
+
+.glc-contact-page .glc-contact-page__panel a:hover {
+	color: #ffffff;
+}
+
+.glc-contact-page .glc-contact-page__panel .wpcf7 {
+	margin: clamp(1.25rem, 3vw, 1.75rem) auto 0;
+	max-width: 40rem;
+	background: #ffffff;
+	color: #1d2c38;
+	padding: clamp(1.75rem, 4vw, 2.75rem);
+	border-radius: 12px;
+	box-shadow: 0 16px 48px rgba(0, 0, 0, 0.18);
+	text-align: left;
+}
+
+/*
+ * Contact + Elementor: stretched sections and 3-col inner layouts break inside the split column.
+ * Kit CSS can hide h1.entry-title; intro uses trx_addons_light_text (wrong contrast on teal).
+ */
+body.glc-contact-page h1.glc-location-page__title.entry-title {
+	display: block !important;
+	visibility: visible !important;
+	opacity: 1 !important;
+}
+
+body.glc-contact-page .glc-contact-page__panel {
+	overflow: hidden;
+	max-width: 100%;
+}
+
+body.glc-contact-page .glc-contact-page__panel > .elementor {
+	width: 100%;
+	max-width: 100%;
+	margin: 0;
+}
+
+/* Neutralise full-bleed stretch math inside the panel (Elementor sets inline width/left). */
+body.glc-contact-page .glc-contact-page__panel .elementor-section.elementor-section-stretched {
+	position: relative !important;
+	width: 100% !important;
+	max-width: 100% !important;
+	left: auto !important;
+	right: auto !important;
+	margin-left: 0 !important;
+	margin-right: 0 !important;
+	transform: none !important;
+}
+
+body.glc-contact-page .glc-contact-page__panel .elementor-section > .elementor-container {
+	max-width: 100% !important;
+	margin-left: auto !important;
+	margin-right: auto !important;
+	padding-left: 0;
+	padding-right: 0;
+}
+
+/* Flatten Elementor’s empty side columns: one column for intro + form. */
+body.glc-contact-page .glc-contact-page__panel .elementor-inner-section .elementor-column,
+body.glc-contact-page .glc-contact-page__panel .elementor-inner-section .elementor-column > .elementor-element-populated {
+	width: 100% !important;
+	max-width: 100% !important;
+	flex-basis: 100% !important;
+}
+
+body.glc-contact-page .glc-contact-page__panel .elementor-inner-section .elementor-container {
+	flex-wrap: wrap;
+}
+
+/* Hide top-level Elementor sections that contain no widgets (empty placeholders). */
+body.glc-contact-page .glc-contact-page__panel .elementor > .elementor-top-section:not(:has(.elementor-widget)) {
+	display: none !important;
+}
+
+/* Fade-in animation classes can leave content invisible if JS hiccups. */
+body.glc-contact-page .glc-contact-page__panel .elementor-invisible {
+	opacity: 1 !important;
+	visibility: visible !important;
+	animation: none !important;
+	transform: none !important;
+}
+
+body.glc-contact-page .glc-contact-page__panel .trx_addons_light_text,
+body.glc-contact-page .glc-contact-page__panel .elementor-widget-text-editor,
+body.glc-contact-page .glc-contact-page__panel .elementor-widget-text-editor p {
+	color: rgba(255, 255, 255, 0.94) !important;
+}
+
+/* Services hub: location link list */
+.glc-services-locations {
+	list-style: none;
+	margin: 1.25em 0 0;
+	padding: 0;
+	display: grid;
+	gap: 0.5em 1.5em;
+	grid-template-columns: repeat(auto-fill, minmax(14rem, 1fr));
+}
+
+.glc-services-locations li {
+	margin: 0;
+}
+
+.glc-services-locations a {
+	text-decoration: none;
+	border-bottom: 1px solid currentColor;
+	padding-bottom: 0.1em;
+}
+
+.glc-services-locations a:hover {
+	opacity: 0.85;
+}
+
+/* Footer: full-width service area links */
+.glc-footer-locations-wrap {
+	width: 100%;
+	padding: 1rem 0 1.25rem;
+	border-top: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.glc-footer-locations-wrap .container {
+	width: 100%;
+	max-width: 100%;
+}
+
+.glc-footer-locations ul {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	grid-template-columns: repeat(auto-fill, minmax(7.5rem, 1fr));
+	gap: 0.35rem 1rem;
+	justify-items: center;
+	text-align: center;
+	font-size: 0.8125rem;
+	line-height: 1.35;
+}
+
+.glc-footer-locations li {
+	margin: 0;
+}
+
+.glc-footer-locations a {
+	display: inline-block;
+	text-decoration: none;
+	opacity: 0.92;
+}
+
+.glc-footer-locations a:hover {
+	opacity: 1;
+	text-decoration: underline;
+}
+
+/* Services location pages: clients showcase + contact (below intro) */
+.glc-location-blocks-wrap {
+	clear: both;
+	margin-top: clamp(2.5rem, 5vw, 4rem);
+	padding-top: clamp(2rem, 4vw, 3.5rem);
+	padding-bottom: clamp(3rem, 6vw, 5rem);
+	border-top: 1px solid rgba(0, 0, 0, 0.06);
+}
+
+/* Happy customers — static image grid */
+.glc-clients-showcase {
+	padding-bottom: clamp(2rem, 4vw, 3rem);
+}
+
+.glc-clients-showcase__title {
+	text-align: center;
+	font-size: clamp(1.5rem, 2.5vw, 1.85rem);
+	margin: 0 0 1.75rem;
+	color: #1d2c38;
+	font-weight: 700;
+}
+
+.glc-clients-showcase__grid {
+	list-style: none;
+	margin: 0;
+	padding: 0;
+	display: grid;
+	grid-template-columns: 1fr;
+	gap: clamp(1rem, 3vw, 1.75rem);
+}
+
+@media (min-width: 576px) {
+	.glc-clients-showcase__grid {
+		grid-template-columns: repeat(2, 1fr);
+	}
+}
+
+@media (min-width: 992px) {
+	.glc-clients-showcase__grid {
+		grid-template-columns: repeat(3, 1fr);
+		align-items: stretch;
+	}
+}
+
+.glc-clients-showcase__item {
+	margin: 0;
+}
+
+.glc-clients-showcase__figure {
+	margin: 0;
+	height: 100%;
+	display: flex;
+	flex-direction: column;
+	background: #fff;
+	border-radius: 12px;
+	overflow: hidden;
+	box-shadow: 0 8px 32px rgba(29, 44, 56, 0.1);
+	border: 1px solid rgba(0, 0, 0, 0.06);
+	transition: box-shadow 0.25s ease, transform 0.25s ease;
+}
+
+.glc-clients-showcase__figure:hover {
+	box-shadow: 0 14px 40px rgba(29, 44, 56, 0.14);
+	transform: translateY(-2px);
+}
+
+.glc-clients-showcase__img {
+	display: block;
+	width: 100%;
+	height: auto;
+	aspect-ratio: 1024 / 755;
+	object-fit: cover;
+	vertical-align: middle;
+}
+
+.glc-clients-showcase__caption {
+	margin: 0;
+	padding: 0.85rem 1rem 1rem;
+	font-size: 0.9rem;
+	font-weight: 600;
+	text-align: center;
+	color: #1d2c38;
+	background: linear-gradient(to top, #f8fafb, #fff);
+	border-top: 1px solid rgba(0, 0, 0, 0.05);
+}
+
+/* Contact band */
+.glc-contact-band {
+	margin-top: clamp(0.5rem, 2vw, 1rem);
+}
+
+.glc-contact-band__outer {
+	background: #f8f2ed;
+	padding: clamp(2rem, 5vw, 3.5rem) 0;
+	border-radius: 0;
+}
+
+.glc-contact-band__inner {
+	background: #006666;
+	border-radius: 14px;
+	padding: clamp(1.75rem, 4vw, 2.75rem) clamp(1.25rem, 3vw, 2rem);
+	text-align: center;
+	box-shadow: 0 12px 40px rgba(0, 102, 102, 0.25);
+}
+
+.glc-contact-band__title {
+	margin: 0 0 0.75rem;
+	color: #ffffff;
+	font-size: clamp(1.35rem, 2.2vw, 1.65rem);
+	font-weight: 700;
+}
+
+.glc-contact-band__intro {
+	margin: 0 auto 1.5rem;
+	max-width: 36rem;
+	color: rgba(255, 255, 255, 0.94);
+	font-size: 1rem;
+	line-height: 1.55;
+}
+
+.glc-contact-band__form .wpcf7 {
+	margin: 0 auto;
+	max-width: 40rem;
+	background: #ffffff;
+	color: #1d2c38;
+	padding: clamp(1.75rem, 4vw, 2.75rem);
+	border-radius: 12px;
+	box-shadow: 0 16px 48px rgba(0, 0, 0, 0.18);
+	text-align: left;
+}
+
+.glc-location-blocks-wrap .wpcf7 input[type="text"],
+.glc-location-blocks-wrap .wpcf7 input[type="email"],
+.glc-location-blocks-wrap .wpcf7 input[type="tel"],
+.glc-location-blocks-wrap .wpcf7 input[type="url"],
+.glc-location-blocks-wrap .wpcf7 select,
+.glc-location-blocks-wrap .wpcf7 textarea,
+.glc-contact-page .glc-contact-page__panel .wpcf7 input[type="text"],
+.glc-contact-page .glc-contact-page__panel .wpcf7 input[type="email"],
+.glc-contact-page .glc-contact-page__panel .wpcf7 input[type="tel"],
+.glc-contact-page .glc-contact-page__panel .wpcf7 input[type="url"],
+.glc-contact-page .glc-contact-page__panel .wpcf7 select,
+.glc-contact-page .glc-contact-page__panel .wpcf7 textarea {
+	margin-bottom: 1.35rem;
+	padding: 0.9rem 1.1rem;
+	width: 100%;
+	box-sizing: border-box;
+	font-size: 1rem;
+	line-height: 1.45;
+	background: #f4f7f9;
+	border: 1px solid #b0bec5;
+	color: #1d2c38;
+	border-radius: 6px;
+}
+
+.glc-location-blocks-wrap .wpcf7 input::placeholder,
+.glc-location-blocks-wrap .wpcf7 textarea::placeholder,
+.glc-contact-page .glc-contact-page__panel .wpcf7 input::placeholder,
+.glc-contact-page .glc-contact-page__panel .wpcf7 textarea::placeholder {
+	color: #546e7a;
+	opacity: 1;
+}
+
+.glc-location-blocks-wrap .wpcf7 textarea,
+.glc-contact-page .glc-contact-page__panel .wpcf7 textarea {
+	min-height: 10rem;
+	line-height: 1.5;
+}
+
+.glc-location-blocks-wrap .wpcf7 .columns_wrap,
+.glc-contact-page .glc-contact-page__panel .wpcf7 .columns_wrap {
+	margin-bottom: 0.25rem;
+}
+
+.glc-location-blocks-wrap .wpcf7 input[type="submit"],
+.glc-location-blocks-wrap .wpcf7 button[type="submit"],
+.glc-contact-page .glc-contact-page__panel .wpcf7 input[type="submit"],
+.glc-contact-page .glc-contact-page__panel .wpcf7 button[type="submit"] {
+	margin-top: 0.5rem;
+	padding: 0.95rem 2.5rem;
+	cursor: pointer;
+	background: #006666 !important;
+	color: #ffffff !important;
+	border: none !important;
+	border-radius: 6px;
+	font-weight: 600;
+	font-size: 1rem;
+}
+
+.glc-location-blocks-wrap .wpcf7 input[type="submit"]:hover,
+.glc-location-blocks-wrap .wpcf7 button[type="submit"]:hover,
+.glc-contact-page .glc-contact-page__panel .wpcf7 input[type="submit"]:hover,
+.glc-contact-page .glc-contact-page__panel .wpcf7 button[type="submit"]:hover {
+	filter: brightness(1.08);
+}
