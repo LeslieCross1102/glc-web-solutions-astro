@@ -106,10 +106,17 @@ def render(item):
         re.sub(r"https?:(\\?/){2}" + re.escape(HOST), "{{origin}}", m.group(0))
         for m in re.finditer(r"<script type=\"application/ld\+json\"[^>]*>.*?</script>", head, re.S)
     )
+    for m in re.finditer(r"\{\{origin\}\}/wp-content/uploads/([^\s\"'?#]+)", jsonld):
+        uploads.add(m.group(1))
+    jsonld = jsonld.replace("{{origin}}/wp-content/uploads/", "{{origin}}/glc/uploads/").replace(
+        "{{origin}}" + THEME_PATH, "{{origin}}/glc/"
+    )
     content = rewrite(extract_content(html, post=kind == "post")).strip()
     key = key_for(path)
+    # The theme and Yoast spell the organisation @id differently; one spelling keeps it one entity
+    page_html = (content + "\n" + jsonld + "\n").replace("{{origin}}#organization", "{{origin}}/#organization")
     with open(os.path.join(OUT_DIR, key + ".html"), "w") as f:
-        f.write(content + "\n" + jsonld + "\n")
+        f.write(page_html)
     sizes[path] = len(content)
     desc = re.search(r'<meta name="description" content="([^"]*)"', head)
     title = re.search(r"<title>(.*?)</title>", head, re.S)

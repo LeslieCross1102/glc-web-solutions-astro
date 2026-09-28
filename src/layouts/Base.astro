@@ -11,6 +11,7 @@ import GlcHead from "../components/glc/GlcHead.astro";
 import GlcHeader from "../components/glc/GlcHeader.astro";
 import GlcFooter from "../components/glc/GlcFooter.astro";
 import { resolveBlogSiteIdentity } from "../utils/site-identity";
+import { businessJsonLd } from "../data/glc/business";
 import assets from "../generated/assets.json";
 import "../styles/tokens.css";
 import "../styles/theme.css";
@@ -125,6 +126,7 @@ j=d.createElement(s),dl=l!='dataLayer'?'&l='+l:'';j.async=true;j.src=
 		<GlcHead renderedKey={renderedKey} sections={sections} trade={trade} />
 		<title>{fullTitle}</title>
 		<EmDashHead page={pageCtx} />
+		<script is:inline type="application/ld+json" set:html={JSON.stringify(businessJsonLd(Astro.url.origin, Astro.originPathname))} />
 	</head>
 	<body class={["glc-theme", "glc-has-custom-chrome", ...bodyClass].join(" ")}>
 		<!-- Google Tag Manager (noscript) -->
