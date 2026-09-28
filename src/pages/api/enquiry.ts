@@ -4,10 +4,8 @@ export const prerender = false;
 
 interface Env {
 	DB: D1Database;
-	/** send_email binding — add once the domain's email is set up on Cloudflare */
-	ENQUIRY_EMAIL?: { send(message: unknown): Promise<void> };
-	ENQUIRY_TO?: string;
-	ENQUIRY_FROM?: string;
+	/** Google Apps Script web app (scripts/enquiry-notify.gs) that emails each enquiry from the Workspace account */
+	ENQUIRY_WEBHOOK_URL?: string;
 	TURNSTILE_SECRET_KEY?: string;
 }
 
@@ -15,8 +13,6 @@ const FORMS: Record<string, { label: string; name: string; email: string; messag
 	"73": { label: "Contact form", name: "text-your-name", email: "email-your-email", message: "textarea-your-message" },
 	"4297": { label: "Special offer", name: "your-name", email: "your-email", message: "your-brief" },
 };
-const DEFAULT_TO = "gareth@glcwebsolutions.co.uk";
-const DEFAULT_FROM = "website@glcwebsolutions.co.uk";
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const MAX_PER_WINDOW = 5;
 const WINDOW_MINUTES = 10;
@@ -39,31 +35,15 @@ async function verifyTurnstile(secret: string, token: string, ip: string | null)
 	return Boolean(data.success);
 }
 
-function mime(from: string, to: string, replyTo: string, subject: string, text: string): string {
-	const encode = (s: string) => `=?UTF-8?B?${btoa(String.fromCharCode(...new TextEncoder().encode(s)))}?=`;
-	return [
-		`From: GLC Web Solutions website <${from}>`,
-		`To: ${to}`,
-		`Reply-To: ${replyTo}`,
-		`Subject: ${encode(subject)}`,
-		`Date: ${new Date().toUTCString()}`,
-		`Message-ID: <${crypto.randomUUID()}@glcwebsolutions.co.uk>`,
-		"MIME-Version: 1.0",
-		"Content-Type: text/plain; charset=utf-8",
-		"Content-Transfer-Encoding: 8bit",
-		"",
-		text,
-	].join("\r\n");
-}
-
-async function sendEmail(env: Env, fields: Record<string, string>, form: string, email: string, page: string) {
-	if (!env.ENQUIRY_EMAIL) return false;
-	const { EmailMessage } = await import("cloudflare:email");
-	const to = env.ENQUIRY_TO || DEFAULT_TO;
-	const from = env.ENQUIRY_FROM || DEFAULT_FROM;
-	const lines = Object.entries(fields).map(([k, v]) => `${k}: ${v}`);
-	const text = [`New ${form} enquiry from ${page}`, "", ...lines].join("\n");
-	await env.ENQUIRY_EMAIL.send(new EmailMessage(from, to, mime(from, to, email, `Website enquiry: ${form}`, text)));
+async function notify(env: Env, enquiry: Record<string, unknown>): Promise<boolean> {
+	if (!env.ENQUIRY_WEBHOOK_URL) return false;
+	const res = await fetch(env.ENQUIRY_WEBHOOK_URL, {
+		method: "POST",
+		headers: { "content-type": "application/json" },
+		body: JSON.stringify(enquiry),
+	});
+	const result = (await res.json().catch(() => null)) as { ok?: boolean } | null;
+	if (!result?.ok) throw new Error(`enquiry webhook returned ${res.status}`);
 	return true;
 }
 
@@ -135,11 +115,12 @@ export const POST: APIRoute = async ({ request }) => {
 		.run();
 
 	try {
-		if (await sendEmail(env, fields, spec.label, value(spec.email), page)) {
+		const enquiry = { form: spec.label, page, name: value(spec.name), email: value(spec.email), fields };
+		if (await notify(env, enquiry)) {
 			await env.DB.prepare("UPDATE glc_enquiries SET emailed = 1 WHERE id = ?").bind(id).run();
 		}
 	} catch (err) {
-		console.error("enquiry email failed", err);
+		console.error("enquiry notification failed", err);
 	}
 
 	return json({ status: "mail_sent", message: "Thank you for your message. It has been sent." });
