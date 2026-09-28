@@ -19,7 +19,8 @@ export default defineConfig({
 	integrations: [
 		react(),
 		emdash({
-			siteUrl: "https://glcwebsolutions.co.uk",
+			// Switch to https://glcwebsolutions.co.uk when the domain moves across
+			siteUrl: "https://glc-web-solutions.gareth-17d.workers.dev",
 			database: d1({ binding: "DB", session: "auto" }),
 			storage: r2({ binding: "MEDIA" }),
 			// Shares the adapter's SESSION namespace; KV Free allows 1,000 writes/day, so keep the TTL long
