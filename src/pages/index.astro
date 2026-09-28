@@ -4,6 +4,7 @@ import Base from "../layouts/Base.astro";
 import RenderedBody from "../components/glc/RenderedBody.astro";
 import { getRenderedPage } from "../rendered";
 import { resolveBlogSiteIdentity } from "../utils/site-identity";
+import { cachePublicPage } from "../utils/page-cache";
 
 // WordPress front page (Settings → Reading) was imported as this page; its SEO drives the home <head>
 const FRONT_PAGE_SLUG = "home-1";
@@ -17,6 +18,7 @@ const frontSeo = frontPage ? (frontPage.seo ?? frontPage.data.seo) : null;
 const rendered = getRenderedPage("/");
 
 if (Astro.cache?.enabled && cacheHint) Astro.cache.set(cacheHint);
+cachePublicPage(Astro);
 ---
 
 <Base

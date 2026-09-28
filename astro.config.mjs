@@ -1,12 +1,16 @@
 import cloudflare from "@astrojs/cloudflare";
 import react from "@astrojs/react";
-import { d1, r2 } from "@emdash-cms/cloudflare";
+import { d1, kvCache, r2 } from "@emdash-cms/cloudflare";
 import { defineConfig, fontProviders } from "astro/config";
 import emdash from "emdash/astro";
 
 export default defineConfig({
 	output: "server",
 	adapter: cloudflare(),
+	// Workers Cache (wrangler "cache.enabled"): public pages opt in from Base.astro, EmDash purges by tag on save
+	cache: {
+		provider: { name: "cloudflare", entrypoint: new URL("./src/cache-provider.ts", import.meta.url) },
+	},
 	build: { inlineStylesheets: "always" },
 	image: {
 		layout: "constrained",
@@ -19,6 +23,8 @@ export default defineConfig({
 			siteUrl: "https://glc-web-solutions.gareth-17d.workers.dev",
 			database: d1({ binding: "DB", session: "auto" }),
 			storage: r2({ binding: "MEDIA" }),
+			// Shares the adapter's SESSION namespace; KV Free allows 1,000 writes/day, so keep the TTL long
+			objectCache: kvCache({ binding: "SESSION", keyPrefix: "emdash-cache:", defaultTtl: 900 }),
 		}),
 	],
 	fonts: [

@@ -4,6 +4,10 @@
 	"main": "./src/worker.ts",
 	"compatibility_date": "2026-02-24",
 	"compatibility_flags": ["nodejs_compat"],
+	// Workers Cache: cached pages are served without invoking the Worker (no CPU). Responses set their own policy in src/worker.ts
+	"cache": {
+		"enabled": true,
+	},
 	"d1_databases": [
 		{
 			"binding": "DB",
@@ -19,8 +23,8 @@
 	],
 	// Sandboxed plugins require Worker Loader, available on Workers paid plans. Uncomment to enable:
 	// "worker_loaders": [{ "binding": "LOADER" }],
-	// General maintenance cron trigger
+	// Scheduled publishing and maintenance; every 10 minutes keeps invocations (and CPU) down on the Free plan
 	"triggers": {
-		"crons": ["* * * * *"],
+		"crons": ["*/10 * * * *"],
 	},
 }

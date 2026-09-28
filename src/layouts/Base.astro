@@ -75,10 +75,10 @@ const [settingsResult, menuResult] = await Promise.all([
 	getSiteSettingsWithCacheHint(),
 	getMenuWithCacheHint("primary"),
 ]);
-if (Astro.cache?.enabled) {
-	Astro.cache.set(settingsResult.cacheHint);
-	Astro.cache.set(menuResult.cacheHint);
-}
+// Route-cache headers are applied before layouts render, so pages set theirs via cachePublicPage()
+
+// Check if user is logged in (for showing admin link)
+const isLoggedIn = !!Astro.locals.user;
 
 const { siteTitle, siteTagline, siteLogo } = resolveBlogSiteIdentity(
 	settingsResult.data,
@@ -108,9 +108,6 @@ const pageCtx = createPublicPageContext({
 	articleMeta: { publishedTime, modifiedTime, author },
 	siteName: siteTitle,
 });
-
-// Check if user is logged in (for showing admin link)
-const isLoggedIn = !!Astro.locals.user;
 ---
 
 <!doctype html>

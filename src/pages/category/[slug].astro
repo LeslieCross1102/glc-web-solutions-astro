@@ -7,10 +7,11 @@ import {
 } from "emdash";
 import Base from "../../layouts/Base.astro";
 import RenderedBody from "../../components/glc/RenderedBody.astro";
-import { fallbackDescription, getRenderedPage } from "../../rendered";
+import { getRenderedPage } from "../../rendered";
 import PostCard from "../../components/PostCard.astro";
 import { getReadingTime } from "../../utils/reading-time";
 import { contentUrl } from "../../utils/content-url";
+import { cachePublicPage } from "../../utils/page-cache";
 
 const slug = decodeSlug(Astro.params.slug);
 const termsResult = await getTaxonomyTermsWithCacheHint("category", {
@@ -38,26 +39,27 @@ if (Astro.cache?.enabled) {
 	Astro.cache.set(termsResult.cacheHint);
 	Astro.cache.set(cacheHint);
 }
+cachePublicPage(Astro);
+
+const rendered = getRenderedPage(Astro.originPathname);
 
 // Single batched query for tags on every post in this category, rather
 // than calling getEntryTerms() per post (which would be one round-trip
-// per post).
+// per post). Rendered WordPress archives list their own posts, so skip it.
 const tagsByEntry = await getTermsForEntries(
 	"posts",
-	posts.map((p) => p.data.id),
+	rendered ? [] : posts.map((p) => p.data.id),
 	"tag",
 );
 const filteredPosts = posts.map((post) => ({
 	post,
 	tags: tagsByEntry.get(post.data.id) ?? [],
 }));
-
-const rendered = getRenderedPage(Astro.originPathname);
 ---
 
 <Base
 	title={`${term.label} Archives`}
-	description={rendered?.description || (posts[0]?.seo ?? posts[0]?.data.seo)?.description || posts[0]?.data.excerpt || fallbackDescription(rendered)}
+	description={rendered?.description || (posts[0]?.seo ?? posts[0]?.data.seo)?.description || posts[0]?.data.excerpt || null}
 	bodyClass={rendered?.bodyClass}
 	sections={rendered ? rendered.sections : true}
 	renderedKey={rendered?.key}

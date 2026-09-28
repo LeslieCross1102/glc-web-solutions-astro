@@ -11,6 +11,7 @@ import { resolveTemplate } from "../../templates";
 import { fallbackDescription, getRenderedPage } from "../../rendered";
 import RenderedBody from "../../components/glc/RenderedBody.astro";
 import { resolveBlogSiteIdentity } from "../../utils/site-identity";
+import { cachePublicPage } from "../../utils/page-cache";
 
 const slug = decodeSlug(Astro.params.slug);
 
@@ -25,6 +26,7 @@ if (!page) {
 }
 
 if (Astro.cache?.enabled) Astro.cache.set(cacheHint);
+cachePublicPage(Astro);
 const { siteTitle } = resolveBlogSiteIdentity(await getSiteSettings());
 // Imported SEO titles are the full WordPress <title>, so only append the site name to plain titles
 const hasSeoTitle = Boolean((page.seo ?? page.data.seo)?.title);

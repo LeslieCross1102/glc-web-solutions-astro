@@ -7,9 +7,11 @@
  * then the final path segment (WP hierarchical pages store leaf post_name).
  * Rewrites to the existing /pages/[slug] or /posts/[slug] templates so
  * rendering stays in one place. Prefixed /posts/ and /pages/ URLs still work.
+ * Unknown paths render the 404 page in place, as WordPress does.
  */
 import { getEmDashEntry, decodeSlug } from "emdash";
 import { slugLookupCandidates } from "../utils/content-url";
+import { getRenderedPage } from "../rendered";
 
 const rawParam = Astro.params.slug;
 const raw =
@@ -20,25 +22,26 @@ const raw =
 			: "";
 const pathSlug = decodeSlug(raw) ?? raw;
 
-if (!pathSlug) {
-	return Astro.redirect("/404");
+// WordPress slugs never contain dots, so file-like probes (/wp-login.php, /.env) skip the database
+if (!pathSlug || pathSlug.includes(".")) {
+	return Astro.rewrite("/404");
 }
 
 const candidates = slugLookupCandidates(pathSlug);
+// Known rendered posts try the posts collection first, saving the failed page lookups
+const collections =
+	getRenderedPage(Astro.originPathname)?.kind === "post"
+		? (["posts", "pages"] as const)
+		: (["pages", "posts"] as const);
 
-for (const candidate of candidates) {
-	const { entry: page } = await getEmDashEntry("pages", candidate);
-	if (page) {
-		return Astro.rewrite(`/pages/${candidate}`);
+for (const collection of collections) {
+	for (const candidate of candidates) {
+		const { entry } = await getEmDashEntry(collection, candidate);
+		if (entry) {
+			return Astro.rewrite(`/${collection}/${candidate}`);
+		}
 	}
 }
 
-for (const candidate of candidates) {
-	const { entry: post } = await getEmDashEntry("posts", candidate);
-	if (post) {
-		return Astro.rewrite(`/posts/${candidate}`);
-	}
-}
-
-return Astro.redirect("/404");
+return Astro.rewrite("/404");
 ---

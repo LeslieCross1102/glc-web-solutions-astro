@@ -22,3 +22,16 @@
 
 /glc/build/css/*
   X-Robots-Tag: noindex
+  Cache-Control: public, max-age=86400
+
+/glc/assets/css/*
+  Cache-Control: public, max-age=86400
+
+/glc/assets/js/*
+  Cache-Control: public, max-age=86400
+
+/glc/wp/*
+  Cache-Control: public, max-age=86400
+
+/glc/:file
+  Cache-Control: public, max-age=86400

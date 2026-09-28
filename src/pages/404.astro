@@ -1,5 +1,8 @@
 ---
 import Base from "../layouts/Base.astro";
+import { cachePublicPage } from "../utils/page-cache";
+
+cachePublicPage(Astro);
 ---
 
 <Base title="Page not found">
