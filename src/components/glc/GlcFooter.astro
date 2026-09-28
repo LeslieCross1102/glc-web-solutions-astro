@@ -1,5 +1,30 @@
 ---
 import { footerHtml } from "./chrome";
+import locationGroups from "../../generated/footer-locations.json";
 ---
 
 <Fragment set:html={footerHtml} />
+<div class="glc-footer-locations-wrap glc-footer-locations-wrap--mu">
+	<div class="container">
+		<nav class="glc-footer-locations" aria-label="Service areas">
+			{
+				locationGroups.map((group) => (
+					<section class="glc-footer-locations__hub" aria-labelledby={`glc-footer-hub-${group.key}`}>
+						<h3 class="glc-footer-locations__hub-title" id={`glc-footer-hub-${group.key}`}>
+							{group.url ? <a href={group.url}>{group.name}</a> : group.name}
+						</h3>
+						{group.items.length > 0 && (
+							<ul class="glc-footer-locations__spokes">
+								{group.items.map((item) => (
+									<li>
+										<a href={item.url}>{item.label}</a>
+									</li>
+								))}
+							</ul>
+						)}
+					</section>
+				))
+			}
+		</nav>
+	</div>
+</div>
