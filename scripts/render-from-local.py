@@ -4,10 +4,11 @@ Writes content/rendered/<key>.html (raw; `node scripts/optimise.mjs` turns these
 public/glc/rendered/ assets), src/rendered/manifest.json and downloads referenced uploads into
 public/glc/uploads/. Header/footer/CSS/JS are not captured (ported separately into Base.astro).
 
-Listings (blog, category, tag and author archives) are followed through their rel="next" pages.
+Tag and author archives are followed through their rel="next" pages. The blog and category listings
+aren't paged: src/components/glc/blog/BlogIndex.astro lists every post on one page.
 
 Usage: python3 scripts/render-from-local.py [local-origin] [--paged-only]   (default http://glc-web-solutions.local)
-  --paged-only  render just the author archive and listing pages 2+, merged into the existing manifest
+  --paged-only  render just the author archive and tag/author pages 2+, merged into the existing manifest
 """
 
 import html as htmllib
@@ -29,7 +30,6 @@ TRADES = ("electricians", "pubs", "landscapers")
 THEME_PATH = "/wp-content/themes/glc-web-solutions/"
 # Linked from every post byline but absent from the Yoast sitemaps
 EXTRA_ARCHIVES = ("/author/gareth-cross/",)
-BLOG_PATH = "/all-posts/"
 
 
 def get(url, binary=False):
@@ -166,7 +166,7 @@ sitemap_items = [
     for url in locs(get(f"{LOCAL}/{sitemap}-sitemap.xml"))
 ]
 extra = [(LOCAL + path, "archive") for path in EXTRA_ARCHIVES]
-listings = [url for url, kind in sitemap_items + extra if kind == "archive" or url == LOCAL + BLOG_PATH]
+listings = [url for url, kind in sitemap_items + extra if kind == "archive" and "/category/" not in url]
 with ThreadPoolExecutor(8) as pool:
     paged = [(url, "archive") for pages in pool.map(later_pages, listings) for url in pages]
     items = extra + paged if PAGED_ONLY else sitemap_items + extra + paged

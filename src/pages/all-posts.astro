@@ -1,0 +1,68 @@
+---
+import { getEmDashEntry, getSeoMeta, getSiteSettings } from "emdash";
+import Base from "../layouts/Base.astro";
+import BlogIndex from "../components/glc/blog/BlogIndex.astro";
+import { canonicalUrl } from "../rendered";
+import { loadBlog, topicHeading } from "../utils/blog";
+import { resolveBlogSiteIdentity } from "../utils/site-identity";
+import { cachePublicPage } from "../utils/page-cache";
+
+const [{ entry: page, cacheHint }, blog, settings] = await Promise.all([
+	getEmDashEntry("pages", "all-posts"),
+	loadBlog(),
+	getSiteSettings(),
+]);
+
+if (Astro.cache?.enabled) {
+	if (cacheHint) Astro.cache.set(cacheHint);
+	Astro.cache.set(blog.cacheHint);
+}
+cachePublicPage(Astro);
+
+const { siteTitle } = resolveBlogSiteIdentity(settings);
+const seoTitle = (page?.seo ?? page?.data.seo)?.title;
+const seo = page ? getSeoMeta(page, { siteUrl: Astro.url.origin, path: "/all-posts/" }) : null;
+const title = seoTitle || `Web Design, SEO and Digital Marketing Blog | ${siteTitle}`;
+const intro =
+	seo?.description ||
+	"Practical guides and news on website design, SEO, AI search (GEO), paid ads and WordPress, written for UK small businesses by Gareth Cross.";
+const headings = {
+	all: { heading: "Insights for small business websites", intro, title },
+	topics: Object.fromEntries(blog.topics.map((topic) => [topic.slug, topicHeading(topic, siteTitle)])),
+};
+
+const origin = Astro.url.origin;
+const blogJsonLd = {
+	"@context": "https://schema.org",
+	"@type": "Blog",
+	"@id": `${origin}/all-posts/#blog`,
+	name: `${siteTitle} Blog`,
+	url: `${origin}/all-posts/`,
+	description: seo?.description || intro,
+	inLanguage: "en-GB",
+	publisher: { "@id": `${origin}/#organization` },
+	blogPost: blog.posts.map((post) => ({
+		"@type": "BlogPosting",
+		headline: post.title,
+		url: `${origin}${post.url}`,
+		...(post.published && { datePublished: post.published.toISOString() }),
+		...(post.image && { image: new URL(post.image.src, origin).href }),
+		...(post.topics.length > 0 && { articleSection: post.topics.map((topic) => topic.label) }),
+		author: { "@type": "Person", name: "Gareth Cross", url: `${origin}/about/` },
+	})),
+};
+---
+
+<Base
+	title={title}
+	exactTitle
+	pageTitle={headings.all.heading}
+	description={seo?.description || intro}
+	canonical={canonicalUrl(Astro.url, "/all-posts/")}
+	image={seo?.ogImage || (blog.posts[0]?.image && new URL(blog.posts[0].image.src, origin).href)}
+	content={page ? { collection: "pages", id: page.data.id, slug: "all-posts" } : undefined}
+	bodyClass={["glc-front", "glc-blog-index"]}
+>
+	<BlogIndex posts={blog.posts} topics={blog.topics} headings={headings} total={blog.posts.length} />
+	<script is:inline type="application/ld+json" set:html={JSON.stringify(blogJsonLd)} />
+</Base>

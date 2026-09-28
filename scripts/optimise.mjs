@@ -338,6 +338,25 @@ function fallbackDescription(html) {
 	return null;
 }
 
+/** Optimised featured image of each post, keyed by post slug, for the blog listing (the CMS only holds the original PNG). */
+function postImages(pages) {
+	const images = {};
+	for (const page of pages) {
+		if (page.kind !== "post" || page.route === "/all-posts/") continue;
+		const tag = /<img\b[^>]*\bwp-post-image\b[^>]*>/.exec(page.html)?.[0];
+		if (!tag) continue;
+		const attr = (name) => new RegExp(`\\s${name}="([^"]*)"`).exec(tag)?.[1];
+		images[page.route.split("/").filter(Boolean).pop()] = {
+			src: attr("src"),
+			srcset: attr("srcset"),
+			width: Number(attr("width")),
+			height: Number(attr("height")),
+			alt: decodeEntities(attr("alt") ?? ""),
+		};
+	}
+	return images;
+}
+
 async function buildHtml() {
 	await fs.mkdir(OUT_DIR, { recursive: true });
 	const pages = [];
@@ -369,6 +388,7 @@ async function buildHtml() {
 			.filter(([, d]) => d),
 	);
 	await fs.writeFile(path.join(GENERATED, "descriptions.json"), JSON.stringify(descriptions, null, "\t") + "\n");
+	await fs.writeFile(path.join(GENERATED, "post-images.json"), JSON.stringify(postImages(pages), null, "\t") + "\n");
 	console.log(`html: ${pages.length} pages written`);
 	return pages;
 }

@@ -31,6 +31,8 @@ for (const [path, page] of Object.entries(manifest)) {
 		WP_PATHS.set(path.split("/").filter(Boolean).pop()!, path);
 	}
 }
+/** The blog and category listings show every post on one page, so WordPress's page 2+ URLs go to page 1. */
+const PAGED_LISTING = /^\/(all-posts|category\/[^/]+)\/page\/\d+\/?$/;
 const URL_ENTRY = /<url>[\s\S]*?<\/url>/g;
 /** Entry URLs only; `<image:loc>` is left alone. */
 const ENTRY_LOC = /<loc>(https?:\/\/[^/<]+)\/([^<]*?)\/?<\/loc>/g;
@@ -97,7 +99,8 @@ export default {
 	...handler,
 	async fetch(request, env, ctx) {
 		const { pathname } = new URL(request.url);
-		const redirect = REDIRECTS.get(pathname);
+		const listing = pathname.match(PAGED_LISTING)?.[1];
+		const redirect = REDIRECTS.get(pathname) ?? (listing && `/${listing}/`);
 		if (redirect) {
 			return withCachePolicy(Response.redirect(new URL(redirect, request.url).href, 301));
 		}

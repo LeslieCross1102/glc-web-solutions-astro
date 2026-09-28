@@ -2,11 +2,9 @@ import { trailingSlash } from "../../rendered";
 
 /**
  * Meta descriptions for listing pages (blog, category, tag and author archives), keyed by first-page path.
- * Archives have no editable SEO of their own. The blog's first page takes its SEO panel description; its later pages use this.
+ * Archives have no editable SEO of their own; the blog page (/all-posts/) uses its CMS SEO panel instead.
  */
 const LISTING_DESCRIPTIONS: Record<string, string> = {
-	"/all-posts/":
-		"Practical advice on websites, SEO, AI search and online advertising for small businesses, from Gareth Cross at GLC Web Solutions.",
 	"/author/gareth-cross/":
 		"Articles by Gareth Cross, founder of GLC Web Solutions, on website design, SEO, AI search, paid ads and WordPress for small businesses.",
 	"/category/digital-ads/":

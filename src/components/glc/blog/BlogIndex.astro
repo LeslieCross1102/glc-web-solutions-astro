@@ -1,0 +1,535 @@
+---
+import type { BlogHeading, BlogPost, BlogTopicCount } from "../../../utils/blog";
+
+interface Props {
+	posts: BlogPost[];
+	topics: BlogTopicCount[];
+	/** Heading for each topic keyed by slug, and for "All" when every post is listed */
+	headings: { all?: BlogHeading; topics: Record<string, BlogHeading> };
+	/** Category page being shown; `posts` must already be limited to it */
+	active?: string;
+	total: number;
+}
+
+const { posts, topics, headings, active, total } = Astro.props;
+const current = (active ? headings.topics[active] : headings.all) ?? { heading: "", intro: "", title: "" };
+const filterable = !active;
+
+const FEATURED_SIZES = "(max-width: 900px) 100vw, 760px";
+const CARD_SIZES = "(max-width: 640px) 100vw, (max-width: 1100px) 50vw, 400px";
+const HIDDEN_PILLS = new Set(["uncategorized"]);
+
+const dateFormat = new Intl.DateTimeFormat("en-GB", { day: "numeric", month: "long", year: "numeric" });
+const chips = [
+	{ slug: "", label: "All", count: total, href: "/all-posts/", ...headings.all },
+	...topics.map((topic) => ({ ...topic, href: `/category/${topic.slug}/`, ...headings.topics[topic.slug]! })),
+];
+---
+
+<div class="glc-blog" data-blog-index data-filterable={filterable ? "" : undefined}>
+	<header class="glc-blog__hero">
+		<div class="glc-container">
+			<p class="glc-blog__eyebrow">The GLC Blog</p>
+			<h1 class="glc-blog__heading" data-blog-heading>{current.heading}</h1>
+			<p class="glc-blog__intro" data-blog-intro>{current.intro}</p>
+		</div>
+	</header>
+
+	<div class="glc-container glc-blog__body">
+		<nav class="glc-blog__filters" aria-label="Filter articles by topic" data-blog-filters>
+			<ul role="list">
+				{chips.map((chip) => (
+					<li>
+						<a
+							class="glc-blog__chip"
+							href={chip.href}
+							data-topic={chip.slug}
+							data-heading={chip.heading}
+							data-intro={chip.intro}
+							data-title={chip.title}
+							aria-current={(active ?? "") === chip.slug ? "page" : undefined}
+						>
+							{chip.label}
+							<span class="glc-blog__chip-count">{chip.count}</span>
+						</a>
+					</li>
+				))}
+			</ul>
+		</nav>
+		<p class="glc-visually-hidden" aria-live="polite" data-blog-status></p>
+
+		{posts.length === 0 ? (
+			<p class="glc-blog__empty">No articles here yet. <a href="/all-posts/">See all articles</a>.</p>
+		) : (
+			<ul class="glc-blog__grid" role="list">
+				{posts.map((post, index) => (
+					<li
+						class:list={["glc-blog__item", { "is-featured": index === 0 }]}
+						data-topics={post.topics.map((topic) => topic.slug).join(" ")}
+					>
+						<article class="glc-blog-card">
+							{post.image && (
+								<div class="glc-blog-card__media">
+									<img
+										src={post.image.src}
+										srcset={post.image.srcset}
+										sizes={post.image.srcset ? (index === 0 ? FEATURED_SIZES : CARD_SIZES) : undefined}
+										data-sizes-featured={FEATURED_SIZES}
+										data-sizes-card={CARD_SIZES}
+										width={post.image.width}
+										height={post.image.height}
+										alt={post.image.alt}
+										loading={index === 0 ? "eager" : "lazy"}
+										fetchpriority={index === 0 ? "high" : undefined}
+										decoding="async"
+									/>
+								</div>
+							)}
+							<div class="glc-blog-card__body">
+								<p class="glc-blog-card__badge">Latest article</p>
+								{post.topics.some((topic) => !HIDDEN_PILLS.has(topic.slug)) && (
+									<ul class="glc-blog-card__topics" role="list" aria-label="Topics">
+										{post.topics.filter((topic) => !HIDDEN_PILLS.has(topic.slug)).map((topic) => (
+											<li>
+												<a href={`/category/${topic.slug}/`} data-topic={topic.slug}>{topic.label}</a>
+											</li>
+										))}
+									</ul>
+								)}
+								<h2 class="glc-blog-card__title">
+									<a href={post.url}>{post.title}</a>
+								</h2>
+								{post.excerpt && <p class="glc-blog-card__excerpt">{post.excerpt}</p>}
+								<p class="glc-blog-card__meta">
+									{post.published && (
+										<time datetime={post.published.toISOString()}>{dateFormat.format(post.published)}</time>
+									)}
+									{post.readingTime > 0 && <span>{post.readingTime} min read</span>}
+								</p>
+							</div>
+						</article>
+					</li>
+				))}
+			</ul>
+		)}
+	</div>
+</div>
+
+<script>
+	const root = document.querySelector<HTMLElement>("[data-blog-index][data-filterable]");
+	if (root) {
+		const chips = [...root.querySelectorAll<HTMLAnchorElement>(".glc-blog__chip")];
+		const items = [...root.querySelectorAll<HTMLElement>(".glc-blog__item")];
+		const filters = root.querySelector<HTMLElement>("[data-blog-filters]")!;
+		const heading = root.querySelector<HTMLElement>("[data-blog-heading]")!;
+		const intro = root.querySelector<HTMLElement>("[data-blog-intro]")!;
+		const status = root.querySelector<HTMLElement>("[data-blog-status]")!;
+		const reduceMotion = matchMedia("(prefers-reduced-motion: reduce)");
+
+		const apply = (topic: string) => {
+			const chip = chips.find((item) => item.dataset.topic === topic) ?? chips[0]!;
+			let shown = 0;
+			for (const item of items) {
+				const match = !topic || item.dataset.topics!.split(" ").includes(topic);
+				const featured = match && shown === 0;
+				item.hidden = !match;
+				item.classList.toggle("is-featured", featured);
+				const image = item.querySelector<HTMLImageElement>("img[srcset]");
+				if (image) image.sizes = (featured ? image.dataset.sizesFeatured : image.dataset.sizesCard) ?? "";
+				if (match) shown++;
+			}
+			for (const item of chips) {
+				if (item === chip) item.setAttribute("aria-current", "page");
+				else item.removeAttribute("aria-current");
+			}
+			heading.textContent = chip.dataset.heading ?? "";
+			intro.textContent = chip.dataset.intro ?? "";
+			document.title = chip.dataset.title ?? document.title;
+			status.textContent = `Showing ${shown} ${shown === 1 ? "article" : "articles"}`;
+		};
+
+		root.addEventListener("click", (event) => {
+			const link = (event.target as Element).closest<HTMLAnchorElement>("a[data-topic]");
+			if (!link || event.button !== 0 || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey) return;
+			const topic = link.dataset.topic!;
+			if (topic && !chips.some((chip) => chip.dataset.topic === topic)) return;
+			event.preventDefault();
+			if (link.href !== location.href) history.pushState({ topic }, "", link.href);
+			apply(topic);
+			if (filters.getBoundingClientRect().top < 0) {
+				filters.scrollIntoView({ behavior: reduceMotion.matches ? "auto" : "smooth" });
+			}
+		});
+
+		addEventListener("popstate", () => {
+			const chip = chips.find((item) => new URL(item.href).pathname === location.pathname);
+			apply(chip?.dataset.topic ?? "");
+		});
+	}
+</script>
+
+<style>
+	.glc-blog {
+		--glc-blog-card-radius: var(--glc-radius-media);
+		padding-block-end: clamp(3rem, 2rem + 4vw, 5rem);
+		color: var(--glc-on-surface);
+	}
+
+	.glc-blog__hero {
+		background:
+			radial-gradient(circle at 85% 0%, color-mix(in srgb, var(--glc-primary-fixed) 45%, transparent), transparent 55%),
+			var(--glc-surface-container-low);
+		padding-block: clamp(3rem, 2rem + 4vw, 5.5rem) clamp(2.5rem, 1.5rem + 3vw, 4rem);
+	}
+
+	.glc-blog__eyebrow {
+		margin: 0 0 0.75rem;
+		font-family: var(--glc-font-label);
+		font-size: var(--glc-text-xs);
+		font-weight: 700;
+		letter-spacing: 0.16em;
+		text-transform: uppercase;
+		color: var(--glc-primary-container);
+	}
+
+	.glc-blog__heading {
+		margin: 0;
+		max-width: 22ch;
+		font-family: var(--glc-font-headline);
+		font-size: clamp(2.25rem, 1.6rem + 2.6vw, 3.5rem);
+		font-weight: 800;
+		line-height: 1.08;
+		letter-spacing: -0.02em;
+		color: var(--glc-on-surface);
+	}
+
+	.glc-blog__intro {
+		margin: 1.25rem 0 0;
+		max-width: 44rem;
+		font-size: var(--glc-text-lg);
+		line-height: 1.6;
+		color: var(--glc-on-surface-variant);
+	}
+
+	.glc-blog__filters {
+		margin-block: 0 2rem;
+		padding-block: 1.5rem 0;
+		scroll-margin-top: 6rem;
+	}
+
+	.glc-blog__filters ul {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.5rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.glc-blog__chip {
+		display: inline-flex;
+		align-items: center;
+		gap: 0.5rem;
+		min-height: 2.75rem;
+		padding: 0.5rem 1rem;
+		border: 1px solid var(--glc-outline-variant);
+		border-radius: var(--glc-radius-pill);
+		background: var(--glc-surface-container-lowest);
+		font-family: var(--glc-font-label);
+		font-size: var(--glc-text-sm);
+		font-weight: 600;
+		color: var(--glc-on-surface);
+		text-decoration: none;
+		white-space: nowrap;
+		transition: background-color 0.2s, border-color 0.2s, color 0.2s;
+	}
+
+	.glc-blog__chip:hover {
+		border-color: var(--glc-primary-container);
+		color: var(--glc-primary);
+	}
+
+	.glc-blog__chip:focus-visible {
+		outline: 2px solid var(--glc-primary);
+		outline-offset: 2px;
+	}
+
+	.glc-blog__chip[aria-current="page"] {
+		border-color: var(--glc-primary);
+		background: var(--glc-primary);
+		color: var(--glc-on-primary);
+	}
+
+	.glc-blog__chip-count {
+		min-width: 1.5rem;
+		padding: 0.1rem 0.45rem;
+		border-radius: var(--glc-radius-pill);
+		background: var(--glc-surface-container);
+		font-size: var(--glc-text-xs);
+		text-align: center;
+		color: var(--glc-on-surface-variant);
+	}
+
+	.glc-blog__chip[aria-current="page"] .glc-blog__chip-count {
+		background: color-mix(in srgb, var(--glc-on-primary) 18%, transparent);
+		color: var(--glc-on-primary);
+	}
+
+	.glc-blog__grid {
+		display: grid;
+		grid-template-columns: repeat(3, minmax(0, 1fr));
+		gap: var(--glc-grid-gap);
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.glc-blog__item {
+		display: flex;
+		animation: glc-blog-in 0.35s ease both;
+	}
+
+	@keyframes glc-blog-in {
+		from {
+			opacity: 0;
+			transform: translateY(8px);
+		}
+	}
+
+	.glc-blog__item[hidden] {
+		display: none;
+	}
+
+	.glc-blog__item.is-featured {
+		grid-column: 1 / -1;
+	}
+
+	.glc-blog-card {
+		position: relative;
+		display: flex;
+		flex-direction: column;
+		width: 100%;
+		overflow: hidden;
+		border: 1px solid color-mix(in srgb, var(--glc-outline-variant) 60%, transparent);
+		border-radius: var(--glc-blog-card-radius);
+		background: var(--glc-surface-container-lowest);
+		box-shadow: var(--glc-shadow-editorial-soft);
+		transition: transform 0.25s ease, box-shadow 0.25s ease;
+	}
+
+	.glc-blog-card:hover,
+	.glc-blog-card:focus-within {
+		transform: translateY(-4px);
+		box-shadow: var(--glc-shadow-lg);
+	}
+
+	.glc-blog-card__media {
+		aspect-ratio: 16 / 9;
+		overflow: hidden;
+		background: var(--glc-surface-container);
+	}
+
+	.glc-blog-card__media img {
+		display: block;
+		width: 100%;
+		height: 100%;
+		object-fit: cover;
+		object-position: center;
+		transition: transform 0.4s ease;
+	}
+
+	.glc-blog-card:hover .glc-blog-card__media img {
+		transform: scale(1.03);
+	}
+
+	.glc-blog-card__body {
+		display: flex;
+		flex: 1;
+		flex-direction: column;
+		gap: 0.75rem;
+		padding: 1.5rem;
+	}
+
+	.glc-blog-card__badge {
+		display: none;
+		margin: 0;
+		font-family: var(--glc-font-label);
+		font-size: var(--glc-text-xs);
+		font-weight: 700;
+		letter-spacing: 0.14em;
+		text-transform: uppercase;
+		color: var(--glc-primary-container);
+	}
+
+	.glc-blog-card__topics {
+		position: relative;
+		z-index: 1;
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.375rem;
+		margin: 0;
+		padding: 0;
+		list-style: none;
+	}
+
+	.glc-blog-card__topics a {
+		display: inline-block;
+		padding: 0.25rem 0.625rem;
+		border-radius: var(--glc-radius-pill);
+		background: var(--glc-surface-container);
+		font-family: var(--glc-font-label);
+		font-size: var(--glc-text-xs);
+		font-weight: 600;
+		color: var(--glc-primary);
+		text-decoration: none;
+	}
+
+	.glc-blog-card__topics a:hover,
+	.glc-blog-card__topics a:focus-visible {
+		background: var(--glc-primary);
+		color: var(--glc-on-primary);
+	}
+
+	.glc-blog-card__title {
+		margin: 0;
+		font-family: var(--glc-font-headline);
+		font-size: var(--glc-text-xl);
+		font-weight: 700;
+		line-height: 1.3;
+		letter-spacing: -0.01em;
+	}
+
+	.glc-blog-card__title a {
+		color: var(--glc-on-surface);
+		text-decoration: none;
+	}
+
+	.glc-blog-card__title a::after {
+		content: "";
+		position: absolute;
+		inset: 0;
+		border-radius: inherit;
+	}
+
+	.glc-blog-card__title a:focus-visible {
+		outline: none;
+	}
+
+	.glc-blog-card:has(.glc-blog-card__title a:focus-visible) {
+		outline: 2px solid var(--glc-primary);
+		outline-offset: 3px;
+	}
+
+	.glc-blog-card:hover .glc-blog-card__title a {
+		color: var(--glc-primary);
+	}
+
+	.glc-blog-card__excerpt {
+		display: -webkit-box;
+		margin: 0;
+		overflow: hidden;
+		-webkit-box-orient: vertical;
+		-webkit-line-clamp: 3;
+		line-clamp: 3;
+		font-size: var(--glc-text-base);
+		line-height: 1.6;
+		color: var(--glc-on-surface-variant);
+	}
+
+	.glc-blog-card__meta {
+		display: flex;
+		flex-wrap: wrap;
+		gap: 0.25rem 1rem;
+		margin: auto 0 0;
+		padding-top: 0.5rem;
+		font-size: var(--glc-text-sm);
+		color: var(--glc-on-surface-variant);
+	}
+
+	.glc-blog-card__meta > * + *::before {
+		content: "·";
+		margin-right: 1rem;
+	}
+
+	.is-featured .glc-blog-card__badge {
+		display: block;
+	}
+
+	@media (min-width: 900px) {
+		.is-featured .glc-blog-card {
+			display: grid;
+			grid-template-columns: minmax(0, 1.35fr) minmax(0, 1fr);
+		}
+
+		.is-featured .glc-blog-card__media {
+			aspect-ratio: auto;
+			min-height: 100%;
+		}
+
+		.is-featured .glc-blog-card__body {
+			justify-content: center;
+			gap: 1rem;
+			padding: clamp(2rem, 1rem + 2.5vw, 3.5rem);
+		}
+
+		.is-featured .glc-blog-card__title {
+			font-size: clamp(1.75rem, 1rem + 1.4vw, 2.5rem);
+			line-height: 1.15;
+		}
+
+		.is-featured .glc-blog-card__excerpt {
+			-webkit-line-clamp: 5;
+			line-clamp: 5;
+			font-size: var(--glc-text-lg);
+		}
+	}
+
+	@media (max-width: 1100px) {
+		.glc-blog__grid {
+			grid-template-columns: repeat(2, minmax(0, 1fr));
+		}
+	}
+
+	@media (max-width: 640px) {
+		.glc-blog__grid {
+			grid-template-columns: minmax(0, 1fr);
+		}
+
+		.glc-blog__filters ul {
+			flex-wrap: nowrap;
+			margin-inline: calc(var(--glc-gutter-sm) * -1);
+			padding: 0.25rem var(--glc-gutter-sm);
+			overflow-x: auto;
+			scrollbar-width: none;
+		}
+
+		.glc-blog__filters ul::-webkit-scrollbar {
+			display: none;
+		}
+	}
+
+	.glc-blog__empty {
+		font-size: var(--glc-text-lg);
+		color: var(--glc-on-surface-variant);
+	}
+
+	@media (prefers-reduced-motion: reduce) {
+		.glc-blog__item {
+			animation: none;
+		}
+
+		.glc-blog-card,
+		.glc-blog-card__media img {
+			transition: none;
+		}
+
+		.glc-blog-card:hover,
+		.glc-blog-card:focus-within {
+			transform: none;
+		}
+
+		.glc-blog-card:hover .glc-blog-card__media img {
+			transform: none;
+		}
+	}
+</style>
