@@ -7,11 +7,16 @@
  * then the final path segment (WP hierarchical pages store leaf post_name).
  * Rewrites to the existing /pages/[slug] or /posts/[slug] templates so
  * rendering stays in one place. Prefixed /posts/ and /pages/ URLs still work.
+ * Rendered archives with no route of their own (author, listing page 2+) render here.
  * Unknown paths render the 404 page in place, as WordPress does.
  */
 import { getEmDashEntry, decodeSlug } from "emdash";
+import Base from "../layouts/Base.astro";
+import RenderedBody from "../components/glc/RenderedBody.astro";
 import { slugLookupCandidates } from "../utils/content-url";
-import { getRenderedPage } from "../rendered";
+import { canonicalUrl, getRenderedPage } from "../rendered";
+import { listingDescription } from "../data/glc/seo";
+import { cachePublicPage } from "../utils/page-cache";
 
 const rawParam = Astro.params.slug;
 const raw =
@@ -27,21 +32,40 @@ if (!pathSlug || pathSlug.includes(".")) {
 	return Astro.rewrite("/404");
 }
 
-const candidates = slugLookupCandidates(pathSlug);
-// Known rendered posts try the posts collection first, saving the failed page lookups
-const collections =
-	getRenderedPage(Astro.originPathname)?.kind === "post"
-		? (["posts", "pages"] as const)
-		: (["pages", "posts"] as const);
+const rendered = getRenderedPage(Astro.originPathname);
+const archive = rendered?.kind === "archive" && rendered.title ? rendered : null;
 
-for (const collection of collections) {
-	for (const candidate of candidates) {
-		const { entry } = await getEmDashEntry(collection, candidate);
-		if (entry) {
-			return Astro.rewrite(`/${collection}/${candidate}`);
+if (archive) {
+	cachePublicPage(Astro);
+} else {
+	const candidates = slugLookupCandidates(pathSlug);
+	// Known rendered posts try the posts collection first, saving the failed page lookups
+	const collections =
+		rendered?.kind === "post" ? (["posts", "pages"] as const) : (["pages", "posts"] as const);
+
+	for (const collection of collections) {
+		for (const candidate of candidates) {
+			const { entry } = await getEmDashEntry(collection, candidate);
+			if (entry) {
+				return Astro.rewrite(`/${collection}/${candidate}`);
+			}
 		}
 	}
-}
 
-return Astro.rewrite("/404");
+	return Astro.rewrite("/404");
+}
 ---
+
+{archive && (
+	<Base
+		title={archive.title!}
+		exactTitle
+		description={archive.description || listingDescription(Astro.originPathname, archive.title!.match(/Page \d+ of \d+/)?.[0])}
+		canonical={canonicalUrl(Astro.url, Astro.originPathname)}
+		bodyClass={archive.bodyClass}
+		sections={archive.sections}
+		renderedKey={archive.key}
+	>
+		<RenderedBody page={archive} />
+	</Base>
+)}

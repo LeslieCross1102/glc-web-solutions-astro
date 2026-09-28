@@ -4,6 +4,8 @@ import descriptions from "../generated/descriptions.json";
 export interface RenderedPage {
 	key: string;
 	kind: "page" | "post" | "archive";
+	/** WordPress <title>, for archives rendered without a route of their own (author, page 2+) */
+	title?: string;
 	description?: string;
 	bodyClass: string[];
 	sections: boolean;
@@ -13,8 +15,16 @@ export interface RenderedPage {
 const pages = manifest as Record<string, RenderedPage>;
 
 export function getRenderedPage(path: string): RenderedPage | null {
-	const normalised = path.endsWith("/") ? path : `${path}/`;
-	return pages[normalised] ?? null;
+	return pages[trailingSlash(path)] ?? null;
+}
+
+export function trailingSlash(path: string): string {
+	return path.endsWith("/") ? path : `${path}/`;
+}
+
+/** Self-referencing canonical in the WordPress trailing-slash form. */
+export function canonicalUrl(url: URL, path: string): string {
+	return new URL(trailingSlash(path), url.origin).href;
 }
 
 /** Meta description taken from a rendered page's opening paragraph, for pages without an SEO description. */

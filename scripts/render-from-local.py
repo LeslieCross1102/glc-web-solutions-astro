@@ -4,7 +4,10 @@ Writes content/rendered/<key>.html (raw; `node scripts/optimise.mjs` turns these
 public/glc/rendered/ assets), src/rendered/manifest.json and downloads referenced uploads into
 public/glc/uploads/. Header/footer/CSS/JS are not captured (ported separately into Base.astro).
 
-Usage: python3 scripts/render-from-local.py [local-origin]   (default http://glc-web-solutions.local)
+Listings (blog, category, tag and author archives) are followed through their rel="next" pages.
+
+Usage: python3 scripts/render-from-local.py [local-origin] [--paged-only]   (default http://glc-web-solutions.local)
+  --paged-only  render just the author archive and listing pages 2+, merged into the existing manifest
 """
 
 import html as htmllib
@@ -15,13 +18,18 @@ import sys
 import urllib.request
 from concurrent.futures import ThreadPoolExecutor
 
-LOCAL = (sys.argv[1] if len(sys.argv) > 1 else "http://glc-web-solutions.local").rstrip("/")
+ARGS = [a for a in sys.argv[1:] if not a.startswith("--")]
+PAGED_ONLY = "--paged-only" in sys.argv
+LOCAL = (ARGS[0] if ARGS else "http://glc-web-solutions.local").rstrip("/")
 HOST = re.sub(r"^https?://", "", LOCAL)
 ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 OUT_DIR = os.path.join(ROOT, "content", "rendered")
 UPLOADS = os.path.join(ROOT, "public", "glc", "uploads")
 TRADES = ("electricians", "pubs", "landscapers")
 THEME_PATH = "/wp-content/themes/glc-web-solutions/"
+# Linked from every post byline but absent from the Yoast sitemaps
+EXTRA_ARCHIVES = ("/author/gareth-cross/",)
+BLOG_PATH = "/all-posts/"
 
 
 def get(url, binary=False):
@@ -104,14 +112,29 @@ def render(item):
         f.write(content + "\n" + jsonld + "\n")
     sizes[path] = len(content)
     desc = re.search(r'<meta name="description" content="([^"]*)"', head)
+    title = re.search(r"<title>(.*?)</title>", head, re.S)
     return path, {
         "key": key,
         "kind": kind,
+        **({"title": htmllib.unescape(title.group(1).strip())} if kind == "archive" and title else {}),
         **({"description": htmllib.unescape(desc.group(1))} if kind == "archive" and desc else {}),
         "bodyClass": classes,
         "sections": "home" in styles,
         "trade": next((t for t in TRADES if t in styles), None),
     }
+
+
+def next_page(url):
+    m = re.search(r'<link rel="next" href="([^"]+)"', get(url))
+    return m.group(1) if m else None
+
+
+def later_pages(url):
+    """Listing pages after `url`, following rel="next"."""
+    pages = []
+    while url := next_page(url):
+        pages.append(url)
+    return pages
 
 
 def download(rel):
@@ -129,15 +152,21 @@ def download(rel):
 
 
 os.makedirs(OUT_DIR, exist_ok=True)
-items = [
+MANIFEST = os.path.join(ROOT, "src", "rendered", "manifest.json")
+sitemap_items = [
     (url, kind)
     for sitemap, kind in (("page", "page"), ("post", "post"), ("category", "archive"), ("post_tag", "archive"))
     for url in locs(get(f"{LOCAL}/{sitemap}-sitemap.xml"))
 ]
+extra = [(LOCAL + path, "archive") for path in EXTRA_ARCHIVES]
+listings = [url for url, kind in sitemap_items + extra if kind == "archive" or url == LOCAL + BLOG_PATH]
 with ThreadPoolExecutor(8) as pool:
+    paged = [(url, "archive") for pages in pool.map(later_pages, listings) for url in pages]
+    items = extra + paged if PAGED_ONLY else sitemap_items + extra + paged
     results = list(pool.map(render, items))
-manifest = dict(sorted(results, key=lambda r: r[0]))
-with open(os.path.join(ROOT, "src", "rendered", "manifest.json"), "w") as f:
+manifest = json.load(open(MANIFEST)) if PAGED_ONLY else {}
+manifest = dict(sorted({**manifest, **dict(results)}.items()))
+with open(MANIFEST, "w") as f:
     json.dump(manifest, f, indent="\t")
 
 with ThreadPoolExecutor(8) as pool:

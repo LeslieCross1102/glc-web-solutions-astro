@@ -13,6 +13,12 @@ const SITEMAP_ALIASES: Record<string, string> = {
 	"/page-sitemap.xml": "/sitemap-pages.xml",
 	"/post-sitemap.xml": "/sitemap-posts.xml",
 };
+/** Permanent redirects WordPress served; their EmDash pages stay editable but are never public. */
+const REDIRECTS = new Map<string, string>([
+	["/sitemap_index.xml", "/sitemap.xml"],
+	["/what-we-do", "/services/"],
+	["/what-we-do/", "/services/"],
+]);
 /** EmDash entry that renders at "/". */
 const HOME_SLUG = "home-1";
 /**
@@ -25,8 +31,10 @@ for (const [path, page] of Object.entries(manifest)) {
 		WP_PATHS.set(path.split("/").filter(Boolean).pop()!, path);
 	}
 }
+const URL_ENTRY = /<url>[\s\S]*?<\/url>/g;
 /** Entry URLs only; `<image:loc>` is left alone. */
 const ENTRY_LOC = /<loc>(https?:\/\/[^/<]+)\/([^<]*?)\/?<\/loc>/g;
+const LOC_PATH = /<loc>https?:\/\/[^/<]+([^<]*)<\/loc>/;
 
 async function serveSitemapAlias(
 	request: Request,
@@ -36,9 +44,13 @@ async function serveSitemapAlias(
 ): Promise<Response> {
 	const response = await handler.fetch!(new Request(new URL(target, request.url), request), env, ctx);
 	if (!response.ok) return response;
-	const xml = (await response.text()).replace(ENTRY_LOC, (_: string, origin: string, slug: string) => {
-		const leaf = slug.split("/").pop() ?? "";
-		return `<loc>${origin}${WP_PATHS.get(leaf) ?? `/${slug}/`}</loc>`;
+	const xml = (await response.text()).replace(URL_ENTRY, (entry: string) => {
+		const rewritten = entry.replace(ENTRY_LOC, (_: string, origin: string, slug: string) => {
+			const leaf = slug.split("/").pop() ?? "";
+			return `<loc>${origin}${WP_PATHS.get(leaf) ?? `/${slug}/`}</loc>`;
+		});
+		const path = rewritten.match(LOC_PATH)?.[1];
+		return path && REDIRECTS.has(path) ? "" : rewritten;
 	});
 	const headers = new Headers(response.headers);
 	headers.delete("Content-Length");
@@ -85,8 +97,9 @@ export default {
 	...handler,
 	async fetch(request, env, ctx) {
 		const { pathname } = new URL(request.url);
-		if (pathname === "/sitemap_index.xml") {
-			return withCachePolicy(Response.redirect(new URL("/sitemap.xml", request.url).href, 301));
+		const redirect = REDIRECTS.get(pathname);
+		if (redirect) {
+			return withCachePolicy(Response.redirect(new URL(redirect, request.url).href, 301));
 		}
 		const alias = SITEMAP_ALIASES[pathname];
 		if (alias) return withCachePolicy(await serveSitemapAlias(request, alias, env, ctx));

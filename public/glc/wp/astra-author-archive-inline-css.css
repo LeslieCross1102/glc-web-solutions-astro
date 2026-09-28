@@ -1,0 +1,6 @@
+.ast-author-box img.avatar{margin:0;}
+@media (min-width:921px){.ast-author-box img.avatar{width:100px;height:100px;}.ast-author-box{column-gap:50px;}}
+@media (max-width:921px){.ast-author-avatar{margin-top:20px;}}
+@media (min-width:922px){.ast-author-box{align-items:center;}}
+@media (min-width:922px){.ast-author-box{-js-display:flex;display:flex;}.ast-author-bio{flex:1;}}
+.ast-author-box .ast-author-avatar{--ast-author-avatar-size:30px;}

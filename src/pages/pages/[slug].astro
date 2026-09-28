@@ -10,6 +10,7 @@ import Base from "../../layouts/Base.astro";
 import { resolveTemplate } from "../../templates";
 import { fallbackDescription, getRenderedPage } from "../../rendered";
 import RenderedBody from "../../components/glc/RenderedBody.astro";
+import { shareImage } from "../../data/glc/seo";
 import { resolveBlogSiteIdentity } from "../../utils/site-identity";
 import { cachePublicPage } from "../../utils/page-cache";
 
@@ -48,7 +49,7 @@ const renderedPage = template ? null : rendered;
 	title={seo.title}
 	exactTitle={hasSeoTitle}
 	pageTitle={seo.ogTitle}
-	image={seo.ogImage}
+	image={seo.ogImage || shareImage(Astro.originPathname, Astro.url.origin)}
 	description={seo.description || rendered?.description || fallbackDescription(rendered)}
 	canonical={seo.canonical}
 	robots={seo.robots}

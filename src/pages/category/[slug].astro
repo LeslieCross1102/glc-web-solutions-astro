@@ -7,7 +7,8 @@ import {
 } from "emdash";
 import Base from "../../layouts/Base.astro";
 import RenderedBody from "../../components/glc/RenderedBody.astro";
-import { getRenderedPage } from "../../rendered";
+import { canonicalUrl, getRenderedPage } from "../../rendered";
+import { listingDescription } from "../../data/glc/seo";
 import PostCard from "../../components/PostCard.astro";
 import { getReadingTime } from "../../utils/reading-time";
 import { contentUrl } from "../../utils/content-url";
@@ -59,7 +60,8 @@ const filteredPosts = posts.map((post) => ({
 
 <Base
 	title={`${term.label} Archives`}
-	description={rendered?.description || (posts[0]?.seo ?? posts[0]?.data.seo)?.description || posts[0]?.data.excerpt || null}
+	description={rendered?.description || listingDescription(Astro.originPathname)}
+	canonical={canonicalUrl(Astro.url, Astro.originPathname)}
 	bodyClass={rendered?.bodyClass}
 	sections={rendered ? rendered.sections : true}
 	renderedKey={rendered?.key}

@@ -5,6 +5,7 @@ import RenderedBody from "../components/glc/RenderedBody.astro";
 import { getRenderedPage } from "../rendered";
 import { resolveBlogSiteIdentity } from "../utils/site-identity";
 import { cachePublicPage } from "../utils/page-cache";
+import { shareImage } from "../data/glc/seo";
 
 // WordPress front page (Settings → Reading) was imported as this page; its SEO drives the home <head>
 const FRONT_PAGE_SLUG = "home-1";
@@ -25,6 +26,7 @@ cachePublicPage(Astro);
 	title={frontSeo?.title || siteTitle}
 	exactTitle={Boolean(frontSeo?.title)}
 	description={frontSeo?.description || siteTagline}
+	image={frontSeo?.image ? new URL(frontSeo.image, Astro.url.origin).href : shareImage("/", Astro.url.origin)}
 	canonical={new URL("/", Astro.url.origin).href}
 	bodyClass={rendered?.bodyClass}
 	sections={rendered?.sections ?? true}
