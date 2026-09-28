@@ -56,7 +56,7 @@ const rendered = getRenderedPage(Astro.originPathname);
 
 <Base
 	title={`${term.label} Archives`}
-	description={rendered?.description || fallbackDescription(rendered) || (posts[0]?.seo ?? posts[0]?.data.seo)?.description || posts[0]?.data.excerpt || null}
+	description={rendered?.description || (posts[0]?.seo ?? posts[0]?.data.seo)?.description || posts[0]?.data.excerpt || fallbackDescription(rendered)}
 	bodyClass={rendered?.bodyClass}
 	sections={rendered ? rendered.sections : true}
 	renderedKey={rendered?.key}
