@@ -5,6 +5,7 @@ import { defineConfig, fontProviders } from "astro/config";
 import emdash from "emdash/astro";
 
 export default defineConfig({
+	site: "https://glcwebsolutions.co.uk",
 	output: "server",
 	adapter: cloudflare(),
 	// Workers Cache (wrangler "cache.enabled"): public pages opt in from Base.astro, EmDash purges by tag on save
