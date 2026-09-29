@@ -4,8 +4,8 @@ export const prerender = false;
 
 interface Env {
 	DB: D1Database;
-	/** Google Apps Script web app (scripts/enquiry-notify.gs) that emails each enquiry from the Workspace account */
-	ENQUIRY_WEBHOOK_URL?: string;
+	/** FormSubmit's random alias for NOTIFY_TO, issued after activation, so the address isn't used in requests */
+	FORMSUBMIT_ALIAS?: string;
 	TURNSTILE_SECRET_KEY?: string;
 }
 
@@ -13,6 +13,9 @@ const FORMS: Record<string, { label: string; name: string; email: string; messag
 	"73": { label: "Contact form", name: "text-your-name", email: "email-your-email", message: "textarea-your-message" },
 	"4297": { label: "Special offer", name: "your-name", email: "your-email", message: "your-brief" },
 };
+const NOTIFY_TO = "gareth@glcwebsolutions.co.uk";
+/** FormSubmit ties activation to the requesting site, so every version posts as the live domain */
+const SITE_ORIGIN = "https://glcwebsolutions.co.uk";
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const MAX_PER_WINDOW = 5;
 const WINDOW_MINUTES = 10;
@@ -35,16 +38,46 @@ async function verifyTurnstile(secret: string, token: string, ip: string | null)
 	return Boolean(data.success);
 }
 
-async function notify(env: Env, enquiry: Record<string, unknown>): Promise<boolean> {
-	if (!env.ENQUIRY_WEBHOOK_URL) return false;
-	const res = await fetch(env.ENQUIRY_WEBHOOK_URL, {
+/** "text-your-name" → "Name", "your-path" → "Path" */
+function fieldLabel(key: string): string {
+	const label = key.replace(/^(text|email|tel|textarea|url|select|radio|checkbox|menu)-/, "").replace(/^your-/, "").replace(/-/g, " ");
+	return label.charAt(0).toUpperCase() + label.slice(1);
+}
+
+interface Enquiry {
+	form: string;
+	page: string;
+	name: string;
+	email: string;
+	fields: Record<string, string>;
+}
+
+/** Emails the enquiry to NOTIFY_TO through FormSubmit (formsubmit.co), leaving the domain's own mail setup alone. */
+async function notify(env: Env, enquiry: Enquiry): Promise<void> {
+	const details: Record<string, string> = {};
+	for (const [key, v] of Object.entries(enquiry.fields)) {
+		if (!key.startsWith("acceptance-")) details[fieldLabel(key)] = v;
+	}
+	const request = new Request(`https://formsubmit.co/ajax/${env.FORMSUBMIT_ALIAS || NOTIFY_TO}`, {
 		method: "POST",
-		headers: { "content-type": "application/json" },
-		body: JSON.stringify(enquiry),
+		headers: { "content-type": "application/json", accept: "application/json" },
+		body: JSON.stringify({
+			Form: enquiry.form,
+			Page: `${SITE_ORIGIN}${enquiry.page}`,
+			...details,
+			_subject: `Website enquiry: ${enquiry.form} from ${enquiry.name}`,
+			_replyto: enquiry.email,
+			_template: "table",
+			_captcha: "false",
+		}),
 	});
-	const result = (await res.json().catch(() => null)) as { ok?: boolean } | null;
-	if (!result?.ok) throw new Error(`enquiry webhook returned ${res.status}`);
-	return true;
+	request.headers.set("origin", SITE_ORIGIN);
+	request.headers.set("referer", `${SITE_ORIGIN}${enquiry.page}`);
+	const res = await fetch(request);
+	const result = (await res.json().catch(() => null)) as { success?: boolean | string; message?: string } | null;
+	if (String(result?.success) !== "true") {
+		throw new Error(`FormSubmit ${res.status}: ${result?.message ?? "no response body"}`);
+	}
 }
 
 export const POST: APIRoute = async ({ request }) => {
@@ -115,10 +148,8 @@ export const POST: APIRoute = async ({ request }) => {
 		.run();
 
 	try {
-		const enquiry = { form: spec.label, page, name: value(spec.name), email: value(spec.email), fields };
-		if (await notify(env, enquiry)) {
-			await env.DB.prepare("UPDATE glc_enquiries SET emailed = 1 WHERE id = ?").bind(id).run();
-		}
+		await notify(env, { form: spec.label, page, name: value(spec.name), email: value(spec.email), fields });
+		await env.DB.prepare("UPDATE glc_enquiries SET emailed = 1 WHERE id = ?").bind(id).run();
 	} catch (err) {
 		console.error("enquiry notification failed", err);
 	}
