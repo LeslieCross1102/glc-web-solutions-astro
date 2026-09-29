@@ -4,9 +4,12 @@ export const prerender = false;
 
 interface Env {
 	DB: D1Database;
-	/** Telegram bot (from @BotFather) that messages each enquiry to TELEGRAM_CHAT_ID */
-	TELEGRAM_BOT_TOKEN?: string;
-	TELEGRAM_CHAT_ID?: string;
+	/** OAuth client and refresh token (gmail.send scope) for NOTIFY_TO's Google Workspace account */
+	GMAIL_CLIENT_ID?: string;
+	GMAIL_CLIENT_SECRET?: string;
+	GMAIL_REFRESH_TOKEN?: string;
+	/** Incoming webhook of the Google Chat space that is pinged for each enquiry */
+	GOOGLE_CHAT_WEBHOOK_URL?: string;
 	TURNSTILE_SECRET_KEY?: string;
 }
 
@@ -14,9 +17,10 @@ const FORMS: Record<string, { label: string; name: string; email: string; messag
 	"73": { label: "Contact form", name: "text-your-name", email: "email-your-email", message: "textarea-your-message" },
 	"4297": { label: "Special offer", name: "your-name", email: "your-email", message: "your-brief" },
 };
+const NOTIFY_TO = "gareth@glcwebsolutions.co.uk";
 const SITE_ORIGIN = "https://glcwebsolutions.co.uk";
-/** Characters shared between the field values; Telegram rejects messages over 4,096 */
-const TELEGRAM_BUDGET = 3500;
+/** Characters shared between the field values; Google Chat rejects messages over 4,096 */
+const CHAT_BUDGET = 3500;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const MAX_PER_WINDOW = 5;
 const WINDOW_MINUTES = 10;
@@ -48,27 +52,79 @@ function fieldLabel(key: string): string {
 interface Enquiry {
 	form: string;
 	page: string;
+	name: string;
+	email: string;
 	fields: Record<string, string>;
 }
 
-const escapeHtml = (text: string) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+function details(enquiry: Enquiry, limit = Infinity): [string, string][] {
+	return Object.entries(enquiry.fields)
+		.filter(([key]) => !key.startsWith("acceptance-"))
+		.map(([key, v]) => [fieldLabel(key), v.length > limit ? `${v.slice(0, limit)}…` : v]);
+}
 
-/** Sends the enquiry to Telegram; returns false when the bot isn't configured. */
-async function notify(env: Env, enquiry: Enquiry): Promise<boolean> {
-	if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID) return false;
-	const lines = [`<b>New website enquiry: ${escapeHtml(enquiry.form)}</b>`, `<b>Page:</b> ${escapeHtml(SITE_ORIGIN + enquiry.page)}`];
-	const entries = Object.entries(enquiry.fields).filter(([key]) => !key.startsWith("acceptance-"));
-	const limit = Math.floor(TELEGRAM_BUDGET / Math.max(1, entries.length));
-	for (const [key, v] of entries) {
-		lines.push(`<b>${escapeHtml(fieldLabel(key))}:</b> ${escapeHtml(v.length > limit ? `${v.slice(0, limit)}…` : v)}`);
-	}
-	const res = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
+function base64(text: string): string {
+	let binary = "";
+	for (const byte of new TextEncoder().encode(text)) binary += String.fromCharCode(byte);
+	return btoa(binary);
+}
+
+/** Emails the enquiry from NOTIFY_TO's own Gmail to itself; returns false when Gmail isn't configured. */
+async function sendEmail(env: Env, enquiry: Enquiry): Promise<boolean> {
+	if (!env.GMAIL_CLIENT_ID || !env.GMAIL_CLIENT_SECRET || !env.GMAIL_REFRESH_TOKEN) return false;
+	const tokenRes = await fetch("https://oauth2.googleapis.com/token", {
 		method: "POST",
-		headers: { "content-type": "application/json" },
-		body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text: lines.join("\n"), parse_mode: "HTML", link_preview_options: { is_disabled: true } }),
+		body: new URLSearchParams({
+			client_id: env.GMAIL_CLIENT_ID,
+			client_secret: env.GMAIL_CLIENT_SECRET,
+			refresh_token: env.GMAIL_REFRESH_TOKEN,
+			grant_type: "refresh_token",
+		}),
 	});
-	const result = (await res.json().catch(() => null)) as { ok?: boolean; description?: string } | null;
-	if (!result?.ok) throw new Error(`Telegram ${res.status}: ${result?.description ?? "no response body"}`);
+	const token = (await tokenRes.json().catch(() => null)) as { access_token?: string; error?: string } | null;
+	if (!token?.access_token) throw new Error(`Google token ${tokenRes.status}: ${token?.error ?? "no response body"}`);
+
+	const body = [
+		`New website enquiry: ${enquiry.form}`,
+		`Page: ${SITE_ORIGIN}${enquiry.page}`,
+		"",
+		...details(enquiry).map(([label, v]) => `${label}: ${v}`),
+	].join("\r\n");
+	const headers = [
+		`From: "GLC Web Solutions website" <${NOTIFY_TO}>`,
+		`To: ${NOTIFY_TO}`,
+		...(EMAIL_RE.test(enquiry.email) ? [`Reply-To: ${enquiry.email}`] : []),
+		`Subject: =?UTF-8?B?${base64(`Website enquiry: ${enquiry.form} from ${enquiry.name.slice(0, 80)}`)}?=`,
+		"MIME-Version: 1.0",
+		"Content-Type: text/plain; charset=UTF-8",
+		"Content-Transfer-Encoding: base64",
+	];
+	const mime = `${headers.join("\r\n")}\r\n\r\n${base64(body).replace(/.{76}/g, "$&\r\n")}`;
+	const raw = base64(mime).replace(/\+/g, "-").replace(/\//g, "_").replace(/=+$/, "");
+	const res = await fetch("https://gmail.googleapis.com/gmail/v1/users/me/messages/send", {
+		method: "POST",
+		headers: { authorization: `Bearer ${token.access_token}`, "content-type": "application/json" },
+		body: JSON.stringify({ raw }),
+	});
+	if (!res.ok) throw new Error(`Gmail ${res.status}: ${await res.text()}`);
+	return true;
+}
+
+/** Posts the enquiry to the Google Chat space; returns false when the webhook isn't configured. */
+async function sendChat(env: Env, enquiry: Enquiry): Promise<boolean> {
+	if (!env.GOOGLE_CHAT_WEBHOOK_URL) return false;
+	const limit = Math.floor(CHAT_BUDGET / Math.max(1, Object.keys(enquiry.fields).length));
+	const text = [
+		`*New website enquiry: ${enquiry.form}*`,
+		`Page: ${SITE_ORIGIN}${enquiry.page}`,
+		...details(enquiry, limit).map(([label, v]) => `*${label}:* ${v}`),
+	].join("\n");
+	const res = await fetch(env.GOOGLE_CHAT_WEBHOOK_URL, {
+		method: "POST",
+		headers: { "content-type": "application/json; charset=UTF-8" },
+		body: JSON.stringify({ text }),
+	});
+	if (!res.ok) throw new Error(`Google Chat ${res.status}: ${await res.text()}`);
 	return true;
 }
 
@@ -139,12 +195,14 @@ export const POST: APIRoute = async ({ request }) => {
 			request.headers.get("cf-ipcountry"))
 		.run();
 
-	try {
-		if (await notify(env, { form: spec.label, page, fields })) {
-			await env.DB.prepare("UPDATE glc_enquiries SET emailed = 1 WHERE id = ?").bind(id).run();
-		}
-	} catch (err) {
-		console.error("enquiry notification failed", err);
+	const enquiry = { form: spec.label, page, name: value(spec.name), email: value(spec.email), fields };
+	const [email, chat] = await Promise.allSettled([sendEmail(env, enquiry), sendChat(env, enquiry)]);
+	if (email.status === "rejected") console.error("enquiry email failed", email.reason);
+	if (chat.status === "rejected") console.error("enquiry chat notification failed", chat.reason);
+	if (email.status === "fulfilled" && email.value) {
+		await env.DB.prepare("UPDATE glc_enquiries SET emailed = 1 WHERE id = ?").bind(id).run().catch((err) => {
+			console.error("enquiry emailed flag not saved", err);
+		});
 	}
 
 	return json({ status: "mail_sent", message: "Thank you for your message. It has been sent." });
