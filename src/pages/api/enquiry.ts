@@ -4,8 +4,9 @@ export const prerender = false;
 
 interface Env {
 	DB: D1Database;
-	/** FormSubmit's random alias for NOTIFY_TO, issued after activation, so the address isn't used in requests */
-	FORMSUBMIT_ALIAS?: string;
+	/** Telegram bot (from @BotFather) that messages each enquiry to TELEGRAM_CHAT_ID */
+	TELEGRAM_BOT_TOKEN?: string;
+	TELEGRAM_CHAT_ID?: string;
 	TURNSTILE_SECRET_KEY?: string;
 }
 
@@ -13,9 +14,9 @@ const FORMS: Record<string, { label: string; name: string; email: string; messag
 	"73": { label: "Contact form", name: "text-your-name", email: "email-your-email", message: "textarea-your-message" },
 	"4297": { label: "Special offer", name: "your-name", email: "your-email", message: "your-brief" },
 };
-const NOTIFY_TO = "gareth@glcwebsolutions.co.uk";
-/** FormSubmit ties activation to the requesting site, so every version posts as the live domain */
 const SITE_ORIGIN = "https://glcwebsolutions.co.uk";
+/** Characters shared between the field values; Telegram rejects messages over 4,096 */
+const TELEGRAM_BUDGET = 3500;
 const EMAIL_RE = /^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/;
 const MAX_PER_WINDOW = 5;
 const WINDOW_MINUTES = 10;
@@ -47,37 +48,28 @@ function fieldLabel(key: string): string {
 interface Enquiry {
 	form: string;
 	page: string;
-	name: string;
-	email: string;
 	fields: Record<string, string>;
 }
 
-/** Emails the enquiry to NOTIFY_TO through FormSubmit (formsubmit.co), leaving the domain's own mail setup alone. */
-async function notify(env: Env, enquiry: Enquiry): Promise<void> {
-	const details: Record<string, string> = {};
-	for (const [key, v] of Object.entries(enquiry.fields)) {
-		if (!key.startsWith("acceptance-")) details[fieldLabel(key)] = v;
+const escapeHtml = (text: string) => text.replace(/&/g, "&amp;").replace(/</g, "&lt;").replace(/>/g, "&gt;");
+
+/** Sends the enquiry to Telegram; returns false when the bot isn't configured. */
+async function notify(env: Env, enquiry: Enquiry): Promise<boolean> {
+	if (!env.TELEGRAM_BOT_TOKEN || !env.TELEGRAM_CHAT_ID) return false;
+	const lines = [`<b>New website enquiry: ${escapeHtml(enquiry.form)}</b>`, `<b>Page:</b> ${escapeHtml(SITE_ORIGIN + enquiry.page)}`];
+	const entries = Object.entries(enquiry.fields).filter(([key]) => !key.startsWith("acceptance-"));
+	const limit = Math.floor(TELEGRAM_BUDGET / Math.max(1, entries.length));
+	for (const [key, v] of entries) {
+		lines.push(`<b>${escapeHtml(fieldLabel(key))}:</b> ${escapeHtml(v.length > limit ? `${v.slice(0, limit)}…` : v)}`);
 	}
-	const request = new Request(`https://formsubmit.co/ajax/${env.FORMSUBMIT_ALIAS || NOTIFY_TO}`, {
+	const res = await fetch(`https://api.telegram.org/bot${env.TELEGRAM_BOT_TOKEN}/sendMessage`, {
 		method: "POST",
-		headers: { "content-type": "application/json", accept: "application/json" },
-		body: JSON.stringify({
-			Form: enquiry.form,
-			Page: `${SITE_ORIGIN}${enquiry.page}`,
-			...details,
-			_subject: `Website enquiry: ${enquiry.form} from ${enquiry.name}`,
-			_replyto: enquiry.email,
-			_template: "table",
-			_captcha: "false",
-		}),
+		headers: { "content-type": "application/json" },
+		body: JSON.stringify({ chat_id: env.TELEGRAM_CHAT_ID, text: lines.join("\n"), parse_mode: "HTML", link_preview_options: { is_disabled: true } }),
 	});
-	request.headers.set("origin", SITE_ORIGIN);
-	request.headers.set("referer", `${SITE_ORIGIN}${enquiry.page}`);
-	const res = await fetch(request);
-	const result = (await res.json().catch(() => null)) as { success?: boolean | string; message?: string } | null;
-	if (String(result?.success) !== "true") {
-		throw new Error(`FormSubmit ${res.status}: ${result?.message ?? "no response body"}`);
-	}
+	const result = (await res.json().catch(() => null)) as { ok?: boolean; description?: string } | null;
+	if (!result?.ok) throw new Error(`Telegram ${res.status}: ${result?.description ?? "no response body"}`);
+	return true;
 }
 
 export const POST: APIRoute = async ({ request }) => {
@@ -148,8 +140,9 @@ export const POST: APIRoute = async ({ request }) => {
 		.run();
 
 	try {
-		await notify(env, { form: spec.label, page, name: value(spec.name), email: value(spec.email), fields });
-		await env.DB.prepare("UPDATE glc_enquiries SET emailed = 1 WHERE id = ?").bind(id).run();
+		if (await notify(env, { form: spec.label, page, fields })) {
+			await env.DB.prepare("UPDATE glc_enquiries SET emailed = 1 WHERE id = ?").bind(id).run();
+		}
 	} catch (err) {
 		console.error("enquiry notification failed", err);
 	}
