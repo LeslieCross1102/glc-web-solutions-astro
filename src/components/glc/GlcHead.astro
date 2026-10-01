@@ -20,7 +20,39 @@ const css = await loadPageCss(Astro.url, { key: renderedKey, sections, trade });
 ---
 
 {assets.preload.map((href) => <link rel="preload" href={href} as="font" type="font/woff2" crossorigin="anonymous" />)}
+<style is:inline>
+	.glc-nav ul,
+	.glc-footer ul,
+	.glc-footer-locations ul,
+	.glc-mobile-menu ul {
+		list-style: none;
+		margin: 0;
+		padding: 0;
+	}
+	.glc-footer svg,
+	.glc-button svg {
+		width: 1.25rem;
+		height: 1.25rem;
+		flex-shrink: 0;
+	}
+	.material-symbols-outlined {
+		font-size: 24px;
+		line-height: 1;
+		width: 1em;
+		height: 1em;
+		overflow: hidden;
+		display: inline-block;
+	}
+</style>
 <style is:inline set:html={css} />
+<style is:inline>
+	.material-symbols-outlined {
+		font-size: 24px;
+		width: 1em;
+		height: 1em;
+		overflow: hidden;
+	}
+</style>
 <link rel="icon" href="/glc/icons/icon-32.png" sizes="32x32" />
 <link rel="icon" href="/glc/icons/icon-192.png" sizes="192x192" />
 <link rel="apple-touch-icon" href="/glc/icons/icon-180.png" />

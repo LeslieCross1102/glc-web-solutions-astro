@@ -21,7 +21,7 @@ export const faqSections: Record<string, FaqSection> = {
 		"items": [
 			{
 				"q": "How much does a website from GLC Web Solutions cost?",
-				"a": "Website builds start at £795 for Professional Basic (up to 5 pages). Enterprise Plus is £1,495 and Commerce Enterprise is £3,495 for shops, diaries and quote tools. Every package includes daily backups, a test server, Google Search Console and Google Analytics. SEO and consultancy are quoted after a free consultation."
+				"a": "Website builds start at £445 for Professional Basic (up to 5 pages). Enterprise Plus is £995 and Commerce Enterprise is £3,495 for shops, diaries and quote tools. Every package includes daily backups, a test server, Google Search Console and Google Analytics. SEO and consultancy are quoted after a free consultation."
 			},
 			{
 				"q": "Do you only build websites, or can you help with SEO and ads as well?",
@@ -37,7 +37,7 @@ export const faqSections: Record<string, FaqSection> = {
 			},
 			{
 				"q": "Do I have to manage hosting and updates myself?",
-				"a": "No. Hosting, SSL, backups and updates can sit with us so you stay on the tools. There is also a full managed website service — £300 to start, then £100 a month on a 24-month minimum — with bi-weekly calls to review data and performance."
+				"a": "No. Hosting, SSL, backups and updates can sit with us so you stay on the tools. There is also a full managed website service — £200 up front, then £100 a month on a 12-month minimum — with bi-weekly calls to review data and performance."
 			},
 			{
 				"q": "Where are you based, and who is this for?",
@@ -69,7 +69,7 @@ export const faqSections: Record<string, FaqSection> = {
 			},
 			{
 				"q": "Can I still get senior-level work at a small-business price?",
-				"a": "That is the point of the practice. You are not paying for a large office or a bench of juniors. Website packages start at £795, with a free consultation before anything is committed."
+				"a": "That is the point of the practice. You are not paying for a large office or a bench of juniors. Website packages start at £445, with a free consultation before anything is committed."
 			}
 		]
 	},
@@ -77,7 +77,7 @@ export const faqSections: Record<string, FaqSection> = {
 		"section_id": "glc-faq",
 		"eyebrow": "The special offer",
 		"title": "Free design, seven-day build — answered",
-		"intro": "How the risk-free design works, what £795 includes, and what happens if you are not happy.",
+		"intro": "How the risk-free design works, what £445 includes, and what happens if you are not happy.",
 		"items": [
 			{
 				"q": "Is the website design really free?",
@@ -92,8 +92,8 @@ export const faqSections: Record<string, FaqSection> = {
 				"a": "Share a brief plus whatever you already have — logo, photos, the core facts. A design comes back in about 48 hours. After revisions, the finished site is delivered within another 48 hours: listed on Google and Bing, with Google Analytics, professional hosting and daily backups."
 			},
 			{
-				"q": "What does the £795 build include?",
-				"a": "£795 is the Professional Basic package if you go ahead: up to 5 pages, mobile-responsive design, contact form, basic on-page SEO, SSL, daily backups, a test server, Search Console, Analytics, one round of revisions, and launch training. Larger builds are Enterprise Plus at £1,495 and Commerce Enterprise at £3,495."
+				"q": "What does the £445 build include?",
+				"a": "£445 is the Professional Basic package if you go ahead: up to 5 pages, mobile-responsive design, contact form, basic on-page SEO, SSL, daily backups, a test server, Search Console, Analytics, one round of revisions, and launch training. Larger builds are Enterprise Plus at £995 and Commerce Enterprise at £3,495."
 			},
 			{
 				"q": "Can you redesign my existing site as well as start from scratch?",
@@ -113,7 +113,7 @@ export const faqSections: Record<string, FaqSection> = {
 		"items": [
 			{
 				"q": "How much does a website cost?",
-				"a": "Professional Basic is £795 (up to 5 pages). Enterprise Plus is £1,495 (up to 10 pages, custom design system, tracking). Commerce Enterprise is £3,495 (up to 20 pages, booking, quote or commerce tools, integrations). All three are one-off builds."
+				"a": "Professional Basic is £445 (up to 5 pages). Enterprise Plus is £995 (up to 10 pages, custom design system, tracking). Commerce Enterprise is £3,495 (up to 20 pages, booking, quote or commerce tools, integrations). All three are one-off builds."
 			},
 			{
 				"q": "What is included in every website package?",
@@ -121,7 +121,7 @@ export const faqSections: Record<string, FaqSection> = {
 			},
 			{
 				"q": "How much is the managed website service?",
-				"a": "£300 upfront, then £100 per month on a 24-month minimum. It covers looking after the live site plus bi-weekly calls to review data and performance, so you can stay focused on the business."
+				"a": "£200 up front, then £100 per month on a 12-month minimum. It covers looking after the live site plus bi-weekly calls to review data and performance, so you can stay focused on the business."
 			},
 			{
 				"q": "How much do Google Ads and Meta Ads cost?",
@@ -189,7 +189,7 @@ export const faqSections: Record<string, FaqSection> = {
 			},
 			{
 				"q": "How do I start a project like these?",
-				"a": "Book a free consultation, or claim the special offer if you want to see a design first with no obligation to pay. Website builds start at £795."
+				"a": "Book a free consultation, or claim the special offer if you want to see a design first with no obligation to pay. Website builds start at £445."
 			}
 		]
 	},
@@ -197,11 +197,11 @@ export const faqSections: Record<string, FaqSection> = {
 		"section_id": "glc-faq",
 		"eyebrow": "Website packages",
 		"title": "Design, build and hosting — answered",
-		"intro": "Packages from £795, what each one includes, and the optional managed layer after launch.",
+		"intro": "Packages from £445, what each one includes, and the optional managed layer after launch.",
 		"items": [
 			{
 				"q": "How much does website design and development cost?",
-				"a": "Professional Basic is £795, Enterprise Plus £1,495, Commerce Enterprise £3,495. Prices are one-off. Every build includes daily backups, a test server, Controlled Vibe Coding access, Search Console and Analytics."
+				"a": "Professional Basic is £445, Enterprise Plus £995, Commerce Enterprise £3,495. Prices are one-off. Every build includes daily backups, a test server, Controlled Vibe Coding access, Search Console and Analytics."
 			},
 			{
 				"q": "What is the difference between the three website packages?",
@@ -221,7 +221,7 @@ export const faqSections: Record<string, FaqSection> = {
 			},
 			{
 				"q": "What does the £100/month managed service include?",
-				"a": "A full managed layer for the live website: £300 to start, then £100 per month with a 24-month minimum, plus bi-weekly calls to review data and performance. Daily backups and the test server from the original package stay in place."
+				"a": "A full managed layer for the live website: £200 up front, then £100 per month with a 12-month minimum, plus bi-weekly calls to review data and performance. Daily backups and the test server from the original package stay in place."
 			}
 		]
 	},
@@ -325,7 +325,7 @@ export const faqSections: Record<string, FaqSection> = {
 		"items": [
 			{
 				"q": "What services does GLC Web Solutions offer?",
-				"a": "Four connected offerings: website design and development from £795, SEO & GEO audits, Google Ads and Meta Ads from £550 setup, and digital consultancy shaped by 27 years at The Telegraph. Start with what you need now and add the rest without switching agencies."
+				"a": "Four connected offerings: website design and development from £445, SEO & GEO audits, Google Ads and Meta Ads from £550 setup, and digital consultancy shaped by 27 years at The Telegraph. Start with what you need now and add the rest without switching agencies."
 			},
 			{
 				"q": "Do I have to buy website, SEO and ads together?",
@@ -353,7 +353,7 @@ export const faqSections: Record<string, FaqSection> = {
 		"items": [
 			{
 				"q": "How much does website design for electricians in London cost?",
-				"a": "Website design packages start from the Professional Basic build at £795. Electricians across London and the South-East typically choose a custom design with SEO foundations and optional full hosting so they never have to manage the site themselves."
+				"a": "Website design packages start from the Professional Basic build at £445. Electricians across London and the South-East typically choose a custom design with SEO foundations and optional full hosting so they never have to manage the site themselves."
 			},
 			{
 				"q": "Do you host the electrician website as well as design it?",
@@ -385,7 +385,7 @@ export const faqSections: Record<string, FaqSection> = {
 		"items": [
 			{
 				"q": "How much does website design for pubs in London cost?",
-				"a": "Website design packages start from the Professional Basic build at £795. Pubs across London and the South-East typically choose a custom design with SEO foundations and optional full hosting so they never have to manage the site themselves."
+				"a": "Website design packages start from the Professional Basic build at £445. Pubs across London and the South-East typically choose a custom design with SEO foundations and optional full hosting so they never have to manage the site themselves."
 			},
 			{
 				"q": "Do you host the pub website as well as design it?",
@@ -417,7 +417,7 @@ export const faqSections: Record<string, FaqSection> = {
 		"items": [
 			{
 				"q": "How much does website design for landscape gardeners in London cost?",
-				"a": "Website design packages start from the Professional Basic build at £795. Landscape gardeners across London and the South-East typically choose a custom design with SEO foundations and optional full hosting so they never have to manage the site themselves."
+				"a": "Website design packages start from the Professional Basic build at £445. Landscape gardeners across London and the South-East typically choose a custom design with SEO foundations and optional full hosting so they never have to manage the site themselves."
 			},
 			{
 				"q": "Do you host the landscaper website as well as design it?",
@@ -449,7 +449,7 @@ export const faqSections: Record<string, FaqSection> = {
 		"items": [
 			{
 				"q": "Do you offer website design in {{place}}?",
-				"a": "Yes. Bespoke, conversion-focused website design for sole traders and small businesses in {{place}} — built to look sharp on every device and reflect how the business actually works. Packages start at £795."
+				"a": "Yes. Bespoke, conversion-focused website design for sole traders and small businesses in {{place}} — built to look sharp on every device and reflect how the business actually works. Packages start at £445."
 			},
 			{
 				"q": "Can you help with SEO and GEO for a {{place}} business?",
@@ -461,7 +461,7 @@ export const faqSections: Record<string, FaqSection> = {
 			},
 			{
 				"q": "How much do {{place}} website services cost?",
-				"a": "Website builds start at £795. Hosting, SSL, backups and uptime monitoring keep the site online for local customers. Full prices sit on the Costs page; a free consultation is the fastest way to match a package to the job."
+				"a": "Website builds start at £445. Hosting, SSL, backups and uptime monitoring keep the site online for local customers. Full prices sit on the Costs page; a free consultation is the fastest way to match a package to the job."
 			},
 			{
 				"q": "Do I need to be based in {{place}} to work with you?",
@@ -489,7 +489,7 @@ export const faqSections: Record<string, FaqSection> = {
 			},
 			{
 				"q": "Can you build a similar website for another dog walker?",
-				"a": "Yes. The pattern is the same for other pet services: phone-first layout, obvious contact, coverage areas and local search foundations. Packages start at £795; a free consultation confirms what you need."
+				"a": "Yes. The pattern is the same for other pet services: phone-first layout, obvious contact, coverage areas and local search foundations. Packages start at £445; a free consultation confirms what you need."
 			},
 			{
 				"q": "Do I need lots of professional photos first?",
@@ -537,7 +537,7 @@ export const faqSections: Record<string, FaqSection> = {
 			},
 			{
 				"q": "Can you build a similar site for another heating engineer?",
-				"a": "Yes. Trade sites follow the same pattern: tap-to-call, clear services, reviews and local SEO. Website packages start at £795, with electrician, pub and landscaper landings if your trade is closer to those examples."
+				"a": "Yes. Trade sites follow the same pattern: tap-to-call, clear services, reviews and local SEO. Website packages start at £445, with electrician, pub and landscaper landings if your trade is closer to those examples."
 			},
 			{
 				"q": "Do emergency call-outs need a special page?",
@@ -585,7 +585,7 @@ export const faqSections: Record<string, FaqSection> = {
 			},
 			{
 				"q": "Can you build a site for other coaches or wellness businesses?",
-				"a": "Yes. Personal-brand sites need trust, a simple booking or enquiry path, and copy that sounds like the practitioner. Packages start at £795; Enterprise Plus is typical if you want a blog or richer enquiry flows."
+				"a": "Yes. Personal-brand sites need trust, a simple booking or enquiry path, and copy that sounds like the practitioner. Packages start at £445; Enterprise Plus is typical if you want a blog or richer enquiry flows."
 			},
 			{
 				"q": "Do I need to supply all the copy myself?",
