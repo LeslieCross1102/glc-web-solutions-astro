@@ -1,24 +1,32 @@
 ---
 import { getEmDashEntry, getSiteSettings } from "emdash";
 import Base from "../layouts/Base.astro";
-import RenderedBody from "../components/glc/RenderedBody.astro";
-import { getRenderedPage } from "../rendered";
+import { getRenderedPage, loadRenderedHtml } from "../rendered";
 import { resolveBlogSiteIdentity } from "../utils/site-identity";
 import { cachePublicPage } from "../utils/page-cache";
 import { shareImage } from "../data/glc/seo";
+import { loadBlog } from "../utils/blog";
+import { withLatestBlogCards } from "../utils/home-blog";
 
 // WordPress front page (Settings → Reading) was imported as this page; its SEO drives the home <head>
 const FRONT_PAGE_SLUG = "home-1";
 
-const [settings, { entry: frontPage, cacheHint }] = await Promise.all([
+const [settings, { entry: frontPage, cacheHint }, blog] = await Promise.all([
 	getSiteSettings(),
 	getEmDashEntry("pages", FRONT_PAGE_SLUG),
+	loadBlog(),
 ]);
 const { siteTitle, siteTagline } = resolveBlogSiteIdentity(settings);
 const frontSeo = frontPage ? (frontPage.seo ?? frontPage.data.seo) : null;
 const rendered = getRenderedPage("/");
+const homeHtml = rendered
+	? withLatestBlogCards(await loadRenderedHtml(rendered, Astro.url), blog.posts)
+	: "";
 
-if (Astro.cache?.enabled && cacheHint) Astro.cache.set(cacheHint);
+if (Astro.cache?.enabled) {
+	if (cacheHint) Astro.cache.set(cacheHint);
+	Astro.cache.set(blog.cacheHint);
+}
 cachePublicPage(Astro);
 ---
 
@@ -32,5 +40,5 @@ cachePublicPage(Astro);
 	sections={rendered?.sections ?? true}
 	renderedKey={rendered?.key}
 >
-	{rendered && <RenderedBody page={rendered} />}
+	{homeHtml && <Fragment set:html={homeHtml} />}
 </Base>
