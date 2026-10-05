@@ -21,9 +21,11 @@ TABLES = [
     "_emdash_fields",
     "_emdash_bylines",
     "media",
+    # Posts and pages reference revisions. Insert revisions first, and delete
+    # the entries first, so the foreign key holds without relying on deferral.
+    "revisions",
     "ec_pages",
     "ec_posts",
-    "revisions",
     "content_taxonomies",
     "_emdash_content_bylines",
     "_emdash_seo",
