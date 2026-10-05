@@ -45,8 +45,28 @@ const images: Record<string, BlogImage> = postImages;
 
 function featuredImage(slug: string, title: string, featured: unknown): BlogImage | null {
 	if (images[slug]) return images[slug];
-	const src = (featured as { src?: unknown } | null)?.src;
-	return typeof src === "string" && src ? { src, alt: title } : null;
+	const image = featured as {
+		src?: unknown;
+		alt?: unknown;
+		width?: unknown;
+		height?: unknown;
+		meta?: { storageKey?: unknown };
+	} | null;
+	const storageKey = image?.meta?.storageKey;
+	const src =
+		typeof image?.src === "string" && image.src
+			? image.src
+			: typeof storageKey === "string" && storageKey
+				? `/_emdash/api/media/file/${storageKey}`
+				: "";
+	if (!src) return null;
+	const alt = typeof image?.alt === "string" && image.alt ? image.alt : title;
+	return {
+		src,
+		alt,
+		...(typeof image?.width === "number" ? { width: image.width } : {}),
+		...(typeof image?.height === "number" ? { height: image.height } : {}),
+	};
 }
 
 /** Every published post, newest first, with its categories and listing image. */
