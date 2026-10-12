@@ -9,7 +9,8 @@ import { cachePublicPage } from "../../utils/page-cache";
 
 const slug = decodeSlug(Astro.params.slug);
 const [blog, settings] = await Promise.all([loadBlog(), getSiteSettings()]);
-const term = blog.posts.flatMap((post) => post.topics).find((topic) => topic.slug === slug);
+const matches = blog.posts.flatMap((post) => post.topics).filter((topic) => topic.slug === slug);
+const term = matches.find((topic) => topic.label !== topic.slug) ?? matches[0];
 
 if (!term) {
 	return Astro.redirect("/404");

@@ -18,7 +18,8 @@ const slug = decodeSlug(Astro.params.slug);
 const termsResult = await getTaxonomyTermsWithCacheHint("tag", {
 	includeCounts: false,
 });
-const term = slug ? termsResult.data.find((item) => item.slug === slug) : null;
+const matches = slug ? termsResult.data.filter((item) => item.slug === slug) : [];
+const term = matches.find((item) => item.label !== item.slug) ?? matches[0] ?? null;
 
 if (!term) {
 	return Astro.redirect("/404");
