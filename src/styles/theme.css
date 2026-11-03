@@ -4,6 +4,11 @@
 */
 
 :root {
+	/* Site chrome is light-only (html.light, schemeToggle false). Lock
+	   color-scheme so light-dark() tokens do not flip under OS dark mode
+	   and leave dark chips on a light page with inherited dark text. */
+	color-scheme: light;
+
 	/* Professional teal / neutral palette (not purple AI defaults) */
 	--color-bg: light-dark(#f7faf9, #0b1210);
 	--color-bg-subtle: light-dark(#eef4f2, #121a18);
