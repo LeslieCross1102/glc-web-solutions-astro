@@ -23,6 +23,22 @@ for (const group of locationGroups) {
 const city = (name: string) => ({ "@type": "City", name });
 
 /**
+ * The only published business address. Consultations are remote, so this stays a
+ * locality — no street or postcode is published on the site.
+ */
+export const businessAddress = {
+	"@type": "PostalAddress" as const,
+	addressLocality: "Dartford",
+	addressRegion: "Kent",
+	addressCountry: "GB",
+};
+
+/** Plain-language form of `businessAddress`, for llms.txt and other prose. */
+export function businessAddressText(): string {
+	return `${businessAddress.addressLocality}, ${businessAddress.addressRegion}, United Kingdom`;
+}
+
+/**
  * The business as one entity. The @id matches the provider/publisher references in the
  * rendered WordPress markup, so every page's services resolve to it.
  */
@@ -32,6 +48,7 @@ function organization(origin: string) {
 		"@id": `${origin}/#organization`,
 		name: "GLC Web Solutions",
 		url: `${origin}/`,
+		address: businessAddress,
 		logo: { "@type": "ImageObject", url: `${origin}/glc/uploads/2020/10/glc-web-solutions-logo-2020-medium.png`, width: 800, height: 147 },
 		image: `${origin}/glc/uploads/2020/10/glc-web-solutions-logo-2020-medium.png`,
 		description:

@@ -112,7 +112,14 @@ export default {
 		}
 		const alias = SITEMAP_ALIASES[pathname];
 		if (alias) return withCachePolicy(await serveSitemapAlias(request, alias, env, ctx));
-		return withCachePolicy(await handler.fetch!(request, env, ctx));
+		const response = withCachePolicy(await handler.fetch!(request, env, ctx));
+		if (pathname !== "/robots.txt" || !response.ok) return response;
+		const text = await response.text();
+		const llms = `${new URL(request.url).origin}/llms.txt`;
+		const headers = new Headers(response.headers);
+		headers.delete("Content-Length");
+		const body = text.includes(llms) ? text : `${text.trimEnd()}\n\n# ${llms}\n`;
+		return new Response(body, { status: response.status, headers });
 	},
 	scheduled: createScheduledHandler(),
 } satisfies ExportedHandler;
